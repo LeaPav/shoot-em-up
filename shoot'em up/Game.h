@@ -10,9 +10,12 @@ private:
 	int initSprite();
 	void initTexture();
 	void initWindow();
+
 	//taille de l'écran
 	int mapWidth = 1920;
 	int mapHeight = 1080;
+
+	//Texture de la map
 	Sprite spriteMap;
 	Texture texture;
 public:

@@ -1,8 +1,13 @@
 #pragma once
 
 class Entity {
-private:
-
+protected:
+	int x, y;
+	int hp;
+	int shield;
 public:
+	Entity();
+	virtual ~Entity();
 
+	virtual void movement(int dx, int dy);
 };
