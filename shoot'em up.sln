@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35431.28
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shoot'em up", "shoot'em up\shoot'em up.vcxproj", "{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Debug|x64.ActiveCfg = Debug|x64
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Debug|x64.Build.0 = Debug|x64
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Debug|x86.ActiveCfg = Debug|Win32
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Debug|x86.Build.0 = Debug|Win32
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Release|x64.ActiveCfg = Release|x64
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Release|x64.Build.0 = Release|x64
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Release|x86.ActiveCfg = Release|Win32
+		{D71C5E0C-96DB-4156-81A2-2B81B94ACD68}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8D4EC51-161B-4D99-A398-8330F9082D72}
+	EndGlobalSection
+EndGlobal
