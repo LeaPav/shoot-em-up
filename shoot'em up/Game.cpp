@@ -16,7 +16,8 @@ void Game::initWindow()
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
-	this->window = new RenderWindow(this->videoMode, "StarWater");
+	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Titlebar | Style::Close);
+	this->window->setFramerateLimit(60);
 }
 
 Game::Game()
@@ -28,7 +29,7 @@ Game::Game()
 
 Game::~Game()
 {
-
+	delete this->window; 
 }
 
 const bool Game::windowIsOpen()
