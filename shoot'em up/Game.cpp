@@ -9,7 +9,7 @@ int Game::initSprite()
 void Game::initTexture()
 {
 	this->spriteMap.setTexture(this->texture);
-	//this->spriteMap.setPosition(0, 0);
+	this->spriteMap.setPosition(0, 0);
 }
 
 void Game::initWindow()
@@ -18,6 +18,11 @@ void Game::initWindow()
 	this->videoMode.height = mapHeight;
 	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Titlebar | Style::Close);
 	this->window->setFramerateLimit(60);
+}
+
+void Game::playerRender()
+{
+	this->player->render(*this->window);
 }
 
 Game::Game()
@@ -49,6 +54,7 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear();
+	//this->playerRender();
 	this->window ->display();
 
 }

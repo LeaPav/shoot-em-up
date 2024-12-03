@@ -1,11 +1,13 @@
 #pragma once
 #include "stdafx.h"
+#include "Player.h"
 
 class Game
 {
 private:
 	RenderWindow* window;
 	VideoMode videoMode;
+	Player* player;
 	//fonctions
 	int initSprite();
 	void initTexture();
@@ -18,11 +20,13 @@ private:
 	//Texture de la map
 	Sprite spriteMap;
 	Texture texture;
+
 public:
 	Game();
 	~Game();
 
 	const bool windowIsOpen();
+	void playerRender();
 	void update();
 	void render();
 

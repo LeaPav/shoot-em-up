@@ -7,7 +7,5 @@ protected:
 	int shield;
 public:
 	Entity();
-	virtual ~Entity();
-
-	virtual void movement(int dx, int dy);
+	virtual void movement(int dx, int dy) = 0;
 };
