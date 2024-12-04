@@ -2,8 +2,9 @@
 
 void Player::initSprite()
 {
+
+	recPlayer.setSize(Vector2f(100.f, 50.f));
 	recPlayer.setFillColor(Color::Red);
-	recPlayer.setSize(Vector2f(200.f, 100.f));
 	recPlayer.setPosition(10,10);
 
 }
@@ -25,9 +26,8 @@ void Player::movement(int dx, int dy)
 
 void Player::playerMovement()
 {
-	/*if (Keyboard::isKeyPressed(Keyboard::D) {
-
-	}*/
+	if (Keyboard::isKeyPressed(Keyboard::D)) {
+	}
 }
 
 void Player::render(RenderTarget& target)

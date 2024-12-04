@@ -10,6 +10,7 @@ private:
 	Player* player;
 	//fonctions
 	int initSprite();
+	void initPlayer();
 	void initTexture();
 	void initWindow();
 
