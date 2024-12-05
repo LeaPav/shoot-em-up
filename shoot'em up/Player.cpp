@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Projectiles.h"
 
 void Player::initSprite()
 {
@@ -38,6 +39,11 @@ void Player::playerMovement()
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
 		recPlayer.move(0.f, 2.f);
+	}
+	if (Keyboard::isKeyPressed(Keyboard::F)) {
+		JoueurProjo projo(recPlayer.getPosition().x, recPlayer.getPosition().y);
+		projo.tirerSimple();
+		
 	}
 }
 
