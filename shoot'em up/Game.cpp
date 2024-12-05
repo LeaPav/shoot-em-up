@@ -6,17 +6,28 @@ int Game::initSprite()
 	return -1;
 }
 
+void Game::initPlayer()
+{
+	this->player = new Player();
+}
+
 void Game::initTexture()
 {
 	this->spriteMap.setTexture(this->texture);
-	//this->spriteMap.setPosition(0, 0);
+	this->spriteMap.setPosition(0, 0);
 }
 
 void Game::initWindow()
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
-	this->window = new RenderWindow(this->videoMode, "StarWater");
+	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Titlebar | Style::Close);
+	this->window->setFramerateLimit(60);
+}
+
+void Game::playerRender()
+{
+	this->player->render(*this->window);
 }
 
 Game::Game()
@@ -24,11 +35,12 @@ Game::Game()
 	//this->initSprite();
 	//this->initTexture();
 	this->initWindow();
+	this->initPlayer();
 }
 
 Game::~Game()
 {
-
+	delete this->window; 
 }
 
 const bool Game::windowIsOpen()
@@ -48,6 +60,7 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear();
+	this->playerRender();
 	this->window ->display();
 
 }
