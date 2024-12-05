@@ -17,9 +17,22 @@ Ennemy::Ennemy()
 	initSprite();
 }
 
+Ennemy::~Ennemy()
+{
+	
+}
+
 void Ennemy::movement(int dx, int dy)
 {
+	//recEnnemy.setPosition(x, y);
+	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
 
+	if (speedEnnemy.getPosition().x + speedEnnemy.width > 0) {
+		recEnnemy.move(-10.f, 0.f);
+	}
+	if (speedEnnemy.getPosition().x == 0) {
+		isCollisions = true;
+	}
 }
 
 void Ennemy::setPosition()
@@ -27,7 +40,18 @@ void Ennemy::setPosition()
 	recEnnemy.setPosition(1830, 500);
 }
 
+void Ennemy::update()
+{
+	movement(x, y);
+
+}
+
 void Ennemy::render(RenderTarget& target)
 {
 	target.draw(recEnnemy);
+}
+
+bool Ennemy::destroy()
+{
+	return isCollisions;
 }

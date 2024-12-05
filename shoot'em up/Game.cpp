@@ -31,7 +31,7 @@ void Game::initWindow()
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
-	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Fullscreen);
+	this->window = new RenderWindow(this->videoMode, "StarWater");
 	this->window->setFramerateLimit(60);
 }
 
@@ -55,7 +55,8 @@ Game::Game()
 
 Game::~Game()
 {
-	delete this->window; 
+	delete this->window;
+
 }
 
 const bool Game::windowIsOpen()
@@ -79,6 +80,12 @@ void Game::update()
 void Game::playerUpdate()
 {
 	this->player->playerUpdate();
+	for (auto& ennemy : ennemies) {
+		ennemy->update();
+		if (ennemy->destroy()) {
+			ennemies.clear();
+		}
+	}
 }
 
 void Game::render()

@@ -13,9 +13,14 @@ private:
 public:
 	Ennemy();
 
+	~Ennemy();
 	void movement(int dx, int dy) override;
 
 	void setPosition();
+	void update();
 	void render(RenderTarget& target);
+
+	bool isCollisions = false;
+	bool destroy();
 };
 
