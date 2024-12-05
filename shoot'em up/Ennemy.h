@@ -20,7 +20,7 @@ public:
 	void update();
 	void render(RenderTarget& target);
 
-	bool isCollisions = false;
+	bool isOutOfScreen = false;
 	bool destroy();
 };
 

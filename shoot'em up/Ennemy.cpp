@@ -27,13 +27,12 @@ void Ennemy::movement(int dx, int dy)
 	//recEnnemy.setPosition(x, y);
 	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
 
-	if (speedEnnemy.getPosition().x + speedEnnemy.width > 0) {
-		//if(){}
-		recEnnemy.move(-10.f, 0.f);
-		//if(){}
-	}
-	if (speedEnnemy.getPosition().x == 0) {
-		isCollisions = true;
+	
+	recEnnemy.move(-10.f, 0.f);
+	
+	
+	if (speedEnnemy.left + speedEnnemy.width <= 0) {
+		isOutOfScreen = true;
 	}
 }
 
@@ -55,5 +54,5 @@ void Ennemy::render(RenderTarget& target)
 
 bool Ennemy::destroy()
 {
-	return isCollisions;
+	return isOutOfScreen;
 }

@@ -11,20 +11,6 @@ void Game::initPlayer()
 	this->player = new Player();
 }
 
-void Game::initEnnemy()
-{
-	for (int i = 0; i < 2; i++) {
-		Ennemy* ennemy1 = new Ennemy();
-		ennemy1->setPosition(1830, rand() % 1080);
-		ennemies.push_back(ennemy1);
-
-	}
-	//Ennemy* ennemy2 = new Ennemy();
-	//ennemy2->setPosition(1900, 900);
-	//ennemies.push_back(ennemy2);
-
-}
-
 void Game::initTexture()
 {
 	this->spriteMap.setTexture(this->texture);
@@ -37,6 +23,13 @@ void Game::initWindow()
 	this->videoMode.height = mapHeight;
 	this->window = new RenderWindow(this->videoMode, "StarWater");
 	this->window->setFramerateLimit(60);
+}
+
+void Game::createEnnemy()
+{
+	Ennemy* newEnnemy = new Ennemy();
+	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
+	ennemies.push_back(newEnnemy);
 }
 
 void Game::entityRender()
@@ -54,7 +47,6 @@ Game::Game()
 	//this->initTexture();
 	this->initWindow();
 	this->initPlayer();
-	this->initEnnemy();
 }
 
 Game::~Game()
@@ -71,7 +63,9 @@ const bool Game::windowIsOpen()
 void Game::update()
 {
 	Event event;
-	playerUpdate();
+	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
+	const int spawnInterval = 60;
+
 	while (this->window->pollEvent(event)) {
 		if (event.type == Event::Closed) 
 			this->window-> close();
@@ -79,17 +73,36 @@ void Game::update()
 			this->window->close();
 		}
 	}
+	this->playerUpdate();
+
+	// cout << "nombre avant maj: " << ennemies.size() << endl;   //verif 
+	for (auto& ennemy : ennemies) {
+		ennemy->update();
+	}
+
+	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
+		if (e->destroy()) {
+			// cout << "Ennemi detruit" << endl; //verif
+			delete e;
+			return true;
+		}
+		return false;
+		}),
+	ennemies.end()
+		);
+	//cout << "Ennemi après : " << ennemies.size() << endl;
+	timer++;
+		if (timer >= spawnInterval) {
+			this->createEnnemy();
+			//cout << "Nombre total : " << ennemies.size();
+			timer = 0;
+		}
 }
 
 void Game::playerUpdate()
 {
 	this->player->playerUpdate();
-	for (auto& ennemy : ennemies) {
-		ennemy->update();
-		if (ennemy->destroy()) {
-			ennemies.clear();
-		}
-	}
+
 }
 
 void Game::render()

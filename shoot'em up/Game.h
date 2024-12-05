@@ -11,9 +11,9 @@ private:
 	//fonctions
 	int initSprite();
 	void initPlayer();
-	void initEnnemy();
 	void initTexture();
 	void initWindow();
+	void createEnnemy();
 
 	//taille de l'écran
 	int mapWidth = 1920;
