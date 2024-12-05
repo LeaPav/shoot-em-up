@@ -3,7 +3,7 @@
 void Player::initSprite()
 {
 
-	recPlayer.setSize(Vector2f(100.f, 50.f));
+	recPlayer.setSize(Vector2f(100.f, 100.f));
 	recPlayer.setFillColor(Color::Red);
 	recPlayer.setPosition(10,10);
 
