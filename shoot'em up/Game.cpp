@@ -1,5 +1,6 @@
 #include "Game.h"
 
+
 int Game::initSprite()
 {
 	if (!this->texture.loadFromFile("test.png"));
@@ -9,6 +10,7 @@ int Game::initSprite()
 void Game::initPlayer()
 {
 	this->player = new Player();
+	this->projoJ = new JoueurProjo(0,-20);
 }
 
 void Game::initTexture()
@@ -28,6 +30,7 @@ void Game::initWindow()
 void Game::playerRender()
 {
 	this->player->render(*this->window);
+	this->projoJ->renderProjo(*this->window);
 }
 
 Game::Game()
@@ -62,5 +65,10 @@ void Game::render()
 	this->window->clear();
 	this->playerRender();
 	this->window ->display();
+	for (auto& projoJ : player->joueurProjo) {
+		projoJ->renderProjo(*this->window);
+	}
+	player->joueurProjo.clear();
 
 }
+

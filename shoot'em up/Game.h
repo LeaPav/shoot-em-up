@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include "Player.h"
+#include "Projectiles.h"
+
 
 class Game
 {
@@ -8,6 +10,7 @@ private:
 	RenderWindow* window;
 	VideoMode videoMode;
 	Player* player;
+	JoueurProjo* projoJ;
 	//fonctions
 	int initSprite();
 	void initPlayer();

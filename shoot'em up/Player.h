@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "stdafx.h"
+#include "Projectiles.h"
 
 class Player : public Entity 
 {
@@ -12,6 +13,7 @@ private:
 
 	void initTexture();
 public:
+	vector<JoueurProjo*> joueurProjo;
 	Player();
 
 	void movement(int dx, int dy) override;

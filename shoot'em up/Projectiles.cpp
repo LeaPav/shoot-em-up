@@ -1,6 +1,6 @@
+#pragma once
 #include "Projectiles.h"
-#include "Player.h"
-#include "stdafx.h"
+
 
 Projectiles::Projectiles(int a, int b) : x(a), y(b) {}
 
@@ -18,33 +18,27 @@ void Projectiles::setY(int newY) {
 }
 
 Projectiles::~Projectiles() {
-	cout << "le projectioles est détruit" << endl;
+	cout << "le projectiles est detruit" << endl;
 }
 
 
 
+JoueurProjo::JoueurProjo(int a, int b) : Projectiles(a, b) {
+	initSpriteProjo();
+}
 
+void JoueurProjo::tirerSimple() {				//actuve le tir du projo
 
-void JoueurProjo::tirerSimple() {
 
 	initSpriteProjo();
+	
 
-	while (x < 500) {  //ptet geter
-
-		setX(x + 1);
-		if (x > 400) {
-			
-			//ennemies.setlife(life - 1);
-			//delete JoueurProjo;
-		}
-	}
+	
 }
 
 
 
-
-
-void JoueurProjo::initSpriteProjo()
+void JoueurProjo::initSpriteProjo()				//crée le rectangle visuel
 {
 	recProjo.setSize(Vector2f(150.f, 20.f));
 	recProjo.setFillColor(Color::Yellow);
@@ -55,6 +49,7 @@ void JoueurProjo::initSpriteProjo()
 
 
 
-void JoueurProjo::renderProjo(RenderTarget& target)
+void JoueurProjo::renderProjo(RenderTarget& target)    //dessiner le rectangle
 {
+	target.draw(recProjo);
 }

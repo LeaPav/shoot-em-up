@@ -1,4 +1,6 @@
 #pragma once
+#include "stdafx.h"
+
 class Projectiles
 {
 protected:
@@ -7,12 +9,12 @@ protected:
 
 public:
 
-	Projectiles(int a, int b) : x(a), y(b) {}
-	int getX() {}
-	int getY() {}
-	void setX(int newX) {}
-	void setY(int newY) {}
-	~Projectiles() {}
+	Projectiles(int a, int b);
+	int getX();
+	int getY();
+	void setX(int newX);
+	void setY(int newY);
+	~Projectiles();
 	virtual void tirerSimple() = 0;
 };
 
@@ -24,9 +26,9 @@ public:
 
 	void initSpriteProjo();
 
-	JoueurProjo(int a, int b) : Projectiles(a, b) {}
+	JoueurProjo(int a, int b);
 
-	void tirerSimple() override {}
+	void tirerSimple() override;
 
 	void renderProjo(RenderTarget& target);
 
