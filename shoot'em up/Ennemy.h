@@ -6,8 +6,16 @@ class Ennemy : public Entity
 {
 private:
 	Sprite sprite;
-	
-public:
+	RectangleShape recEnnemy;
 
+	void initSprite();
+	void initTexture();
+public:
+	Ennemy();
+
+	void movement(int dx, int dy) override;
+
+	void setPosition();
+	void render(RenderTarget& target);
 };
 

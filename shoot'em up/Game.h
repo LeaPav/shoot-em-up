@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Player.h"
-
+#include "Ennemy.h"
 class Game
 {
 private:
@@ -11,6 +11,7 @@ private:
 	//fonctions
 	int initSprite();
 	void initPlayer();
+	void initEnnemy();
 	void initTexture();
 	void initWindow();
 
@@ -22,12 +23,15 @@ private:
 	Sprite spriteMap;
 	Texture texture;
 
+	//vectors des entités 
+	vector<Ennemy*> ennemies;
+
 public:
 	Game();
 	~Game();
 
 	const bool windowIsOpen();
-	void playerRender();
+	void entityRender();
 	void update();
 	void render();
 

@@ -11,6 +11,16 @@ void Game::initPlayer()
 	this->player = new Player();
 }
 
+void Game::initEnnemy()
+{
+	Ennemy* ennemy1 = new Ennemy();
+	ennemy1->setPosition();
+	ennemies.push_back(ennemy1);
+
+	//Ennemy* ennemy2 = new Ennemy();
+
+}
+
 void Game::initTexture()
 {
 	this->spriteMap.setTexture(this->texture);
@@ -25,9 +35,13 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
-void Game::playerRender()
+void Game::entityRender()
 {
 	this->player->render(*this->window);
+
+	for (auto& ennemy : ennemies) {
+		ennemy->render(*this->window);
+	}
 }
 
 Game::Game()
@@ -36,6 +50,7 @@ Game::Game()
 	//this->initTexture();
 	this->initWindow();
 	this->initPlayer();
+	this->initEnnemy();
 }
 
 Game::~Game()
@@ -60,7 +75,7 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear();
-	this->playerRender();
+	this->entityRender();
 	this->window ->display();
 
 }
