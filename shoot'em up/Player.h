@@ -15,7 +15,8 @@ public:
 	Player();
 
 	void movement(int dx, int dy) override;
-
+	void setPosition(const float x, const float y);
+	void playerCollisions();
 	void playerMovement();
 
 	void playerUpdate();

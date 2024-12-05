@@ -33,6 +33,7 @@ public:
 	const bool windowIsOpen();
 	void entityRender();
 	void update();
+	void playerUpdate();
 	void render();
 
 };

@@ -31,7 +31,7 @@ void Game::initWindow()
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
-	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Titlebar | Style::Close);
+	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Fullscreen);
 	this->window->setFramerateLimit(60);
 }
 
@@ -66,10 +66,19 @@ const bool Game::windowIsOpen()
 void Game::update()
 {
 	Event event;
+	playerUpdate();
 	while (this->window->pollEvent(event)) {
-		if (event.type == Event::Closed)
+		if (event.type == Event::Closed) 
 			this->window-> close();
+		if (Keyboard::isKeyPressed(Keyboard::Escape)){
+			this->window->close();
+		}
 	}
+}
+
+void Game::playerUpdate()
+{
+	this->player->playerUpdate();
 }
 
 void Game::render()
