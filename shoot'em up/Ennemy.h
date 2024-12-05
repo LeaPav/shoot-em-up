@@ -16,7 +16,7 @@ public:
 	~Ennemy();
 	void movement(int dx, int dy) override;
 
-	void setPosition();
+	void setPosition(const float x, const float y);
 	void update();
 	void render(RenderTarget& target);
 

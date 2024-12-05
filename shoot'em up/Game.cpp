@@ -13,11 +13,15 @@ void Game::initPlayer()
 
 void Game::initEnnemy()
 {
-	Ennemy* ennemy1 = new Ennemy();
-	ennemy1->setPosition();
-	ennemies.push_back(ennemy1);
+	for (int i = 0; i < 2; i++) {
+		Ennemy* ennemy1 = new Ennemy();
+		ennemy1->setPosition(1830, rand() % 1080);
+		ennemies.push_back(ennemy1);
 
+	}
 	//Ennemy* ennemy2 = new Ennemy();
+	//ennemy2->setPosition(1900, 900);
+	//ennemies.push_back(ennemy2);
 
 }
 

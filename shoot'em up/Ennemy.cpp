@@ -28,16 +28,18 @@ void Ennemy::movement(int dx, int dy)
 	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
 
 	if (speedEnnemy.getPosition().x + speedEnnemy.width > 0) {
+		//if(){}
 		recEnnemy.move(-10.f, 0.f);
+		//if(){}
 	}
 	if (speedEnnemy.getPosition().x == 0) {
 		isCollisions = true;
 	}
 }
 
-void Ennemy::setPosition()
+void Ennemy::setPosition(const float x, const float y)
 {
-	recEnnemy.setPosition(1830, 500);
+	recEnnemy.setPosition(x, y);
 }
 
 void Ennemy::update()
