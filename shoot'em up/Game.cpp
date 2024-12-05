@@ -68,7 +68,8 @@ void Game::render()
 	for (auto& projoJ : player->joueurProjo) {
 		projoJ->renderProjo(*this->window);
 	}
-	player->joueurProjo.clear();
-
+	
+		player->joueurProjo.clear();
+	
 }
 
