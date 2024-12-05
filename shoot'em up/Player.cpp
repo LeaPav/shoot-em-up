@@ -28,17 +28,16 @@ void Player::movement(int dx, int dy)
 void Player::playerMovement()
 {
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
-		recPlayer.move(2.f, 0.f);
+		recPlayer.move(8.f, 0.f);
 	}
-
 	if (Keyboard::isKeyPressed(Keyboard::Q)) {
-		recPlayer.move(-5.f, 0.f);
+		recPlayer.move(-12.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		recPlayer.move(0.f, -2.f);
+		recPlayer.move(0.f, -8.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		recPlayer.move(0.f, 2.f);
+		recPlayer.move(0.f, 8.f);
 	}
 	
 }
