@@ -120,6 +120,16 @@ void Game::projectileUpdate()
 	for (auto& projectile : projectiles) {
 		projectile->update();
 	}
+
+	projectiles.erase(remove_if(projectiles.begin(), projectiles.end(), [](Projectile* p) {
+		if (p->outOfScreen()) {
+			delete p;
+			return true;
+		}
+		return false;
+		}),
+		projectiles.end()
+	);
 }
 
 void Game::projectileRender()
