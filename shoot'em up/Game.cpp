@@ -37,10 +37,10 @@ void Game::createEnnemy()
 	ennemies.push_back(newEnnemy);
 }
 
-void Game::createProjectiles()
+void Game::createProjectiles(float x, float y)
 {
-	Projectile* newProjectile = new Projectile();
-
+	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f);
+	projectiles.push_back(newProjectile);
 }
 
 void Game::entityRender()
@@ -115,10 +115,25 @@ void Game::playerUpdate()
 	this->player->playerUpdate();
 }
 
+void Game::projectileUpdate()
+{
+	for (auto& projectile : projectiles) {
+		projectile->update();
+	}
+}
+
+void Game::projectileRender()
+{
+	for (auto& projectile : projectiles) {
+		projectile->render(*this->window);
+	}
+}
+
 void Game::render()
 {
 	this->window->clear();
 	this->entityRender();
+	this->projectileRender();
 	this->window ->display();
 
 }

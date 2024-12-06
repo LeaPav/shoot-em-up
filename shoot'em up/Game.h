@@ -16,7 +16,7 @@ private:
 	void initTexture();
 	void initWindow();
 	void createEnnemy();
-	void createProjectiles();
+	void createProjectiles(float x, float y);
 
 	//taille de l'écran
 	int mapWidth = 1920;
@@ -38,6 +38,8 @@ public:
 	void entityRender();
 	void update();
 	void playerUpdate();
+	void projectileUpdate();
+	void projectileRender();
 	void render();
 
 };
