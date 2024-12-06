@@ -12,7 +12,7 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f)
+Ennemy::Ennemy(MovementType type, int hp) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(1)
 {
 	initSprite();
 }
@@ -65,6 +65,12 @@ void Ennemy::update()
 void Ennemy::render(RenderTarget& target)
 {
 	target.draw(recEnnemy);
+}
+
+void Ennemy::degat(int degats)
+{
+	hp -= degats;
+	if (hp < 0) hp = 0;
 }
 
 bool Ennemy::destroy()
