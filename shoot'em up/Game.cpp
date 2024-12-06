@@ -25,6 +25,14 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
+void Game::initScore()
+{
+	textScore.setPosition(0, 0);
+	textScore.setCharacterSize(20);
+	textScore.setFillColor(Color::Green);
+	textScore.setString("20");
+}
+
 void Game::createEnnemy()
 {
 	
@@ -58,6 +66,7 @@ Game::Game()
 	//this->initTexture();
 	this->initWindow();
 	this->initPlayer();
+	this->initScore();
 }
 
 Game::~Game()
@@ -132,11 +141,9 @@ void Game::checkCollisions()
 {
 	std::vector<Projectile*> projectilesToRemove;
 	vector<Ennemy*> ennemiesToRemove;
-	cout << "test";
 	for (auto& projectile : projectiles) {
 		for (auto& ennemy : ennemies) {
-			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds())) {
-				cout << "Collision detected ";
+			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds())) {	
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
 
@@ -144,14 +151,11 @@ void Game::checkCollisions()
 					ennemiesToRemove.push_back(ennemy);
 				}
 			}
-			else {
-				cout << "no collision" << endl;
-			}
 		}
 	}
 	for (auto& projectile : projectilesToRemove) {
 		projectiles.erase(std::remove(projectiles.begin(), projectiles.end(), projectile), projectiles.end());
-		delete projectile; // Libère la mémoire
+		delete projectile; 
 	}
 	for (auto& ennemy : ennemiesToRemove) {
 		ennemies.erase(std::remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());

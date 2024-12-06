@@ -10,11 +10,13 @@ private:
 	RenderWindow* window;
 	VideoMode videoMode;
 	Player* player;
+	Text textScore;
 	//fonctions
 	int initSprite();
 	void initPlayer();
 	void initTexture();
 	void initWindow();
+	void initScore();
 	void createEnnemy();
 	void createProjectiles(float x, float y);
 
@@ -30,6 +32,7 @@ private:
 	vector<Ennemy*> ennemies;
 	vector<Projectile*> projectiles;
 
+	int score;
 public:
 	Game();
 	~Game();

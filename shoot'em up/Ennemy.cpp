@@ -12,7 +12,7 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(1)
+Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(3)
 {
 	initSprite();
 }

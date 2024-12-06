@@ -33,7 +33,5 @@ public:
 	bool isOutOfScreen;
 	bool destroy();
 	FloatRect getGlobalBounds() const;
-	int hp;
-	;
 };
 
