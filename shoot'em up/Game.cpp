@@ -74,8 +74,6 @@ const bool Game::windowIsOpen()
 void Game::update()
 {
 	Event event;
-	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
-	const int spawnInterval = 60;
 
 	while (this->window->pollEvent(event)) {
 		if (event.type == Event::Closed) 
@@ -84,31 +82,14 @@ void Game::update()
 			this->window->close();
 		}
 	}
+	
 	this->playerUpdate();
+	this->projectileUpdate();
+	this->ennemyUpdate();
+	this->checkCollisions();
 	this->shoot();
 
-	//cout << "nombre avant maj: " << ennemies.size() << endl;   //verif 
-	for (auto& ennemy : ennemies) {
-		ennemy->update();
-	}
 
-	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
-		if (e->destroy()) {
-		//	cout << "Ennemi detruit" << endl; //verif
-			delete e;
-			return true;
-		}
-		return false;
-		}),
-	ennemies.end()
-		);
-	//cout << "Ennemi après : " << ennemies.size() << endl;
-	timer++;
-		if (timer >= spawnInterval) {
-			this->createEnnemy();
-		//	cout << "Nombre total : " << ennemies.size();
-			timer = 0;
-		}
 }
 
 void Game::playerUpdate()
@@ -121,7 +102,61 @@ void Game::projectileUpdate()
 	for (auto& projectile : projectiles) {
 		projectile->update();
 	}
+}
 
+void Game::ennemyUpdate()
+{
+
+	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
+	const int spawnInterval = 60;
+
+	for (auto& ennemy : ennemies) {
+		ennemy->update();
+	}
+
+	timer++;
+	if (timer >= spawnInterval) {
+		this->createEnnemy();
+		timer = 0;
+	}
+}
+
+void Game::projectileRender()
+{
+	for (auto& projectile : projectiles) {
+		projectile->render(*this->window);
+	}
+}
+
+void Game::checkCollisions()
+{
+	std::vector<Projectile*> projectilesToRemove;
+	vector<Ennemy*> ennemiesToRemove;
+	cout << "test";
+	for (auto& projectile : projectiles) {
+		for (auto& ennemy : ennemies) {
+			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds())) {
+				cout << "Collision detected ";
+				ennemy->damage(1);
+				projectile->markAsOutOfScreen();
+
+				if (ennemy->isDead()) {
+					ennemiesToRemove.push_back(ennemy);
+				}
+			}
+			else {
+				cout << "no collision" << endl;
+			}
+		}
+	}
+	for (auto& projectile : projectilesToRemove) {
+		projectiles.erase(std::remove(projectiles.begin(), projectiles.end(), projectile), projectiles.end());
+		delete projectile; // Libère la mémoire
+	}
+	for (auto& ennemy : ennemiesToRemove) {
+		ennemies.erase(std::remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());
+		delete ennemy; 
+	}
 	projectiles.erase(remove_if(projectiles.begin(), projectiles.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
 			delete p;
@@ -131,13 +166,16 @@ void Game::projectileUpdate()
 		}),
 		projectiles.end()
 	);
-}
 
-void Game::projectileRender()
-{
-	for (auto& projectile : projectiles) {
-		projectile->render(*this->window);
-	}
+	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
+		if (e->destroy() || e->isDead()) {
+			delete e;
+			return true;
+		}
+		return false;
+		}),
+		ennemies.end()
+	);
 }
 
 void Game::shoot()
@@ -154,7 +192,6 @@ void Game::shoot()
 	if (cooldownShoot > 0) {
 			cooldownShoot--;
 	}
-	projectileUpdate();
 }
 
 void Game::render()

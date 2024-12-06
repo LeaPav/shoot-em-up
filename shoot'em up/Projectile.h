@@ -15,6 +15,9 @@ public:
 
 	void update();
 	void render(RenderTarget& target);
+	const RectangleShape& getShape() const;
+	FloatRect getGlobalBounds() const;
+	void markAsOutOfScreen();
 	bool outOfScreen() const; // avec IsOutOfScreen
 
 };

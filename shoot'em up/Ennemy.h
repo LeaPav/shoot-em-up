@@ -16,9 +16,10 @@ private:
 	float timeElapsed;
 	void initSprite();
 	void initTexture();
+	bool alive = true;
 	int hp;
 public:
-	Ennemy(MovementType type = STRAIGHT, int hp);
+	Ennemy(MovementType type = STRAIGHT);
 
 	~Ennemy();
 	void movement(int dx, int dy) override;
@@ -26,8 +27,13 @@ public:
 	void setPosition(const float x, const float y);
 	void update();
 	void render(RenderTarget& target);
-	void degat(int degats);
+	void damage(int damages);
+	int getHp() const;
+	bool isDead() const;
 	bool isOutOfScreen;
 	bool destroy();
+	FloatRect getGlobalBounds() const;
+	int hp;
+	;
 };
 

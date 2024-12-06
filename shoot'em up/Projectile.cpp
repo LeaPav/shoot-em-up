@@ -29,6 +29,16 @@ void Projectile::render(RenderTarget& target)
 	target.draw(this->projectile);
 }
 
+FloatRect Projectile::getGlobalBounds() const
+{
+	return this->projectile.getGlobalBounds();
+}
+
+void Projectile::markAsOutOfScreen()
+{
+	this->isOutOfScreen = true;
+}
+
 bool Projectile::outOfScreen() const
 {
 	return this->isOutOfScreen;

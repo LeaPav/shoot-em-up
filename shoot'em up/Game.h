@@ -39,7 +39,9 @@ public:
 	void update();
 	void playerUpdate();
 	void projectileUpdate();
+	void ennemyUpdate();
 	void projectileRender();
+	void checkCollisions();
 	void shoot();
 	void render();
 
