@@ -2,13 +2,14 @@
 
 void Projectile::initProjectiles()
 {
-	projectile.setSize(Vector2f(50.f, 50.f));
+	projectile.setSize(Vector2f(25.f, 25.f));
 	projectile.setFillColor(Color::Blue);
 }
 
-Projectile::Projectile(float x, float y, float speedX, float speedY) : velocity(x, y), isOutOfScreen(false)
+Projectile::Projectile(float x, float y, float speedX, float speedY) : velocity(speedX, speedY), isOutOfScreen(false)
 {
 	this->initProjectiles();
+	this->projectile.setPosition(x, y);
 }
 
 Projectile::~Projectile(){}

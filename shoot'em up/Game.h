@@ -40,6 +40,7 @@ public:
 	void playerUpdate();
 	void projectileUpdate();
 	void projectileRender();
+	void shoot();
 	void render();
 
 };

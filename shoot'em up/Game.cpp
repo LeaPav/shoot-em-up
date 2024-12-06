@@ -85,6 +85,7 @@ void Game::update()
 		}
 	}
 	this->playerUpdate();
+	this->shoot();
 
 	//cout << "nombre avant maj: " << ennemies.size() << endl;   //verif 
 	for (auto& ennemy : ennemies) {
@@ -137,6 +138,23 @@ void Game::projectileRender()
 	for (auto& projectile : projectiles) {
 		projectile->render(*this->window);
 	}
+}
+
+void Game::shoot()
+{
+	static int cooldownShoot = 0;
+	const int fireRate = 15;
+
+	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
+		float playerX = this->player->getPosition().x + 80.f;
+		float playerY = this->player->getPosition().y + 40.f;
+		createProjectiles(playerX, playerY);
+		cooldownShoot = fireRate;
+	}
+	if (cooldownShoot > 0) {
+			cooldownShoot--;
+	}
+	projectileUpdate();
 }
 
 void Game::render()
