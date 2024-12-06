@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Player.h"
-
+#include "Ennemy.h"
 class Game
 {
 private:
@@ -13,6 +13,7 @@ private:
 	void initPlayer();
 	void initTexture();
 	void initWindow();
+	void createEnnemy();
 
 	//taille de l'écran
 	int mapWidth = 1920;
@@ -22,13 +23,17 @@ private:
 	Sprite spriteMap;
 	Texture texture;
 
+	//vectors des entités 
+	vector<Ennemy*> ennemies;
+
 public:
 	Game();
 	~Game();
 
 	const bool windowIsOpen();
-	void playerRender();
+	void entityRender();
 	void update();
+	void playerUpdate();
 	void render();
 
 };

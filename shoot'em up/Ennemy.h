@@ -6,8 +6,21 @@ class Ennemy : public Entity
 {
 private:
 	Sprite sprite;
-	
-public:
+	RectangleShape recEnnemy;
 
+	void initSprite();
+	void initTexture();
+public:
+	Ennemy();
+
+	~Ennemy();
+	void movement(int dx, int dy) override;
+
+	void setPosition(const float x, const float y);
+	void update();
+	void render(RenderTarget& target);
+
+	bool isOutOfScreen = false;
+	bool destroy();
 };
 
