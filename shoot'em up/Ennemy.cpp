@@ -27,13 +27,12 @@ void Ennemy::movement(int dx, int dy)
 	//recEnnemy.setPosition(x, y);
 	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
 
-	
 	recEnnemy.move(-10.f, 0.f);
-	
 	
 	if (speedEnnemy.left + speedEnnemy.width <= 0) {
 		isOutOfScreen = true;
 	}
+
 }
 
 void Ennemy::setPosition(const float x, const float y)

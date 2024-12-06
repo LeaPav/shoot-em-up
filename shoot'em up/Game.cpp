@@ -75,14 +75,14 @@ void Game::update()
 	}
 	this->playerUpdate();
 
-	// cout << "nombre avant maj: " << ennemies.size() << endl;   //verif 
+	//cout << "nombre avant maj: " << ennemies.size() << endl;   //verif 
 	for (auto& ennemy : ennemies) {
 		ennemy->update();
 	}
 
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 		if (e->destroy()) {
-			// cout << "Ennemi detruit" << endl; //verif
+		//	cout << "Ennemi detruit" << endl; //verif
 			delete e;
 			return true;
 		}
@@ -94,7 +94,7 @@ void Game::update()
 	timer++;
 		if (timer >= spawnInterval) {
 			this->createEnnemy();
-			//cout << "Nombre total : " << ennemies.size();
+		//	cout << "Nombre total : " << ennemies.size();
 			timer = 0;
 		}
 }
