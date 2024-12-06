@@ -12,7 +12,7 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy()
+Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f)
 {
 	initSprite();
 }
@@ -24,16 +24,32 @@ Ennemy::~Ennemy()
 
 void Ennemy::movement(int dx, int dy)
 {
-	//recEnnemy.setPosition(x, y);
-	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
 
-	recEnnemy.move(-10.f, 0.f);
-	
+	/*if (speedEnnemy.getPosition().x < 1000) {
+		recEnnemy.move(-5.f, -10.f);
+	}*/
+	switch (movementType) {
+	case STRAIGHT:
+		recEnnemy.move(-10.f, 0.f);
+		break;
+	case DIAGONAL:
+		recEnnemy.move(-10.f, 5.f);
+		
+		break;
+	}
+
+	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
 	if (speedEnnemy.left + speedEnnemy.width <= 0) {
 		isOutOfScreen = true;
 	}
+	if (speedEnnemy.getPosition().y + speedEnnemy.height < 0) {
+		isOutOfScreen = true;
+	}
 
-}
+	if (speedEnnemy.getPosition().y  > 1080) {
+		isOutOfScreen = true;
+	}
+} 
 
 void Ennemy::setPosition(const float x, const float y)
 {
