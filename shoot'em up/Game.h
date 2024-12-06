@@ -10,6 +10,7 @@ private:
 	RenderWindow* window;
 	VideoMode videoMode;
 	Player* player;
+	Font font;
 	Text textScore;
 	//fonctions
 	int initSprite();

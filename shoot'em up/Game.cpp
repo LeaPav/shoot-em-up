@@ -27,10 +27,14 @@ void Game::initWindow()
 
 void Game::initScore()
 {
+	if (!font.loadFromFile("assets/test.ttf")) {
+		cout << "ERREUR";
+	}
+	textScore.setFont(font);
 	textScore.setPosition(0, 0);
-	textScore.setCharacterSize(20);
+	textScore.setCharacterSize(30);
 	textScore.setFillColor(Color::Green);
-	textScore.setString("20");
+	textScore.setString(to_string(score));
 }
 
 void Game::createEnnemy()
@@ -91,7 +95,7 @@ void Game::update()
 			this->window->close();
 		}
 	}
-	
+
 	this->playerUpdate();
 	this->projectileUpdate();
 	this->ennemyUpdate();
@@ -148,6 +152,8 @@ void Game::checkCollisions()
 				projectile->markAsOutOfScreen();
 
 				if (ennemy->isDead()) {
+					score++;
+					textScore.setString(to_string(score));
 					ennemiesToRemove.push_back(ennemy);
 				}
 			}
@@ -203,6 +209,8 @@ void Game::render()
 	this->window->clear();
 	this->entityRender();
 	this->projectileRender();
+
+	this->window->draw(textScore);
 	this->window ->display();
 
 }
