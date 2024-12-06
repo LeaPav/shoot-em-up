@@ -64,10 +64,10 @@ void Player::playerMovement()
 		recPlayer.move(-12.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		recPlayer.move(0.f, -12.f);
+		recPlayer.move(0.f, -8.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		recPlayer.move(0.f, 12.f);
+		recPlayer.move(0.f, 8.f);
 	}
 }
 
