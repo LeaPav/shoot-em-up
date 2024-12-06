@@ -21,14 +21,19 @@ void Game::initWindow()
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
-	this->window = new RenderWindow(this->videoMode, "StarWater");
+	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Fullscreen);
 	this->window->setFramerateLimit(60);
 }
 
 void Game::createEnnemy()
 {
-	Ennemy* newEnnemy = new Ennemy();
+	
+	MovementType randomType = static_cast<MovementType>(rand() % 2);
+	Ennemy* newEnnemy = new Ennemy(randomType);
 	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
+	if (newEnnemy->destroy()) {
+		delete newEnnemy;
+	}
 	ennemies.push_back(newEnnemy);
 }
 
@@ -102,7 +107,6 @@ void Game::update()
 void Game::playerUpdate()
 {
 	this->player->playerUpdate();
-
 }
 
 void Game::render()

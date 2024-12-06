@@ -2,16 +2,22 @@
 #include "stdafx.h"
 #include "Entity.h"
 
+enum MovementType {
+	STRAIGHT,
+	DIAGONAL
+};
+
 class Ennemy : public Entity
 {
 private:
 	Sprite sprite;
 	RectangleShape recEnnemy;
-
+	MovementType movementType;
+	float timeElapsed;
 	void initSprite();
 	void initTexture();
 public:
-	Ennemy();
+	Ennemy(MovementType type = STRAIGHT);
 
 	~Ennemy();
 	void movement(int dx, int dy) override;
