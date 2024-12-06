@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Ennemy.h"
+#include "Projectile.h"
+
 class Game
 {
 private:
@@ -14,6 +16,7 @@ private:
 	void initTexture();
 	void initWindow();
 	void createEnnemy();
+	void createProjectiles();
 
 	//taille de l'écran
 	int mapWidth = 1920;
@@ -25,6 +28,7 @@ private:
 
 	//vectors des entités 
 	vector<Ennemy*> ennemies;
+	vector<Projectile*> projectiles;
 
 public:
 	Game();

@@ -37,6 +37,12 @@ void Game::createEnnemy()
 	ennemies.push_back(newEnnemy);
 }
 
+void Game::createProjectiles()
+{
+	Projectile* newProjectile = new Projectile();
+
+}
+
 void Game::entityRender()
 {
 	this->player->render(*this->window);
