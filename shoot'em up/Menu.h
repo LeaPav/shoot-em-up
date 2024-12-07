@@ -24,10 +24,14 @@ private:
 	RectangleShape commandsButtonRect;
 	RectangleShape difficultyButtonRect;
 	RectangleShape settingsButtonRect;
+	RectangleShape returnButtonRect;
+	RectangleShape returnMenuOptionsButtonRect;
 	
 	Text commandsButton;
 	Text difficultyButton;
 	Text settingsButton;
+	Text returnButton;
+	Text returnMenuOptionsButton;
 
 	Sprite background;
 	Sprite optionsBackground;
@@ -35,13 +39,13 @@ private:
 	Texture optionsTexture;
 	int indexButtonSelected;
 
-
-public:
-	Menu();
 	int initFont();
 	int initBackground();
 	void initButton();
 	void initOptionsButton();
+	void initCommandsButton();
+public:
+	Menu();
 
 	int handleInputMainMenu(RenderWindow& window);
 	int handleInputMenuOptions(RenderWindow& window);
@@ -52,6 +56,5 @@ public:
 	void renderCommands(RenderWindow& window);
 	void setBackground(const string& backgroundImage);
 	void handleMouseHover(const RenderWindow& window);
-	int getSelectedIndex();
 };
 

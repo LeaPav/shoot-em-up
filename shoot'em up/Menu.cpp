@@ -6,6 +6,7 @@ Menu::Menu() : indexButtonSelected(0)
 	initFont();
 	initButton();
 	initOptionsButton();
+	initCommandsButton();
 }
 
 int Menu::initFont()
@@ -83,6 +84,10 @@ void Menu::initOptionsButton()
 	difficultyButtonRect.setFillColor(Color(165, 191, 208));
 	difficultyButtonRect.setPosition(705.f, 585.f);
 
+	returnButtonRect.setSize(Vector2f(350.f, 75.f));
+	returnButtonRect.setFillColor(Color(165, 191, 208));
+	returnButtonRect.setPosition(1550.f, 980.f);
+
 	commandsButton.setFont(this->font);
 	commandsButton.setString("COMMANDES");
 	commandsButton.setCharacterSize(50);
@@ -97,6 +102,22 @@ void Menu::initOptionsButton()
 	difficultyButton.setString("DIFFICULTÉ");
 	difficultyButton.setCharacterSize(50);
 	difficultyButton.setPosition(870.f, 600.f);
+
+	returnButton.setFont(this->font);
+	returnButton.setString("RETOUR");
+	returnButton.setCharacterSize(50);
+	returnButton.setPosition(1650.f, 985.f);
+}
+void Menu::initCommandsButton()
+{
+	returnButtonRect.setSize(Vector2f(350.f, 75.f));
+	returnButtonRect.setFillColor(Color(165, 191, 208));
+	returnButtonRect.setPosition(1550.f, 980.f);
+
+	returnButton.setFont(this->font);
+	returnButton.setString("RETOUR");
+	returnButton.setCharacterSize(50);
+	returnButton.setPosition(1650.f, 985.f);
 }
 int Menu::handleInputMainMenu(RenderWindow& window)
 {
@@ -133,6 +154,9 @@ int Menu::handleInputMenuOptions(RenderWindow& window)
 		if (difficultyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 			return 3;
 		}
+		if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			return 4;
+		}
 	}
 	return 0;
 }
@@ -158,10 +182,12 @@ void Menu::renderOptions(RenderWindow& window)
 	window.draw(commandsButtonRect);
 	window.draw(settingsButtonRect);
 	window.draw(difficultyButtonRect);
-
+	window.draw(returnButtonRect);
+	
 	window.draw(commandsButton);
 	window.draw(settingsButton);
 	window.draw(difficultyButton);
+	window.draw(this->returnButton);
 }
 
 void Menu::renderEditor(RenderWindow& window)
@@ -179,6 +205,9 @@ void Menu::renderCommands(RenderWindow& window)
 	text.setPosition(750, 200);
 	text.setString(" Z : Aller vers le haut. \n\n Q : Aller vers la gauche. \n\n S : Aller vers le bas. \n\n D : Aller vers la droite. \n\n F : Tirer. \n\n Echap : Quitter");
 	window.draw(text);
+
+	window.draw(returnButtonRect);
+	window.draw(returnButton);
 }
 
 
@@ -248,9 +277,13 @@ void Menu::handleMouseHover(const RenderWindow& window)
 		difficultyButtonRect.setFillColor(Color(165, 191, 208));
 		difficultyButton.setFillColor(Color::White);
 	}
+	if (returnButtonRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		returnButtonRect.setFillColor(Color(222, 231, 237));
+		returnButton.setFillColor(Color(165, 191, 208));
+	}
+	else {
+		returnButtonRect.setFillColor(Color(165, 191, 208));
+		returnButton.setFillColor(Color::White);
+	}
 }
 
-int Menu::getSelectedIndex()
-{
-	return indexButtonSelected;
-}

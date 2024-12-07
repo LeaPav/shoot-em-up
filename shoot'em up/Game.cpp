@@ -227,6 +227,17 @@ void Game::handleMenuState()
 		switch (optionsAction) {
 		case 1: currentState = GameState::COMMANDS;
 			break;
+		case 4: currentState = GameState::MENU;
+			break;
+		}
+	}
+	if (currentState == GameState::COMMANDS) {
+		mainMenu.handleMouseHover(*window);
+		int actionCommands = mainMenu.handleInputMenuOptions(*window);
+
+		switch (actionCommands) {
+		case 4: currentState = GameState::OPTIONS;
+			break;
 		}
 	}
 }
