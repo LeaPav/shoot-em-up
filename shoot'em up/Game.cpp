@@ -58,6 +58,7 @@ void Game::createProjectiles(float x, float y)
 void Game::entityRender()
 {
 	this->player->render(*this->window);
+	this->player->renderHealthBar(*this->window);
 
 	for (auto& ennemy : ennemies) {
 		ennemy->render(*this->window);
@@ -87,6 +88,7 @@ const bool Game::windowIsOpen()
 void Game::playerUpdate()
 {
 	this->player->playerUpdate();
+	this->player->udpateHealthBar();
 }
 
 void Game::projectileUpdate()
@@ -142,7 +144,7 @@ void Game::checkCollisions()
 
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
-			player->damage(1);
+			player->damage(10);
 			ennemiesToRemove.push_back(ennemy);
 		}
 	}

@@ -20,10 +20,22 @@ void Player::initTexture()
 	this->sprite.setPosition(10, 10);
 }
 
-Player::Player() : hp(5)
+void Player::initHealthBar()
 {
-	initSprite();
-	initTexture();
+	this->maxHp = 100;
+	this->hp = this->maxHp;
+	this->healthBar.setSize(Vector2f(200.f, 20.f));
+	this->healthBar.setFillColor(Color(102, 255, 102));
+
+	this->backgroundHealthBar.setSize(Vector2f(200.f, 20.f));
+	this->backgroundHealthBar.setFillColor(Color(117, 117, 117));
+}
+
+Player::Player() 
+{
+	this->initHealthBar();
+	this->initSprite();
+	this->initTexture();
 }
 
 void Player::movement(int dx, int dy)
@@ -105,6 +117,22 @@ void Player::render(RenderTarget& target)
 {
 	playerMovement();
 	target.draw(this->sprite);
+}
+
+void Player::udpateHealthBar()
+{
+	float healthPercentage = static_cast<float>(this->hp) / static_cast<float>(this->maxHp);
+	this->healthBar.setSize(Vector2f(200.f * healthPercentage, 20.f));
+}
+
+void Player::renderHealthBar(RenderTarget& target)
+{
+	this->backgroundHealthBar.setPosition(10.f, 1050.f);
+	this->healthBar.setPosition(10.f, 1050.f);
+
+	target.draw(this->backgroundHealthBar);
+	target.draw(this->healthBar);
+
 }
 
 FloatRect Player::getGlobalBounds() const

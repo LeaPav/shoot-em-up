@@ -8,11 +8,14 @@ private:
 	Sprite sprite;
 	Texture vaisseau;
 	RectangleShape recPlayer;
-
+	RectangleShape healthBar;
+	RectangleShape backgroundHealthBar;
 	void initSprite(); 
 	void initTexture();
+	void initHealthBar();
 
 	int hp;
+	int maxHp;
 public:
 	Player();
 
@@ -26,6 +29,9 @@ public:
 	bool isDead() const;
 	void playerUpdate();
 	void render(RenderTarget &target);
+
+	void udpateHealthBar();
+	void renderHealthBar(RenderTarget& target);
 	FloatRect getGlobalBounds() const;
 
 };
