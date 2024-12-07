@@ -84,27 +84,6 @@ const bool Game::windowIsOpen()
 	return this->window->isOpen();
 }
 
-void Game::update()
-{
-	Event event;
-
-	while (this->window->pollEvent(event)) {
-		if (event.type == Event::Closed) 
-			this->window-> close();
-		if (Keyboard::isKeyPressed(Keyboard::Escape)){
-			this->window->close();
-		}
-	}
-
-	this->playerUpdate();
-	this->projectileUpdate();
-	this->ennemyUpdate();
-	this->checkCollisions();
-	this->shoot();
-
-
-}
-
 void Game::playerUpdate()
 {
 	this->player->playerUpdate();
@@ -143,8 +122,9 @@ void Game::projectileRender()
 
 void Game::checkCollisions()
 {
-	std::vector<Projectile*> projectilesToRemove;
+	vector<Projectile*> projectilesToRemove;
 	vector<Ennemy*> ennemiesToRemove;
+
 	for (auto& projectile : projectiles) {
 		for (auto& ennemy : ennemies) {
 			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds())) {	
@@ -159,14 +139,23 @@ void Game::checkCollisions()
 			}
 		}
 	}
+
+	for (auto& ennemy : ennemies) {
+		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
+			player->damage(1);
+			ennemiesToRemove.push_back(ennemy);
+		}
+	}
+
 	for (auto& projectile : projectilesToRemove) {
-		projectiles.erase(std::remove(projectiles.begin(), projectiles.end(), projectile), projectiles.end());
+		projectiles.erase(remove(projectiles.begin(), projectiles.end(), projectile), projectiles.end());
 		delete projectile; 
 	}
 	for (auto& ennemy : ennemiesToRemove) {
-		ennemies.erase(std::remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());
+		ennemies.erase(remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());
 		delete ennemy; 
 	}
+
 	projectiles.erase(remove_if(projectiles.begin(), projectiles.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
 			delete p;
@@ -202,6 +191,33 @@ void Game::shoot()
 	if (cooldownShoot > 0) {
 			cooldownShoot--;
 	}
+}
+
+
+void Game::update()
+{
+	Event event;
+
+	while (this->window->pollEvent(event)) {
+		if (event.type == Event::Closed)
+			this->window->close();
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			this->window->close();
+		}
+	}
+
+	this->playerUpdate();
+	this->projectileUpdate();
+	this->ennemyUpdate();
+	this->checkCollisions();
+
+	if (player->isDead()) {
+		cout << "Game over";
+		this->window->close();
+		return;
+	}
+	this->shoot();
+
 }
 
 void Game::render()

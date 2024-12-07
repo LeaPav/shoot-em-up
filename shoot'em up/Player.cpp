@@ -20,7 +20,7 @@ void Player::initTexture()
 	this->sprite.setPosition(10, 10);
 }
 
-Player::Player()
+Player::Player() : hp(5)
 {
 	initSprite();
 	initTexture();
@@ -83,6 +83,18 @@ void Player::playerMovement()
 	
 }
 
+void Player::damage(int damages)
+{
+	this->hp -= damages;
+	if (this->hp < 0)
+		this->hp = 0;
+}
+
+bool Player::isDead() const
+{
+	return this->hp <= 0;
+}
+
 
 void Player::playerUpdate()
 {
@@ -93,4 +105,10 @@ void Player::render(RenderTarget& target)
 {
 	playerMovement();
 	target.draw(this->sprite);
+}
+
+FloatRect Player::getGlobalBounds() const
+{
+	return this->sprite.getGlobalBounds();
+
 }

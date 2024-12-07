@@ -10,8 +10,9 @@ private:
 	RectangleShape recPlayer;
 
 	void initSprite(); 
-
 	void initTexture();
+
+	int hp;
 public:
 	Player();
 
@@ -21,7 +22,11 @@ public:
 	void playerCollisions();
 	void playerMovement();
 
+	void damage(int damages);
+	bool isDead() const;
 	void playerUpdate();
 	void render(RenderTarget &target);
+	FloatRect getGlobalBounds() const;
+
 };
 
