@@ -200,7 +200,7 @@ void Game::handleMenuState()
 {
 	if (currentState == GameState::MENU) {
 		mainMenu.handleMouseHover(*window);
-		int action = mainMenu.handleInput(*window);
+		int action = mainMenu.handleInputMainMenu(*window);
 
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
@@ -220,6 +220,15 @@ void Game::handleMenuState()
 		this->ennemyUpdate();
 		this->checkCollisions();
 	}
+	if (currentState == GameState::OPTIONS) {
+		mainMenu.handleMouseHover(*window);
+		int optionsAction = mainMenu.handleInputMenuOptions(*window);
+
+		switch (optionsAction) {
+		case 1: currentState = GameState::COMMANDS;
+			break;
+		}
+	}
 }
 
 void Game::handleMenu()
@@ -235,6 +244,13 @@ void Game::handleMenu()
 	}
 	else if (currentState == GameState::OPTIONS) {
 		mainMenu.renderOptions(*window);
+	}
+	else if (currentState == GameState::EDITOR) {
+		//mainMenu.handleMouseHover(*window);
+		mainMenu.renderEditor(*window);
+	}
+	else if (currentState == GameState::COMMANDS) {
+		mainMenu.renderCommands(*window);
 	}
 }
 

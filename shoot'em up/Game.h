@@ -11,6 +11,7 @@ public:
 	enum GameState {
 		MENU,
 		OPTIONS,
+		COMMANDS,
 		EDITOR,
 		PLAYING
 	};
