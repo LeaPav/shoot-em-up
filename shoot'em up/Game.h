@@ -2,10 +2,18 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Ennemy.h"
+#include "Menu.h"
 #include "Projectile.h"
 
 class Game
 {
+public:
+	enum GameState {
+		MENU,
+		OPTIONS,
+		EDITOR,
+		PLAYING
+	};
 private:
 	RenderWindow* window;
 	VideoMode videoMode;
@@ -34,19 +42,28 @@ private:
 	vector<Projectile*> projectiles;
 
 	int score;
+
+	// Menu
+	Menu mainMenu;
+	GameState currentState;
 public:
 	Game();
 	~Game();
 
 	const bool windowIsOpen();
 	void entityRender();
-	void update();
 	void playerUpdate();
 	void projectileUpdate();
 	void ennemyUpdate();
 	void projectileRender();
 	void checkCollisions();
 	void shoot();
+
+	// Menu
+	void handleMenuState();
+	void handleMenu();
+
+	void update();
 	void render();
 
 };

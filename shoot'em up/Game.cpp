@@ -65,7 +65,7 @@ void Game::entityRender()
 	}
 }
 
-Game::Game()
+Game::Game() : currentState(MENU)
 {
 	//this->initSprite();
 	//this->initTexture();
@@ -77,6 +77,7 @@ Game::Game()
 Game::~Game()
 {
 	delete this->window;
+	delete this->player;
 
 }
 
@@ -195,6 +196,44 @@ void Game::shoot()
 	}
 }
 
+void Game::handleMenuState()
+{
+	if (currentState == GameState::MENU) {
+		int action = mainMenu.handleInput(*window);
+
+		switch (action) {
+		case 1: currentState = GameState::PLAYING;
+			break;
+		case2: currentState = GameState::OPTIONS;
+			break;
+		case 3: currentState = GameState::EDITOR;
+			break;
+		case 4:
+			this->window->close();
+			break;
+		}	
+	}
+	else if (currentState == GameState::PLAYING) {
+		this->playerUpdate();
+		this->projectileUpdate();
+		this->ennemyUpdate();
+		this->checkCollisions();
+	}
+}
+
+void Game::handleMenu()
+{
+	if (currentState == GameState::MENU) {
+		mainMenu.render(*window);
+	}
+	else if (currentState == GameState::PLAYING) {
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+	}
+}
+
 
 void Game::update()
 {
@@ -207,11 +246,7 @@ void Game::update()
 			this->window->close();
 		}
 	}
-
-	this->playerUpdate();
-	this->projectileUpdate();
-	this->ennemyUpdate();
-	this->checkCollisions();
+	//handleMenuState();
 
 	if (player->isDead()) {
 		cout << "Game over";
@@ -225,10 +260,9 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear();
-	this->entityRender();
-	this->projectileRender();
-
-	this->window->draw(textScore);
+	this->handleMenu();
 	this->window ->display();
 
 }
+
+
