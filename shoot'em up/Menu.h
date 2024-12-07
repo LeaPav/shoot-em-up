@@ -6,13 +6,18 @@ class Menu
 {
 private:
 	Font font;
-	vector<Text> buttons;
 	Text playButton;
 	Text optionsButton;
 	Text editorButton;
 	Text quitButton;
+	RectangleShape playButtonRect;
+	RectangleShape optionsButtonRect;
+	RectangleShape editorButtonRect;
+	RectangleShape quitButtonRect;
 	Sprite background;
+	Sprite optionsBackground;
 	Texture backgroundTexture;
+	Texture optionsTexture;
 	int indexButtonSelected;
 
 public:
@@ -26,7 +31,7 @@ public:
 	void render(RenderWindow& window);
 	void renderOptions(RenderWindow& window);
 	void setBackground(const string& backgroundImage);
-
+	void handleMouseHover(const RenderWindow& window);
 	int getSelectedIndex();
 };
 

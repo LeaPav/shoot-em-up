@@ -199,12 +199,13 @@ void Game::shoot()
 void Game::handleMenuState()
 {
 	if (currentState == GameState::MENU) {
+		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInput(*window);
 
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
 			break;
-		case2: currentState = GameState::OPTIONS;
+		case 2: currentState = GameState::OPTIONS;
 			break;
 		case 3: currentState = GameState::EDITOR;
 			break;
@@ -232,6 +233,9 @@ void Game::handleMenu()
 		this->projectileRender();
 		this->window->draw(textScore);
 	}
+	else if (currentState == GameState::OPTIONS) {
+		mainMenu.renderOptions(*window);
+	}
 }
 
 
@@ -246,7 +250,7 @@ void Game::update()
 			this->window->close();
 		}
 	}
-	//handleMenuState();
+	handleMenuState();
 
 	if (player->isDead()) {
 		cout << "Game over";
