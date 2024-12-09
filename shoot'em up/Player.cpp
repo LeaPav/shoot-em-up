@@ -87,10 +87,10 @@ void Player::playerMovement()
 		sprite.move(-12.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		sprite.move(0.f, -8.f);
+		sprite.move(0.f, -12.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		sprite.move(0.f, 8.f);
+		sprite.move(0.f, 12.f);
 	}
 	
 }
