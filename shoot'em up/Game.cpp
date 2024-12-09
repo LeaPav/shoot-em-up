@@ -65,7 +65,7 @@ void Game::entityRender()
 	}
 }
 
-Game::Game() : currentState(MENU)
+Game::Game() : currentState(MENU), isPaused(false)
 {
 	//this->initSprite();
 	//this->initTexture();
@@ -215,10 +215,17 @@ void Game::handleMenuState()
 		}	
 	}
 	else if (currentState == GameState::PLAYING) {
-		this->playerUpdate();
-		this->projectileUpdate();
-		this->ennemyUpdate();
-		this->checkCollisions();
+
+		if (!isPaused) {
+			this->playerUpdate();
+			this->projectileUpdate();
+			this->ennemyUpdate();
+			this->checkCollisions();
+			this->shoot();
+		}
+		else {
+			cout << "Pause";
+		}
 	}
 	if (currentState == GameState::OPTIONS) {
 		mainMenu.handleMouseHover(*window);
@@ -248,6 +255,9 @@ void Game::handleMenu()
 		mainMenu.render(*window);
 	}
 	else if (currentState == GameState::PLAYING) {
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			isPaused = true;
+		}
 		this->window->draw(this->spriteMap);
 		this->entityRender();
 		this->projectileRender();
@@ -263,6 +273,13 @@ void Game::handleMenu()
 	else if (currentState == GameState::COMMANDS) {
 		mainMenu.renderCommands(*window);
 	}
+
+	if (isPaused) {
+		cout << "test";
+		RectangleShape test(Vector2f(200.f, 40.f));
+		this->window->draw(test);
+
+	}
 }
 
 
@@ -273,7 +290,7 @@ void Game::update()
 	while (this->window->pollEvent(event)) {
 		if (event.type == Event::Closed)
 			this->window->close();
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+		if (Keyboard::isKeyPressed(Keyboard::J)) {
 			this->window->close();
 		}
 	}
@@ -284,7 +301,6 @@ void Game::update()
 		this->window->close();
 		return;
 	}
-	this->shoot();
 
 }
 

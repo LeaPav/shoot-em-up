@@ -111,11 +111,11 @@ bool Player::isDead() const
 void Player::playerUpdate()
 {
 	playerCollisions();
+	playerMovement();
 }
 
 void Player::render(RenderTarget& target)
 {
-	playerMovement();
 	target.draw(this->sprite);
 }
 

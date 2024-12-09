@@ -47,6 +47,7 @@ private:
 	// Menu
 	Menu mainMenu;
 	GameState currentState;
+	bool isPaused;
 public:
 	Game();
 	~Game();
