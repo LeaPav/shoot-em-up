@@ -312,13 +312,13 @@ void Game::handleMenuState()
 			this->fonduNiveau1();
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+		if (Keyboard::isKeyPressed(Keyboard::A)) {
 			isPaused = true;
 			currentState = GameState::PAUSE;
 		}
 	}
 	else if (currentState == GameState::PAUSE) {
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+		if (Keyboard::isKeyPressed(Keyboard::A)) {
 			isPaused = false;
 			currentState = GameState::PLAYING;
 		}
@@ -358,6 +358,20 @@ void Game::handleMenu()
 		this->projectileRender();
 		this->window->draw(textScore);
 	}
+	else if (currentState == GameState::PAUSE) {
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+
+		RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
+		overlayTest.setFillColor(Color(0, 0, 0, 125));
+		this->window->draw(overlayTest);
+
+		RectangleShape test(Vector2f(200.f, 40.f));
+		this->window->draw(test);
+	}
 	else if (currentState == GameState::OPTIONS) {
 		mainMenu.renderOptions(*window);
 	}
@@ -367,12 +381,6 @@ void Game::handleMenu()
 	}
 	else if (currentState == GameState::COMMANDS) {
 		mainMenu.renderCommands(*window);
-	}
-
-	if (isPaused) {
-		RectangleShape test(Vector2f(200.f, 40.f));
-		this->window->draw(test);
-
 	}
 }
 
