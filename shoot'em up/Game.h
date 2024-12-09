@@ -13,6 +13,7 @@ public:
 		OPTIONS,
 		COMMANDS,
 		EDITOR,
+		PAUSE,
 		PLAYING
 	};
 private:

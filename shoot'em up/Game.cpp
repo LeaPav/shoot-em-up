@@ -312,8 +312,10 @@ void Game::handleMenuState()
 			this->fonduNiveau1();
 
 		}
-		else {
-			
+	}
+	if (isPaused) {
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			isPaused = false;
 		}
 	}
 	if (currentState == GameState::OPTIONS) {
