@@ -309,6 +309,7 @@ void Game::handleMenuState()
 			this->ennemyUpdate();
 			this->checkCollisions();
 			this->shoot();
+			this->fonduNiveau1();
 
 		}
 		else {
@@ -383,7 +384,7 @@ void Game::update()
 		}
 	}
 	handleMenuState();
-	fonduNiveau1();
+	
 
 	if (player->isDead()) {
 		cout << "Game over";
