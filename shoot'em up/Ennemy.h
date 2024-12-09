@@ -4,7 +4,8 @@
 
 enum MovementType {
 	STRAIGHT,
-	DIAGONAL
+	DIAGONAL,
+	SINUSOIDAL
 };
 
 class Ennemy : public Entity
@@ -18,6 +19,7 @@ private:
 	void initTexture();
 	bool alive = true;
 	int hp;
+	Vector2f velocity;
 public:
 	Ennemy(MovementType type = STRAIGHT);
 

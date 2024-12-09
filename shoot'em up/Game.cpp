@@ -82,7 +82,8 @@ void Game::initScore()
 void Game::createEnnemy()
 {
 	
-	MovementType randomType = static_cast<MovementType>(rand() % 2);
+	MovementType randomType = static_cast<MovementType>(rand() % 3);
+
 	Ennemy* newEnnemy = new Ennemy(randomType);
 	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
 	if (newEnnemy->destroy()) {
@@ -101,6 +102,8 @@ void Game::createProjectilesEnnemy(float x, float y)
 {
 	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
 	projectilesEnnemy.push_back(newProjectile);
+
+	std::cout << "Projectile créé à (" << x << ", " << y << ")" << std::endl;
 }
 
 void Game::entityRender()
@@ -303,45 +306,31 @@ void Game::handleMenuState()
 		}	
 	}
 	else if (currentState == GameState::PLAYING) {
-		if (!isPaused) {
 			this->playerUpdate();
-			this->projectileUpdate();
 			this->ennemyUpdate();
+			this->projectileUpdate();
 			this->checkCollisions();
 			this->shoot();
 			this->fonduNiveau1();
-		}
+	}
+	if (currentState == GameState::OPTIONS) {
+		mainMenu.handleMouseHover(*window);
+		int optionsAction = mainMenu.handleInputMenuOptions(*window);
 
-		if (Keyboard::isKeyPressed(Keyboard::A)) {
-			isPaused = true;
-			currentState = GameState::PAUSE;
+		switch (optionsAction) {
+		case 1: currentState = GameState::COMMANDS;
+			break;
+		case 4: currentState = GameState::MENU;
+			break;
 		}
 	}
-	else if (currentState == GameState::PAUSE) {
-		if (Keyboard::isKeyPressed(Keyboard::A)) {
-			isPaused = false;
-			currentState = GameState::PLAYING;
-		}
+	if (currentState == GameState::COMMANDS) {
+		mainMenu.handleMouseHover(*window);
+		int actionCommands = mainMenu.handleInputMenuOptions(*window);
 
-		if (currentState == GameState::OPTIONS) {
-			mainMenu.handleMouseHover(*window);
-			int optionsAction = mainMenu.handleInputMenuOptions(*window);
-
-			switch (optionsAction) {
-			case 1: currentState = GameState::COMMANDS;
+		switch (actionCommands) {
+		case 4: currentState = GameState::OPTIONS;
 				break;
-			case 4: currentState = GameState::MENU;
-				break;
-			}
-		}
-		if (currentState == GameState::COMMANDS) {
-			mainMenu.handleMouseHover(*window);
-			int actionCommands = mainMenu.handleInputMenuOptions(*window);
-
-			switch (actionCommands) {
-			case 4: currentState = GameState::OPTIONS;
-				break;
-			}
 		}
 	}
 }
@@ -364,13 +353,7 @@ void Game::handleMenu()
 		this->entityRender();
 		this->projectileRender();
 		this->window->draw(textScore);
-
-		RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
-		overlayTest.setFillColor(Color(0, 0, 0, 125));
-		this->window->draw(overlayTest);
-
-		RectangleShape test(Vector2f(200.f, 40.f));
-		this->window->draw(test);
+		this->renderMenuPause();
 	}
 	else if (currentState == GameState::OPTIONS) {
 		mainMenu.renderOptions(*window);
@@ -386,7 +369,25 @@ void Game::handleMenu()
 
 void Game::renderMenuPause()
 {
+	if (!font.loadFromFile("assets/test.ttf")) {
+		cout << "ERREUR";
+	}
+	RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlayTest.setFillColor(Color(0, 0, 0, 125));
+	//his->window->draw(overlayTest);
+	RectangleShape test(Vector2f(200.f, 40.f));
+	//this->window->draw(test);
 
+	reprendre.setFont(font);
+	reprendre.setPosition(0, 0);
+	reprendre.setCharacterSize(24);
+	reprendre.setFillColor(Color::Red);
+	reprendre.setString("Reprendre");
+
+	this->window->draw(overlayTest);
+	this->window->draw(test);
+	this->window->draw(reprendre);
+	
 }
 
 
@@ -399,15 +400,28 @@ void Game::update()
 			this->window->close();
 		if (Keyboard::isKeyPressed(Keyboard::J)) {
 			this->window->close();
+
+
+		}
+		if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+			if (currentState == GameState::PLAYING) {
+				isPaused = true;
+				currentState = GameState::PAUSE;
+			}
+			else if (currentState == GameState::PAUSE) {
+				isPaused = false;
+				currentState = GameState::PLAYING;
+			}
 		}
 	}
-	handleMenuState();
-	
 
-	if (player->isDead()) {
-		cout << "Game over";
-		this->window->close();
-		return;
+	if (!isPaused) {
+		handleMenuState();
+		if (player->isDead()) {
+			cout << "Game over";
+			this->window->close();
+			return;
+		}
 	}
 
 }

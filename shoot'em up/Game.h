@@ -22,6 +22,7 @@ private:
 	Player* player;
 	Font font;
 	Text textScore;
+	Text reprendre;
 	//fonctions
 	int initSprite();
 	void initPlayer();

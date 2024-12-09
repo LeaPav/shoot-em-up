@@ -28,12 +28,20 @@ void Ennemy::movement(int dx, int dy)
 	/*if (speedEnnemy.getPosition().x < 1000) {
 		recEnnemy.move(-5.f, -10.f);
 	}*/
+
+	float frequency = 2.f;
+	float amplitude = 50.f;
+
 	switch (movementType) {
 	case STRAIGHT:
 		recEnnemy.move(-10.f, 0.f);
 		break;
 	case DIAGONAL:
 		recEnnemy.move(-10.f, 5.f);
+		break;
+	case SINUSOIDAL:
+		recEnnemy.move(-5.f, amplitude * sin(frequency * timeElapsed));
+		timeElapsed += 0.1f;
 		break;
 	}
 
