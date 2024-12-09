@@ -21,7 +21,8 @@ void Game::initWindow()
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
-	this->window = new RenderWindow(this->videoMode, "StarWater", Style::Fullscreen);
+	this->window = new RenderWindow(videoMode, "StarWater", Style::Fullscreen);
+	this->window->setVerticalSyncEnabled(true);
 	this->window->setFramerateLimit(60);
 }
 
@@ -52,7 +53,13 @@ void Game::createEnnemy()
 void Game::createProjectiles(float x, float y)
 {
 	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f);
-	projectiles.push_back(newProjectile);
+	projectilesPlayer.push_back(newProjectile);
+}
+
+void Game::createProjectilesEnnemy(float x, float y)
+{
+	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
+	projectilesEnnemy.push_back(newProjectile);
 }
 
 void Game::entityRender()
@@ -94,9 +101,14 @@ void Game::playerUpdate()
 
 void Game::projectileUpdate()
 {
-	for (auto& projectile : projectiles) {
+	for (auto& projectile : projectilesPlayer) {
 		projectile->update();
 	}
+
+	for (auto& projectile : projectilesEnnemy) {
+		projectile->update();
+	}
+
 }
 
 void Game::ennemyUpdate()
@@ -107,6 +119,7 @@ void Game::ennemyUpdate()
 
 	for (auto& ennemy : ennemies) {
 		ennemy->update();
+		//this->shootEnnemy();
 	}
 
 	timer++;
@@ -118,7 +131,11 @@ void Game::ennemyUpdate()
 
 void Game::projectileRender()
 {
-	for (auto& projectile : projectiles) {
+	for (auto& projectile : projectilesPlayer) {
+		projectile->render(*this->window);
+	}
+
+	for (auto& projectile : projectilesEnnemy) {
 		projectile->render(*this->window);
 	}
 }
@@ -128,7 +145,7 @@ void Game::checkCollisions()
 	vector<Projectile*> projectilesToRemove;
 	vector<Ennemy*> ennemiesToRemove;
 
-	for (auto& projectile : projectiles) {
+	for (auto& projectile : projectilesPlayer) {
 		for (auto& ennemy : ennemies) {
 			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds())) {	
 				ennemy->damage(1);
@@ -143,15 +160,24 @@ void Game::checkCollisions()
 		}
 	}
 
+	/*for (auto& ennemy : ennemies) {
+		for (auto& projectile : projectilesEnnemy) {
+			if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
+				player->damage(1);
+				projectile->markAsOutOfScreen();
+			}
+		}
+	}*/
+
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
-			player->damage(10);
+			player->damage(1);
 			ennemiesToRemove.push_back(ennemy);
 		}
 	}
 
 	for (auto& projectile : projectilesToRemove) {
-		projectiles.erase(remove(projectiles.begin(), projectiles.end(), projectile), projectiles.end());
+		projectilesPlayer.erase(remove(projectilesPlayer.begin(), projectilesPlayer.end(), projectile), projectilesPlayer.end());
 		delete projectile; 
 	}
 	for (auto& ennemy : ennemiesToRemove) {
@@ -159,14 +185,14 @@ void Game::checkCollisions()
 		delete ennemy; 
 	}
 
-	projectiles.erase(remove_if(projectiles.begin(), projectiles.end(), [](Projectile* p) {
+	projectilesPlayer.erase(remove_if(projectilesPlayer.begin(), projectilesPlayer.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
 			delete p;
 			return true;
 		}
 		return false;
 		}),
-		projectiles.end()
+		projectilesPlayer.end()
 	);
 
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
@@ -196,6 +222,26 @@ void Game::shoot()
 	}
 }
 
+//void Game::shootEnnemy()
+//{
+//	static int cooldownShoot = 0;
+//	const int fireRate = 15;
+//
+//	//for (auto& ennemy : ennemies) {
+//
+//	if (cooldownShoot <= 0) {
+//			cout << "test";
+//			float ennemyX = ennemy->getPosition().x - 37.f;
+//			float ennemyY = ennemy->getPosition().y + 37.f;
+//			createProjectilesEnnemy(ennemyX, ennemyY);
+//			cooldownShoot = fireRate;
+//		
+//	}
+//	if (cooldownShoot > 0) {
+//		cooldownShoot--;
+//	}
+//}
+
 void Game::handleMenuState()
 {
 	if (currentState == GameState::MENU) {
@@ -222,9 +268,10 @@ void Game::handleMenuState()
 			this->ennemyUpdate();
 			this->checkCollisions();
 			this->shoot();
+
 		}
 		else {
-			cout << "Pause";
+			
 		}
 	}
 	if (currentState == GameState::OPTIONS) {
@@ -275,7 +322,6 @@ void Game::handleMenu()
 	}
 
 	if (isPaused) {
-		cout << "test";
 		RectangleShape test(Vector2f(200.f, 40.f));
 		this->window->draw(test);
 

@@ -29,6 +29,7 @@ public:
 	void render(RenderTarget& target);
 	void damage(int damages);
 	int getHp() const;
+	const Vector2f getPosition() const;
 	bool isDead() const;
 	bool isOutOfScreen;
 	bool destroy();

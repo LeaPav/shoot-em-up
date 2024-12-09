@@ -34,7 +34,6 @@ void Ennemy::movement(int dx, int dy)
 		break;
 	case DIAGONAL:
 		recEnnemy.move(-10.f, 5.f);
-		
 		break;
 	}
 
@@ -70,6 +69,11 @@ void Ennemy::render(RenderTarget& target)
 int Ennemy::getHp() const
 {
 	return hp;
+}
+
+const Vector2f Ennemy::getPosition() const
+{
+	return this->sprite.getPosition();
 }
 
 bool Ennemy::isDead() const
