@@ -158,9 +158,21 @@ void Game::ennemyUpdate()
 	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
 	const int spawnInterval = 60;
 
+	static int cooldownShoot = 0;
+	const int fireRate = 15;
+
 	for (auto& ennemy : ennemies) {
 		ennemy->update();
-		//this->shootEnnemy();
+		if (cooldownShoot <= 0) {
+			float ennemyX = ennemy->getPosition().x - 37.f;
+			float ennemyY = ennemy->getPosition().y + 37.f;
+			createProjectilesEnnemy(ennemyX, ennemyY);
+		}
+	}
+
+	cooldownShoot--;
+	if (cooldownShoot <= 0) {
+		cooldownShoot = fireRate;
 	}
 
 	timer++;
@@ -176,8 +188,8 @@ void Game::projectileRender()
 		projectile->render(*this->window);
 	}
 
-	for (auto& projectile : projectilesEnnemy) {
-		projectile->render(*this->window);
+	for (auto& projectile2 : projectilesEnnemy) {
+		projectile2->render(*this->window);
 	}
 }
 
@@ -236,6 +248,15 @@ void Game::checkCollisions()
 		projectilesPlayer.end()
 	);
 
+	projectilesEnnemy.erase(remove_if(projectilesEnnemy.begin(), projectilesEnnemy.end(), [](Projectile* p) {
+		if (p->outOfScreen()) {
+			delete p;
+			return true;
+		}
+		return false;
+		}),
+		projectilesEnnemy.end()
+	);
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 		if (e->destroy() || e->isDead()) {
 			delete e;
@@ -263,26 +284,6 @@ void Game::shoot()
 	}
 }
 
-//void Game::shootEnnemy()
-//{
-//	static int cooldownShoot = 0;
-//	const int fireRate = 15;
-//
-//	//for (auto& ennemy : ennemies) {
-//
-//	if (cooldownShoot <= 0) {
-//			cout << "test";
-//			float ennemyX = ennemy->getPosition().x - 37.f;
-//			float ennemyY = ennemy->getPosition().y + 37.f;
-//			createProjectilesEnnemy(ennemyX, ennemyY);
-//			cooldownShoot = fireRate;
-//		
-//	}
-//	if (cooldownShoot > 0) {
-//		cooldownShoot--;
-//	}
-//}
-
 void Game::handleMenuState()
 {
 	if (currentState == GameState::MENU) {
@@ -302,7 +303,6 @@ void Game::handleMenuState()
 		}	
 	}
 	else if (currentState == GameState::PLAYING) {
-
 		if (!isPaused) {
 			this->playerUpdate();
 			this->projectileUpdate();
@@ -310,32 +310,38 @@ void Game::handleMenuState()
 			this->checkCollisions();
 			this->shoot();
 			this->fonduNiveau1();
+		}
 
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			isPaused = true;
+			currentState = GameState::PAUSE;
 		}
 	}
-	if (isPaused) {
+	else if (currentState == GameState::PAUSE) {
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 			isPaused = false;
+			currentState = GameState::PLAYING;
 		}
-	}
-	if (currentState == GameState::OPTIONS) {
-		mainMenu.handleMouseHover(*window);
-		int optionsAction = mainMenu.handleInputMenuOptions(*window);
 
-		switch (optionsAction) {
-		case 1: currentState = GameState::COMMANDS;
-			break;
-		case 4: currentState = GameState::MENU;
-			break;
+		if (currentState == GameState::OPTIONS) {
+			mainMenu.handleMouseHover(*window);
+			int optionsAction = mainMenu.handleInputMenuOptions(*window);
+
+			switch (optionsAction) {
+			case 1: currentState = GameState::COMMANDS;
+				break;
+			case 4: currentState = GameState::MENU;
+				break;
+			}
 		}
-	}
-	if (currentState == GameState::COMMANDS) {
-		mainMenu.handleMouseHover(*window);
-		int actionCommands = mainMenu.handleInputMenuOptions(*window);
+		if (currentState == GameState::COMMANDS) {
+			mainMenu.handleMouseHover(*window);
+			int actionCommands = mainMenu.handleInputMenuOptions(*window);
 
-		switch (actionCommands) {
-		case 4: currentState = GameState::OPTIONS;
-			break;
+			switch (actionCommands) {
+			case 4: currentState = GameState::OPTIONS;
+				break;
+			}
 		}
 	}
 }
@@ -347,9 +353,6 @@ void Game::handleMenu()
 	}
 	else if (currentState == GameState::PLAYING) {
 		this->renderNiveau1();
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-			isPaused = true;
-		}
 		this->window->draw(this->spriteMap);
 		this->entityRender();
 		this->projectileRender();
@@ -371,6 +374,11 @@ void Game::handleMenu()
 		this->window->draw(test);
 
 	}
+}
+
+void Game::renderMenuPause()
+{
+
 }
 
 

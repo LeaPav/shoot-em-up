@@ -88,6 +88,7 @@ public:
 	// Menu
 	void handleMenuState();
 	void handleMenu();
+	void renderMenuPause();
 
 	void update();
 	void render();
