@@ -162,26 +162,23 @@ void Game::ennemyUpdate()
 	const int spawnInterval = 60;
 
 	static int cooldownShoot = 0;
-	const int fireRate = 15;
-
-	for (auto& ennemy : ennemies) {
-		ennemy->update();
-		if (cooldownShoot <= 0) {
-			float ennemyX = ennemy->getPosition().x - 37.f;
-			float ennemyY = ennemy->getPosition().y + 37.f;
-			createProjectilesEnnemy(ennemyX, ennemyY);
-		}
-	}
-
-	cooldownShoot--;
-	if (cooldownShoot <= 0) {
-		cooldownShoot = fireRate;
-	}
+	const int fireRate = 50;
 
 	timer++;
 	if (timer >= spawnInterval) {
 		this->createEnnemy();
 		timer = 0;
+	}
+
+	for (auto& ennemy : ennemies) {
+		ennemy->update();
+		ennemy->updateShootCooldown();
+		if (ennemy->canShoot()) {
+			float ennemyX = ennemy->getPosition().x - 37.f;
+			float ennemyY = ennemy->getPosition().y + 37.f;
+			createProjectilesEnnemy(ennemyX, ennemyY);
+			ennemy->resetShootCooldown();
+		}
 	}
 }
 
@@ -216,15 +213,13 @@ void Game::checkCollisions()
 		}
 	}
 
-	/*for (auto& ennemy : ennemies) {
-		for (auto& projectile : projectilesEnnemy) {
-			if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
-				player->damage(1);
-				projectile->markAsOutOfScreen();
-			}
+	for (auto& projectile : projectilesEnnemy) {
+		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
+			player->damage(1);
+			projectile->markAsOutOfScreen();
 		}
-	}*/
-
+	}
+	
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			player->damage(1);
@@ -253,6 +248,7 @@ void Game::checkCollisions()
 
 	projectilesEnnemy.erase(remove_if(projectilesEnnemy.begin(), projectilesEnnemy.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
+			cout << "Suppression d'un projectile ennemi" << endl;
 			delete p;
 			return true;
 		}
@@ -475,7 +471,6 @@ void Game::fonduNiveau1()
 	hautSens2.move(Vector2f(-3, 0.f));
 	hautInvers1.move(Vector2f(-3, 0.f));
 	hautInvers2.move(Vector2f(-3, 0.f));
-
 
 }
 

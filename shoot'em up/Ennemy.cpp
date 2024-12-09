@@ -14,6 +14,8 @@ void Ennemy::initTexture()
 
 Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(1)
 {
+	shootCooldown = 0;
+	fireRate = 30;
 	initSprite();
 }
 
@@ -81,7 +83,7 @@ int Ennemy::getHp() const
 
 const Vector2f Ennemy::getPosition() const
 {
-	return this->sprite.getPosition();
+	return this->recEnnemy.getPosition();
 }
 
 bool Ennemy::isDead() const
@@ -98,6 +100,27 @@ void Ennemy::damage(int damages)
 bool Ennemy::destroy()
 {
 	return isOutOfScreen;
+}
+
+bool Ennemy::canShoot()
+{
+	
+	/*if (this->recEnnemy.getPosition().x < 1920 || this->recEnnemy.getPosition().x > 0 ||
+		this->recEnnemy.getPosition().y < 1080 || this->recEnnemy.getPosition().y > 0) {
+		return true;
+	}*/
+	return shootCooldown <= 0;
+}
+
+void Ennemy::updateShootCooldown()
+{
+	if (shootCooldown > 0)
+		shootCooldown--;
+}
+
+void Ennemy::resetShootCooldown()
+{
+	shootCooldown = fireRate;
 }
 
 FloatRect Ennemy::getGlobalBounds() const

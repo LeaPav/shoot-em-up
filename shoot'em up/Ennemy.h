@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Entity.h"
+#include "Projectile.h"
 
 enum MovementType {
 	STRAIGHT,
@@ -19,6 +20,8 @@ private:
 	void initTexture();
 	bool alive = true;
 	int hp;
+	int shootCooldown;
+	int fireRate;
 	Vector2f velocity;
 public:
 	Ennemy(MovementType type = STRAIGHT);
@@ -35,6 +38,10 @@ public:
 	bool isDead() const;
 	bool isOutOfScreen;
 	bool destroy();
+	bool canShoot();
+	void updateShootCooldown();
+	void resetShootCooldown();
+	void shoot(vector<Projectile*>& projectiles);
 	FloatRect getGlobalBounds() const;
 };
 
