@@ -1,9 +1,31 @@
 #include "Game.h"
 
 int Game::initSprite()
-{
-	if (!this->texture.loadFromFile("test.png"));
-	return -1;
+{	
+	if (!bas_Sens1.loadFromFile("assets\\Fond_1\\ocean_final_sens_normal-1622-1080_bas.png")) 
+		return -1; 
+
+	if (!bas_invers1.loadFromFile("assets\\Fond_1\\ocean_final_sens_inverse_1622_1080_bas.png")) 
+		return -1; 
+	
+	if (!bas_Sens2.loadFromFile("assets\\Fond_1\\ocean_final_sens_normal-1622-1080_bas.png")) 
+		return -1; 
+	
+	if (!bas_invers2.loadFromFile("assets\\Fond_1\\ocean_final_sens_inverse_1622_1080_bas.png")) 
+		return -1; 
+	
+	if (!haut_sens1.loadFromFile("assets\\Fond_1\\ocean_final_sens_normal-1622-1080_haut.png")) 
+		return -1; 
+	
+	if (!haut_invers1.loadFromFile("assets\\Fond_1\\ocean_final_sens_inverse_1622_1080_haut.png")) 
+		return -1; 
+		
+	if (!haut_sens2.loadFromFile("assets\\Fond_1\\ocean_final_sens_normal-1622-1080_haut.png")) 
+		return -1; 
+		
+	if (!haut_invers2.loadFromFile("assets\\Fond_1\\ocean_final_sens_inverse_1622_1080_haut.png")) 
+		return -1; 
+	
 }
 
 void Game::initPlayer()
@@ -13,8 +35,27 @@ void Game::initPlayer()
 
 void Game::initTexture()
 {
-	this->spriteMap.setTexture(this->texture);
-	this->spriteMap.setPosition(0, 0);
+	basSens1.setTexture(bas_Sens1);					//metre texture sur les sprite
+	basInvers1.setTexture(bas_invers1);
+	basSens2.setTexture(bas_Sens2);
+	basInvers2.setTexture(bas_invers2);
+	hautSens1.setTexture(haut_sens1);
+	hautInvers1.setTexture(haut_invers1);
+	hautSens2.setTexture(haut_sens2);
+	hautInvers2.setTexture(haut_invers2);
+
+	/////////////////////////////initialisation des position//////////////////////////////////////////////
+
+	basSens1.setPosition(Vector2f(0.f, 626.f));
+	basInvers1.setPosition(Vector2f(1622.f, 626.f));
+	basSens2.setPosition(Vector2f(3244.f, 626.f));
+	basInvers2.setPosition(Vector2f(4866.f, 626.f));
+
+
+	hautSens1.setPosition(Vector2f(0.f, 0.f));
+	hautInvers1.setPosition(Vector2f(1622.f, 0.f));
+	hautSens2.setPosition(Vector2f(3244.f, 0.f));
+	hautInvers2.setPosition(Vector2f(4866.f, 0.f));
 }
 
 void Game::initWindow()
@@ -74,8 +115,8 @@ void Game::entityRender()
 
 Game::Game() : currentState(MENU), isPaused(false)
 {
-	//this->initSprite();
-	//this->initTexture();
+	this->initSprite();
+	this->initTexture();
 	this->initWindow();
 	this->initPlayer();
 	this->initScore();
@@ -302,6 +343,7 @@ void Game::handleMenu()
 		mainMenu.render(*window);
 	}
 	else if (currentState == GameState::PLAYING) {
+		this->renderNiveau1();
 		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 			isPaused = true;
 		}
@@ -341,6 +383,7 @@ void Game::update()
 		}
 	}
 	handleMenuState();
+	fonduNiveau1();
 
 	if (player->isDead()) {
 		cout << "Game over";
@@ -356,6 +399,63 @@ void Game::render()
 	this->handleMenu();
 	this->window ->display();
 
+}
+
+void Game::fonduNiveau1()
+{
+	float depop = 1622.f;
+
+	if (basSens1.getPosition().x <= -depop) {
+		basSens1.setPosition(basInvers2.getPosition().x + depop, basSens1.getPosition().y);
+	}
+	if (basInvers1.getPosition().x <= -depop) {
+		basInvers1.setPosition(basSens1.getPosition().x + depop, basInvers1.getPosition().y);
+	}
+	if (basSens2.getPosition().x <= -depop) {
+		basSens2.setPosition(basInvers1.getPosition().x + depop, basSens2.getPosition().y);
+	}
+	if (basInvers2.getPosition().x <= -depop) {
+		basInvers2.setPosition(basSens2.getPosition().x + depop, basSens2.getPosition().y);
+	}
+
+
+	if (hautSens1.getPosition().x <= -depop) {
+		hautSens1.setPosition(hautInvers2.getPosition().x + depop, hautSens1.getPosition().y);
+	}
+	if (hautInvers1.getPosition().x <= -depop) {
+		hautInvers1.setPosition(hautSens1.getPosition().x + depop, hautInvers1.getPosition().y);
+	}
+	if (hautSens2.getPosition().x <= -depop) {
+		hautSens2.setPosition(hautInvers1.getPosition().x + depop, hautSens2.getPosition().y);
+	}
+	if (hautInvers2.getPosition().x <= -depop) {
+		hautInvers2.setPosition(hautSens2.getPosition().x + depop, hautInvers2.getPosition().y);
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	basSens1.move(Vector2f(-10, 0.f));
+	basSens2.move(Vector2f(-10, 0.f));
+	basInvers1.move(Vector2f(-10, 0.f));
+	basInvers2.move(Vector2f(-10, 0.f));
+	hautSens1.move(Vector2f(-3, 0.f));
+	hautSens2.move(Vector2f(-3, 0.f));
+	hautInvers1.move(Vector2f(-3, 0.f));
+	hautInvers2.move(Vector2f(-3, 0.f));
+
+
+}
+
+void Game::renderNiveau1()
+{
+	this->window->draw(basSens1);
+	this->window->draw(basSens2);
+	this->window->draw(basInvers1);
+	this->window->draw(basInvers2);
+	this->window->draw(hautSens1);
+	this->window->draw(hautSens2);
+	this->window->draw(hautInvers1);
+	this->window->draw(hautInvers2);
 }
 
 

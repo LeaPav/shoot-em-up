@@ -39,6 +39,26 @@ private:
 	Sprite spriteMap;
 	Texture texture;
 
+	//Texture niveau 1
+	Texture bas_Sens1;
+	Texture bas_invers1;
+	Texture bas_Sens2;
+	Texture bas_invers2;
+	Texture haut_sens1;
+	Texture haut_invers1;
+	Texture haut_sens2;
+	Texture haut_invers2;
+
+
+	Sprite basSens1;
+	Sprite basInvers1;
+	Sprite basSens2;
+	Sprite basInvers2;
+	Sprite hautSens1;
+	Sprite hautInvers1;
+	Sprite hautSens2;
+	Sprite hautInvers2;
+
 	//vectors des entités 
 	vector<Ennemy*> ennemies;
 	vector<Projectile*> projectilesPlayer;
@@ -70,6 +90,9 @@ public:
 
 	void update();
 	void render();
+
+	void fonduNiveau1();
+	void renderNiveau1();
 
 };
 
