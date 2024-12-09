@@ -12,7 +12,7 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f)
+Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(3)
 {
 	initSprite();
 }
@@ -34,7 +34,6 @@ void Ennemy::movement(int dx, int dy)
 		break;
 	case DIAGONAL:
 		recEnnemy.move(-10.f, 5.f);
-		
 		break;
 	}
 
@@ -67,7 +66,33 @@ void Ennemy::render(RenderTarget& target)
 	target.draw(recEnnemy);
 }
 
+int Ennemy::getHp() const
+{
+	return hp;
+}
+
+const Vector2f Ennemy::getPosition() const
+{
+	return this->sprite.getPosition();
+}
+
+bool Ennemy::isDead() const
+{
+	return this->hp <= 0;
+}
+
+void Ennemy::damage(int damages)
+{
+	this->hp -= damages;
+	if (this->hp <= 0) this->hp = 0;
+}
+
 bool Ennemy::destroy()
 {
 	return isOutOfScreen;
+}
+
+FloatRect Ennemy::getGlobalBounds() const
+{
+	return this->recEnnemy.getGlobalBounds();
 }

@@ -8,16 +8,34 @@ void Player::initSprite()
 	recPlayer.setFillColor(Color::Red);
 	recPlayer.setPosition(10,10);
 
+	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
+		cout << "ERREUR";
+	}
+
 }
 
 void Player::initTexture()
 {
-
+	this->sprite.setTexture(vaisseau);
+	this->sprite.setPosition(10, 10);
 }
 
-Player::Player()
+void Player::initHealthBar()
 {
-	initSprite();
+	this->maxHp = 3;
+	this->hp = this->maxHp;
+	this->healthBar.setSize(Vector2f(200.f, 20.f));
+	this->healthBar.setFillColor(Color(102, 255, 102));
+
+	this->backgroundHealthBar.setSize(Vector2f(200.f, 20.f));
+	this->backgroundHealthBar.setFillColor(Color(117, 117, 117));
+}
+
+Player::Player() 
+{
+	this->initHealthBar();
+	this->initSprite();
+	this->initTexture();
 }
 
 void Player::movement(int dx, int dy)
@@ -30,27 +48,32 @@ void Player::setPosition(const float x, const float y)
 
 }
 
+const Vector2f Player::getPosition() const
+{
+	return this->sprite.getPosition();
+}
+
 void Player::playerCollisions()
 {
-	FloatRect playerBounds = recPlayer.getGlobalBounds();
+	FloatRect playerBounds = sprite.getGlobalBounds();
 
 	//Collisions avec la droite
 	if (playerBounds.getPosition().x + playerBounds.width > 1920) {
-		recPlayer.setPosition(1920 - playerBounds.width, playerBounds.getPosition().y);
+		sprite.setPosition(1920 - playerBounds.width, playerBounds.getPosition().y);
 	}
 
 	//Collisions avec la gauche
 	if (playerBounds.getPosition().x < 0) {
-		recPlayer.setPosition(0, playerBounds.getPosition().y);
+		sprite.setPosition(0, playerBounds.getPosition().y);
 	}
 	//Collisions avec le haut
 	if (playerBounds.getPosition().y < 0) {
-		recPlayer.setPosition(playerBounds.getPosition().x, 0);
+		sprite.setPosition(playerBounds.getPosition().x, 0);
 	}
 
 	// Collisions avec le bas
 	if (playerBounds.getPosition().y + playerBounds.height > 1080) {
-		recPlayer.setPosition(playerBounds.getPosition().x, 1080 - playerBounds.height);
+		sprite.setPosition(playerBounds.getPosition().x, 1080 - playerBounds.height);
 	}
 }
 
@@ -58,28 +81,62 @@ void Player::playerMovement()
 {
 	playerCollisions();
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
-		recPlayer.move(8.f, 0.f);
+		sprite.move(8.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Q)) {
-		recPlayer.move(-12.f, 0.f);
+		sprite.move(-12.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		recPlayer.move(0.f, -8.f);
+		sprite.move(0.f, -8.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		recPlayer.move(0.f, 8.f);
+		sprite.move(0.f, 8.f);
 	}
 	
+}
+
+void Player::damage(int damages)
+{
+	this->hp -= damages;
+	if (this->hp < 0)
+		this->hp = 0;
+}
+
+bool Player::isDead() const
+{
+	return this->hp <= 0;
 }
 
 
 void Player::playerUpdate()
 {
 	playerCollisions();
+	playerMovement();
 }
 
 void Player::render(RenderTarget& target)
 {
-	playerMovement();
-	target.draw(recPlayer);
+	target.draw(this->sprite);
+}
+
+void Player::udpateHealthBar()
+{
+	float healthPercentage = static_cast<float>(this->hp) / static_cast<float>(this->maxHp);
+	this->healthBar.setSize(Vector2f(200.f * healthPercentage, 20.f));
+}
+
+void Player::renderHealthBar(RenderTarget& target)
+{
+	this->backgroundHealthBar.setPosition(10.f, 1050.f);
+	this->healthBar.setPosition(10.f, 1050.f);
+
+	target.draw(this->backgroundHealthBar);
+	target.draw(this->healthBar);
+
+}
+
+FloatRect Player::getGlobalBounds() const
+{
+	return this->sprite.getGlobalBounds();
+
 }
