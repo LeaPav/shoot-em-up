@@ -84,7 +84,7 @@ void Game::createEnnemy()
 	
 	MovementType randomType = static_cast<MovementType>(rand() % 3);
 
-	Ennemy* newEnnemy = new Ennemy(randomType, 3, 0, 30, false); // mouvement, life, cooldown, firerate, passif
+	Ennemy* newEnnemy = new Ennemy(randomType, 1, 0, 30, false); // mouvement, life, cooldown, firerate, passif
 	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
 	if (newEnnemy->destroy()) {
 		delete newEnnemy;
