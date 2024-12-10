@@ -319,6 +319,7 @@ void Game::handleMenuState(Event& event)
 			currentState = GameState::PLAYING;
 			break;
 		case 3: currentState = GameState::MENU;
+			mainMenu.resetCooldown();
 			break;
 		}
 		
