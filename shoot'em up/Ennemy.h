@@ -5,6 +5,7 @@
 
 enum MovementType {
 	STRAIGHT,
+	STRAIGHT_FAST,
 	DIAGONAL,
 	SINUSOIDAL
 };

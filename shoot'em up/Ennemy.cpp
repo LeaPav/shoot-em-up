@@ -33,6 +33,9 @@ void Ennemy::movement(int dx, int dy)
 	case STRAIGHT:
 		recEnnemy.move(-10.f, 0.f);
 		break;
+	case STRAIGHT_FAST:
+		recEnnemy.move(-20.f, 0.f);
+		break;
 	case DIAGONAL:
 		if (recEnnemy.getPosition().x <= 1000) {
 			recEnnemy.move(-5.f, 5.f);
