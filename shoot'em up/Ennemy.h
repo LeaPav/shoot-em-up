@@ -6,8 +6,9 @@
 enum MovementType {
 	STRAIGHT,
 	STRAIGHT_FAST,
+	DIAGONAL_INVERSE,
 	DIAGONAL,
-	SINUSOIDAL
+	
 };
 
 class Ennemy : public Entity
