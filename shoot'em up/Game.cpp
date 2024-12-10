@@ -81,15 +81,114 @@ void Game::initScore()
 
 void Game::createEnnemy()
 {
+	int random = rand() % 3;
+	static int nmbGrp;
 	
-	MovementType randomType = static_cast<MovementType>(rand() % 3);
+	if (random == 1) {
 
-	Ennemy* newEnnemy = new Ennemy(randomType, 3, 0, 30, false); // mouvement, life, cooldown, firerate, passif
-	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
-	if (newEnnemy->destroy()) {
-		delete newEnnemy;
+		int largeur = rand() % this->videoMode.height;
+
+		Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy1->setPosition(1920, largeur);
+		if (newEnnemy1->destroy()) {
+			delete newEnnemy1;
+		}
+		ennemies.push_back(newEnnemy1);
+
+		Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy2->setPosition(1920 + 75, largeur + 75);
+		if (newEnnemy2->destroy()) {
+			delete newEnnemy2;
+		}
+		ennemies.push_back(newEnnemy2);
+
+		Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy3->setPosition(1920 + 75, largeur - 75);
+		if (newEnnemy3->destroy()) {
+			delete newEnnemy3;
+		}
+		ennemies.push_back(newEnnemy3);
+
+		nmbGrp += 1;
+		cout << nmbGrp << endl;
+		cout << random << endl;
 	}
-	ennemies.push_back(newEnnemy);
+	if (random == 2) {
+
+		int largeur = rand() % this->videoMode.height;
+
+		Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, 1, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+		newEnnemy1->setPosition(1920, largeur);
+		if (newEnnemy1->destroy()) {
+			delete newEnnemy1;
+		}
+		ennemies.push_back(newEnnemy1);
+
+		Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, 1, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+		newEnnemy2->setPosition(1920, largeur + 80);
+		if (newEnnemy2->destroy()) {
+			delete newEnnemy2;
+		}
+		ennemies.push_back(newEnnemy2);
+
+		Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, 1, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+		newEnnemy3->setPosition(1920, largeur - 80);
+		if (newEnnemy3->destroy()) {
+			delete newEnnemy3;
+		}
+		ennemies.push_back(newEnnemy3);
+
+		nmbGrp += 1;
+		cout << nmbGrp << endl;
+		cout << random << endl;
+	}
+	if (score > 20) {
+		random += 1;
+	}
+	if (random == 3) {
+
+		int largeur = rand() % this->videoMode.height;
+
+		Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy1->setPosition(1920, largeur);
+		if (newEnnemy1->destroy()) {
+			delete newEnnemy1;
+		}
+		ennemies.push_back(newEnnemy1);
+
+		Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy2->setPosition(1920 + 75, largeur + 75);
+		if (newEnnemy2->destroy()) {
+			delete newEnnemy2;
+		}
+		ennemies.push_back(newEnnemy2);
+
+		Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy3->setPosition(1920 + 75, largeur - 75);
+		if (newEnnemy3->destroy()) {
+			delete newEnnemy3;
+		}
+		ennemies.push_back(newEnnemy3);
+
+		Ennemy* newEnnemy4 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy4->setPosition(1920 + 150, largeur + 150);
+		if (newEnnemy4->destroy()) {
+			delete newEnnemy4;
+		}
+		ennemies.push_back(newEnnemy3);
+
+		Ennemy* newEnnemy5 = new Ennemy(STRAIGHT, 1, 0, 90, false); // mouvement, life, cooldown, firerate, passif
+		newEnnemy5->setPosition(1920 + 150, largeur - 150);
+		if (newEnnemy5->destroy()) {
+			delete newEnnemy5;
+		}
+		ennemies.push_back(newEnnemy5);
+
+		nmbGrp += 1;
+		cout << nmbGrp << endl;
+		cout << random << endl;
+	}
+
 }
 
 void Game::createProjectiles(float x, float y)

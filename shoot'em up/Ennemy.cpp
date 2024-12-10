@@ -34,11 +34,16 @@ void Ennemy::movement(int dx, int dy)
 		recEnnemy.move(-10.f, 0.f);
 		break;
 	case DIAGONAL:
-		recEnnemy.move(-10.f, 5.f);
+		if (recEnnemy.getPosition().x <= 1000) {
+			recEnnemy.move(-5.f, 5.f);
+		}
+		else {
+			recEnnemy.move(-10.f, 0.f);
+		}
 		break;
 	case SINUSOIDAL:
 		recEnnemy.move(-5.f, amplitude * sin(frequency * timeElapsed));
-		timeElapsed += 0.1f;
+		timeElapsed += 1;
 		break;
 	}
 
