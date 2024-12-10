@@ -139,59 +139,75 @@ void Menu::initCommandsButton()
 	returnButton.setCharacterSize(50);
 	returnButton.setPosition(1650.f, 985.f);
 }
-int Menu::handleInputMainMenu(RenderWindow& window)
+int Menu::handleInputMainMenu(RenderWindow& window, const Event& event)
 {
-	if (Mouse::isButtonPressed(Mouse::Left)) {
-		Vector2i mousePos = Mouse::getPosition(window);
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
 
+			if (playButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (optionsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (editorButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
+			if (quitButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
+		}
 		
-		if (playButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 1;
-		}
-		if (optionsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 2;
-		}
-		if (editorButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 3;
-		}
-		if (quitButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 4;
-		}
 
 	}
 	return 0;
 }
-int Menu::handleInputMenuOptions(RenderWindow& window)
+int Menu::handleInputMenuOptions(RenderWindow& window, const Event& event)
 {
-	if (Mouse::isButtonPressed(Mouse::Left)) {
-		Vector2i mousePos = Mouse::getPosition(window);
-		if (commandsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 1;
-		}
-		if (settingsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 2;
-		}
-		if (difficultyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 3;
-		}
-		if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 4;
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (commandsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (settingsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (difficultyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				return 3;
+			}
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
 		}
 	}
 	return 0;
 }
-int Menu::handleInputPauseMenu(RenderWindow& window)
+int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event)
 {
-	if (Mouse::isButtonPressed(Mouse::Left)) {
-		Vector2i mousePos = Mouse::getPosition(window);
-		if (resumeButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 1;
-		}
-		if (settingsPauseButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 2;
-		}
-		if (returnToMainMenuButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 3;
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (resumeButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (settingsPauseButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (returnToMainMenuButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
 		}
 	}
 	return 0;
@@ -351,5 +367,15 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	else {
 		returnToMainMenuButton.setFillColor(Color::White);
 	}
+}
+
+bool Menu::isCooldownActive()
+{
+	return mouseCooldownClock.getElapsedTime() < mouseCooldown;
+}
+
+void Menu::resetCooldown()
+{
+	mouseCooldownClock.restart();
 }
 

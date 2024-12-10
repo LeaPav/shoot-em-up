@@ -87,7 +87,7 @@ public:
 	void shootEnnemy();
 
 	// Menu
-	void handleMenuState();
+	void handleMenuState(Event& event);
 	void handleMenu();
 	void handleMenuPause();
 	void renderMenuPause();

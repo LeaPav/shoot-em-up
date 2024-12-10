@@ -284,11 +284,11 @@ void Game::shootEnnemy()
 	}
 }
 
-void Game::handleMenuState()
+void Game::handleMenuState(Event& event)
 {
 	if (currentState == GameState::MENU) {
 		mainMenu.handleMouseHover(*window);
-		int action = mainMenu.handleInputMainMenu(*window);
+		int action = mainMenu.handleInputMainMenu(*window, event);
 
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
@@ -312,7 +312,7 @@ void Game::handleMenuState()
 	}
 	if (currentState == GameState::PAUSE) {
 		pauseMenu.handleMouseHover(*window); 
-		int mouseAction = pauseMenu.handleInputPauseMenu(*window);
+		int mouseAction = pauseMenu.handleInputPauseMenu(*window, event);
 
 		switch (mouseAction) {
 		case 1: 
@@ -325,7 +325,7 @@ void Game::handleMenuState()
 	}
 	if (currentState == GameState::OPTIONS) {
 		mainMenu.handleMouseHover(*window);
-		int optionsAction = mainMenu.handleInputMenuOptions(*window);
+		int optionsAction = mainMenu.handleInputMenuOptions(*window, event);
 
 		switch (optionsAction) {
 		case 1: currentState = GameState::COMMANDS;
@@ -336,7 +336,7 @@ void Game::handleMenuState()
 	}
 	if (currentState == GameState::COMMANDS) {
 		mainMenu.handleMouseHover(*window);
-		int actionCommands = mainMenu.handleInputMenuOptions(*window);
+		int actionCommands = mainMenu.handleInputMenuOptions(*window, event);
 
 		switch (actionCommands) {
 		case 4: currentState = GameState::OPTIONS;
@@ -350,14 +350,14 @@ void Game::handleMenu()
 	if (currentState == GameState::MENU) {
 		mainMenu.render(*window);
 	}
-	else if (currentState == GameState::PLAYING) {
+	if (currentState == GameState::PLAYING) {
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
 		this->projectileRender();
 		this->window->draw(textScore);
 	}
-	else if (currentState == GameState::PAUSE) {
+	if (currentState == GameState::PAUSE) {
 		pauseMenu.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
@@ -366,14 +366,15 @@ void Game::handleMenu()
 		this->window->draw(textScore);
 		this->renderMenuPause();
 	}
-	else if (currentState == GameState::OPTIONS) {
+	if (currentState == GameState::OPTIONS) {
+		mainMenu.handleMouseHover(*window);
 		mainMenu.renderOptions(*window);
 	}
-	else if (currentState == GameState::EDITOR) {
-		//mainMenu.handleMouseHover(*window);
+	if (currentState == GameState::EDITOR) {
+		mainMenu.handleMouseHover(*window);
 		mainMenu.renderEditor(*window);
 	}
-	else if (currentState == GameState::COMMANDS) {
+	if (currentState == GameState::COMMANDS) {
 		mainMenu.renderCommands(*window);
 	}
 }
@@ -404,7 +405,7 @@ void Game::renderMenuPause()
 void Game::update()
 {
 	Event event;
-	handleMenuState();
+	//handleMenuState(event);
 	while (this->window->pollEvent(event)) {
 
 		if (event.type == Event::Closed)
@@ -432,6 +433,7 @@ void Game::update()
 		this->window->close();
 		return;
 	}
+	handleMenuState(event);
 	
 }
 

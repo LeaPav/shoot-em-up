@@ -47,6 +47,9 @@ private:
 	Texture optionsTexture;
 	int indexButtonSelected;
 
+	Clock mouseCooldownClock;
+	const Time mouseCooldown = milliseconds(200);
+
 	int initFont();
 	int initBackground();
 	void initButton();
@@ -55,9 +58,9 @@ private:
 public:
 	Menu();
 
-	int handleInputMainMenu(RenderWindow& window);
-	int handleInputMenuOptions(RenderWindow& window);
-	int handleInputPauseMenu(RenderWindow& window);
+	int handleInputMainMenu(RenderWindow& window, const Event& event);
+	int handleInputMenuOptions(RenderWindow& window, const Event& event);
+	int handleInputPauseMenu(RenderWindow& window, const Event& event);
 
 	void render(RenderWindow& window);
 	void renderOptions(RenderWindow& window);
@@ -67,5 +70,8 @@ public:
 	void renderSettingsPauseMenu(RenderWindow& window);
 	void setBackground(const string& backgroundImage);
 	void handleMouseHover(const RenderWindow& window);
+
+	bool isCooldownActive();
+	void resetCooldown();
 };
 
