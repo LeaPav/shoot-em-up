@@ -76,6 +76,11 @@ int Ennemy::getHp() const
 	return hp;
 }
 
+bool Ennemy::getPassif() const
+{
+	return canShootVerif;
+}
+
 const Vector2f Ennemy::getPosition() const
 {
 	return this->recEnnemy.getPosition();

@@ -84,7 +84,7 @@ void Game::createEnnemy()
 	
 	MovementType randomType = static_cast<MovementType>(rand() % 3);
 
-	Ennemy* newEnnemy = new Ennemy(randomType, 3, 0, 30); // mouvement, life, cooldown, firerate
+	Ennemy* newEnnemy = new Ennemy(randomType, 3, 0, 30, false); // mouvement, life, cooldown, firerate, passif
 	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
 	if (newEnnemy->destroy()) {
 		delete newEnnemy;
@@ -103,7 +103,7 @@ void Game::createProjectilesEnnemy(float x, float y)
 	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
 	projectilesEnnemy.push_back(newProjectile);
 
-	std::cout << "Projectile créé à (" << x << ", " << y << ")" << std::endl;
+	//std::cout << "Projectile créé à (" << x << ", " << y << ")" << std::endl;
 }
 
 void Game::entityRender()
@@ -275,7 +275,7 @@ void Game::shootEnnemy()
 	for (auto& ennemy : ennemies) {
 		ennemy->update();
 		ennemy->updateShootCooldown();
-		if (ennemy->canShoot()) {
+		if (ennemy->canShoot() && !ennemy->getPassif()) {
 			float ennemyX = ennemy->getPosition().x - 37.f;
 			float ennemyY = ennemy->getPosition().y + 37.f;
 			createProjectilesEnnemy(ennemyX, ennemyY);
