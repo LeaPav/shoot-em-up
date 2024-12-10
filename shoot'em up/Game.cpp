@@ -69,7 +69,7 @@ void Game::initWindow()
 
 void Game::initScore()
 {
-	if (!font.loadFromFile("assets/test.ttf")) {
+	if (!font.loadFromFile("assets/font/test.ttf")) {
 		cout << "ERREUR";
 	}
 	textScore.setFont(font);
@@ -235,7 +235,7 @@ void Game::checkCollisions()
 
 	projectilesEnnemy.erase(remove_if(projectilesEnnemy.begin(), projectilesEnnemy.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
-			cout << "Suppression d'un projectile ennemi" << endl;
+			//cout << "Suppression d'un projectile ennemi" << endl;
 			delete p;
 			return true;
 		}
@@ -302,13 +302,26 @@ void Game::handleMenuState()
 			break;
 		}	
 	}
-	else if (currentState == GameState::PLAYING) {
+	if (currentState == GameState::PLAYING) {
 			this->playerUpdate();
 			this->ennemyUpdate();
 			this->projectileUpdate();
 			this->checkCollisions();
 			this->shoot();
 			this->fonduNiveau1();
+	}
+	if (currentState == GameState::PAUSE) {
+		pauseMenu.handleMouseHover(*window); 
+		int mouseAction = pauseMenu.handleInputPauseMenu(*window);
+
+		switch (mouseAction) {
+		case 1: 
+			currentState = GameState::PLAYING;
+			break;
+		case 3: currentState = GameState::MENU;
+			break;
+		}
+		
 	}
 	if (currentState == GameState::OPTIONS) {
 		mainMenu.handleMouseHover(*window);
@@ -345,6 +358,7 @@ void Game::handleMenu()
 		this->window->draw(textScore);
 	}
 	else if (currentState == GameState::PAUSE) {
+		pauseMenu.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
@@ -364,26 +378,25 @@ void Game::handleMenu()
 	}
 }
 
+void Game::handleMenuPause()
+{
+
+}
+
 void Game::renderMenuPause()
 {
-	if (!font.loadFromFile("assets/test.ttf")) {
-		cout << "ERREUR";
-	}
+//	pauseMenu.handleMouseHover(*window);
+
+
 	RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
 	overlayTest.setFillColor(Color(0, 0, 0, 125));
 	//his->window->draw(overlayTest);
 	RectangleShape test(Vector2f(200.f, 40.f));
 	//this->window->draw(test);
 
-	reprendre.setFont(font);
-	reprendre.setPosition(0, 0);
-	reprendre.setCharacterSize(24);
-	reprendre.setFillColor(Color::Red);
-	reprendre.setString("Reprendre");
-
 	this->window->draw(overlayTest);
-	this->window->draw(test);
-	this->window->draw(reprendre);
+	pauseMenu.renderPauseMenu(*window);
+
 	
 }
 
@@ -391,8 +404,9 @@ void Game::renderMenuPause()
 void Game::update()
 {
 	Event event;
-
+	handleMenuState();
 	while (this->window->pollEvent(event)) {
+
 		if (event.type == Event::Closed)
 			this->window->close();
 		if (Keyboard::isKeyPressed(Keyboard::J)) {
@@ -412,15 +426,13 @@ void Game::update()
 		}
 	}
 
-	if (!isPaused) {
-		handleMenuState();
-		if (player->isDead()) {
-			cout << "Game over";
-			this->window->close();
-			return;
-		}
+	
+	if (player->isDead()) {
+		cout << "Game over";
+		this->window->close();
+		return;
 	}
-
+	
 }
 
 void Game::render()

@@ -11,7 +11,11 @@ Menu::Menu() : indexButtonSelected(0)
 
 int Menu::initFont()
 {
-	if (!font.loadFromFile("assets/test.ttf")) {
+	if (!fontMainMenu.loadFromFile("assets/font/test.ttf")) {
+		return -1;
+	}
+
+	if (!fontPauseMenu.loadFromFile("assets/font/fontpause.ttf")) {
 		return -1;
 	}
 }
@@ -47,24 +51,24 @@ void Menu::initButton()
 	quitButtonRect.setFillColor(Color(165, 191, 208));
 	quitButtonRect.setPosition(705.f, 735.f);
 
-	playButton.setFont(this->font);
+	playButton.setFont(this->fontMainMenu);
 	playButton.setString("JOUER");
 	playButton.setCharacterSize(50);
 	playButton.setPosition(870.f, 300.f);
 
-	optionsButton.setFont(this->font);
+	optionsButton.setFont(this->fontMainMenu);
 	optionsButton.setString("OPTIONS");
 	optionsButton.setCharacterSize(50);
 	optionsButton.setFillColor(Color::White);
 	optionsButton.setPosition(860.f, 455.f);
 
-	editorButton.setFont(this->font);
+	editorButton.setFont(this->fontMainMenu);
 	editorButton.setString("EDITEUR DE NIVEAU");
 	editorButton.setCharacterSize(50);
 	editorButton.setFillColor(Color::White);
 	editorButton.setPosition(765.f, 600.f);
 
-	quitButton.setFont(this->font);
+	quitButton.setFont(this->fontMainMenu);
 	quitButton.setString("QUITTER");
 	quitButton.setCharacterSize(50);
 	quitButton.setFillColor(Color::White);
@@ -88,25 +92,41 @@ void Menu::initOptionsButton()
 	returnButtonRect.setFillColor(Color(165, 191, 208));
 	returnButtonRect.setPosition(1550.f, 980.f);
 
-	commandsButton.setFont(this->font);
+	commandsButton.setFont(this->fontMainMenu);
 	commandsButton.setString("COMMANDES");
 	commandsButton.setCharacterSize(50);
 	commandsButton.setPosition(870.f, 300.f);
 
-	settingsButton.setFont(this->font);
+	settingsButton.setFont(this->fontMainMenu);
 	settingsButton.setString("PARAMÈTRES");
 	settingsButton.setCharacterSize(50);
 	settingsButton.setPosition(870.f, 455.f);
 
-	difficultyButton.setFont(this->font);
+	difficultyButton.setFont(this->fontMainMenu);
 	difficultyButton.setString("DIFFICULTÉ");
 	difficultyButton.setCharacterSize(50);
 	difficultyButton.setPosition(870.f, 600.f);
 
-	returnButton.setFont(this->font);
+	returnButton.setFont(this->fontMainMenu);
 	returnButton.setString("RETOUR");
 	returnButton.setCharacterSize(50);
 	returnButton.setPosition(1650.f, 985.f);
+
+	resumeButton.setFont(fontPauseMenu);
+	resumeButton.setPosition(870, 400);
+	resumeButton.setCharacterSize(28);
+	resumeButton.setString("Reprendre");
+
+	settingsPauseButton.setFont(fontPauseMenu);
+	settingsPauseButton.setPosition(870, 500);
+	settingsPauseButton.setCharacterSize(28);
+	settingsPauseButton.setString("Paramètres");
+
+	returnToMainMenuButton.setFont(fontPauseMenu);
+	returnToMainMenuButton.setPosition(870, 600);
+	returnToMainMenuButton.setCharacterSize(28);
+	returnToMainMenuButton.setString("Retour au menu");
+
 }
 void Menu::initCommandsButton()
 {
@@ -114,7 +134,7 @@ void Menu::initCommandsButton()
 	returnButtonRect.setFillColor(Color(165, 191, 208));
 	returnButtonRect.setPosition(1550.f, 980.f);
 
-	returnButton.setFont(this->font);
+	returnButton.setFont(this->fontMainMenu);
 	returnButton.setString("RETOUR");
 	returnButton.setCharacterSize(50);
 	returnButton.setPosition(1650.f, 985.f);
@@ -160,6 +180,22 @@ int Menu::handleInputMenuOptions(RenderWindow& window)
 	}
 	return 0;
 }
+int Menu::handleInputPauseMenu(RenderWindow& window)
+{
+	if (Mouse::isButtonPressed(Mouse::Left)) {
+		Vector2i mousePos = Mouse::getPosition(window);
+		if (resumeButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			return 1;
+		}
+		if (settingsPauseButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			return 2;
+		}
+		if (returnToMainMenuButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			return 3;
+		}
+	}
+	return 0;
+}
 void Menu::render(RenderWindow& window)
 {
 
@@ -199,7 +235,7 @@ void Menu::renderCommands(RenderWindow& window)
 {
 	window.draw(optionsBackground);
 	Text text;
-	text.setFont(font);
+	text.setFont(fontMainMenu);
 	text.setCharacterSize(40);
 	text.setFillColor(Color::White);
 	text.setPosition(750, 200);
@@ -208,6 +244,18 @@ void Menu::renderCommands(RenderWindow& window)
 
 	window.draw(returnButtonRect);
 	window.draw(returnButton);
+}
+
+void Menu::renderPauseMenu(RenderWindow& window)
+{
+	window.draw(resumeButton);
+	window.draw(settingsPauseButton);
+	window.draw(returnToMainMenuButton);
+}
+
+void Menu::renderSettingsPauseMenu(RenderWindow& window)
+{
+
 }
 
 
@@ -284,6 +332,24 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	else {
 		returnButtonRect.setFillColor(Color(165, 191, 208));
 		returnButton.setFillColor(Color::White);
+	}
+	if (resumeButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		resumeButton.setFillColor(Color(218, 218, 218));
+	}
+	else {
+		resumeButton.setFillColor(Color::White);
+	}
+	if (settingsPauseButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		settingsPauseButton.setFillColor(Color(218, 218, 218));
+	}
+	else {
+		settingsPauseButton.setFillColor(Color::White);
+	}
+	if (returnToMainMenuButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		returnToMainMenuButton.setFillColor(Color(218, 218, 218));
+	}
+	else {
+		returnToMainMenuButton.setFillColor(Color::White);
 	}
 }
 
