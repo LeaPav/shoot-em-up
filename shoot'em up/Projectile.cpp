@@ -2,7 +2,7 @@
 
 void Projectile::initProjectiles()
 {
-	projectile.setSize(Vector2f(25.f, 25.f));
+	projectile.setSize(Vector2f(40.f, 20.f));
 	projectile.setFillColor(Color::Blue);
 }
 

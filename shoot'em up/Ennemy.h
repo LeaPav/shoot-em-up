@@ -24,7 +24,7 @@ private:
 	int fireRate;
 	Vector2f velocity;
 public:
-	Ennemy(MovementType type = STRAIGHT);
+	Ennemy(MovementType type = STRAIGHT, int life =1);
 
 	~Ennemy();
 	void movement(int dx, int dy) override;

@@ -84,7 +84,7 @@ void Game::createEnnemy()
 	
 	MovementType randomType = static_cast<MovementType>(rand() % 3);
 
-	Ennemy* newEnnemy = new Ennemy(randomType);
+	Ennemy* newEnnemy = new Ennemy(randomType, 3);
 	newEnnemy->setPosition(1920, rand() % this->videoMode.height);
 	if (newEnnemy->destroy()) {
 		delete newEnnemy;
@@ -161,25 +161,12 @@ void Game::ennemyUpdate()
 	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
 	const int spawnInterval = 60;
 
-	static int cooldownShoot = 0;
-	const int fireRate = 50;
-
 	timer++;
 	if (timer >= spawnInterval) {
 		this->createEnnemy();
 		timer = 0;
 	}
-
-	for (auto& ennemy : ennemies) {
-		ennemy->update();
-		ennemy->updateShootCooldown();
-		if (ennemy->canShoot()) {
-			float ennemyX = ennemy->getPosition().x - 37.f;
-			float ennemyY = ennemy->getPosition().y + 37.f;
-			createProjectilesEnnemy(ennemyX, ennemyY);
-			ennemy->resetShootCooldown();
-		}
-	}
+	this->shootEnnemy();
 }
 
 void Game::projectileRender()
@@ -280,6 +267,20 @@ void Game::shoot()
 	}
 	if (cooldownShoot > 0) {
 			cooldownShoot--;
+	}
+}
+
+void Game::shootEnnemy()
+{
+	for (auto& ennemy : ennemies) {
+		ennemy->update();
+		ennemy->updateShootCooldown();
+		if (ennemy->canShoot()) {
+			float ennemyX = ennemy->getPosition().x - 37.f;
+			float ennemyY = ennemy->getPosition().y + 37.f;
+			createProjectilesEnnemy(ennemyX, ennemyY);
+			ennemy->resetShootCooldown();
+		}
 	}
 }
 

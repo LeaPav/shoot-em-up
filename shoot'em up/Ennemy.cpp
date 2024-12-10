@@ -12,7 +12,7 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(1)
+Ennemy::Ennemy(MovementType type, int life) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false)
 {
 	shootCooldown = 0;
 	fireRate = 30;
@@ -26,10 +26,6 @@ Ennemy::~Ennemy()
 
 void Ennemy::movement(int dx, int dy)
 {
-
-	/*if (speedEnnemy.getPosition().x < 1000) {
-		recEnnemy.move(-5.f, -10.f);
-	}*/
 
 	float frequency = 2.f;
 	float amplitude = 50.f;
@@ -104,11 +100,6 @@ bool Ennemy::destroy()
 
 bool Ennemy::canShoot()
 {
-	
-	/*if (this->recEnnemy.getPosition().x < 1920 || this->recEnnemy.getPosition().x > 0 ||
-		this->recEnnemy.getPosition().y < 1080 || this->recEnnemy.getPosition().y > 0) {
-		return true;
-	}*/
 	return shootCooldown <= 0;
 }
 
