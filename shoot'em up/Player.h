@@ -34,5 +34,8 @@ public:
 	void renderHealthBar(RenderTarget& target);
 	FloatRect getGlobalBounds() const;
 
+	int getHealth() const;
+	void reset();
+
 };
 

@@ -13,6 +13,7 @@ public:
 		OPTIONS,
 		COMMANDS,
 		EDITOR,
+		GAMEOVER,
 		PAUSE,
 		PLAYING
 	};
@@ -28,6 +29,7 @@ private:
 	void initTexture();
 	void initWindow();
 	void initScore();
+	void initGameOver();
 	void createEnnemy();
 	void createProjectiles(float x, float y);
 	void createProjectilesEnnemy(float x, float y);
@@ -72,6 +74,12 @@ private:
 	Menu pauseMenu;
 	GameState currentState;
 	bool isPaused;
+
+	//Game over
+	Font fontOver;
+	Text gameOverText;
+	Text retryButton;
+	Text mainMenuButton;
 public:
 	Game();
 	~Game();

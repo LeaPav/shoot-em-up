@@ -79,6 +79,31 @@ void Game::initScore()
 	textScore.setString(to_string(score));
 }
 
+void Game::initGameOver()
+{
+	if (!fontOver.loadFromFile("assets/font/test.ttf")) {
+		cout << "ERREUR";
+	}
+	gameOverText.setFont(fontOver);
+	gameOverText.setString("GAME OVER");
+	gameOverText.setCharacterSize(50);
+	gameOverText.setPosition(800, 200);
+	gameOverText.setFillColor(Color::Red);
+
+	retryButton.setFont(fontOver);
+	retryButton.setString("Rejouer");
+	retryButton.setCharacterSize(30);
+	retryButton.setPosition(800, 500);
+	retryButton.setFillColor(Color::White);
+
+	mainMenuButton.setFont(fontOver);
+	mainMenuButton.setString("Retour au menu");
+	mainMenuButton.setCharacterSize(30);
+	mainMenuButton.setPosition(800, 600);
+	mainMenuButton.setFillColor(Color::White);
+
+}
+
 void Game::createEnnemy()
 {
 	
@@ -123,6 +148,7 @@ Game::Game() : currentState(MENU), isPaused(false)
 	this->initWindow();
 	this->initPlayer();
 	this->initScore();
+	this->initGameOver();
 }
 
 Game::~Game()
@@ -378,6 +404,11 @@ void Game::handleMenu()
 	if (currentState == GameState::COMMANDS) {
 		mainMenu.renderCommands(*window);
 	}
+	if (currentState == GameState::GAMEOVER) {
+		window->draw(gameOverText);
+		window->draw(retryButton);
+		window->draw(mainMenuButton);
+	}
 }
 
 void Game::handleMenuPause()
@@ -426,13 +457,13 @@ void Game::update()
 				currentState = GameState::PLAYING;
 			}
 		}
+
 	}
 
 	
 	if (player->isDead()) {
-		cout << "Game over";
-		this->window->close();
-		return;
+		currentState = GameState::GAMEOVER;
+		
 	}
 	handleMenuState(event);
 	
