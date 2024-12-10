@@ -22,6 +22,7 @@ private:
 	Player* player;
 	Font font;
 	Text textScore;
+	Text reprendre;
 	//fonctions
 	int initSprite();
 	void initPlayer();
@@ -88,6 +89,7 @@ public:
 	// Menu
 	void handleMenuState();
 	void handleMenu();
+	void renderMenuPause();
 
 	void update();
 	void render();

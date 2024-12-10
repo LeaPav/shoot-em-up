@@ -12,7 +12,8 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy(MovementType type) : movementType(type), timeElapsed(0.f), isOutOfScreen(false), hp(1)
+Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false), 
+shootCooldown(cooldown), fireRate(rate), canShootVerif(passif)
 {
 	initSprite();
 }
@@ -25,15 +26,19 @@ Ennemy::~Ennemy()
 void Ennemy::movement(int dx, int dy)
 {
 
-	/*if (speedEnnemy.getPosition().x < 1000) {
-		recEnnemy.move(-5.f, -10.f);
-	}*/
+	float frequency = 2.f;
+	float amplitude = 50.f;
+
 	switch (movementType) {
 	case STRAIGHT:
 		recEnnemy.move(-10.f, 0.f);
 		break;
 	case DIAGONAL:
 		recEnnemy.move(-10.f, 5.f);
+		break;
+	case SINUSOIDAL:
+		recEnnemy.move(-5.f, amplitude * sin(frequency * timeElapsed));
+		timeElapsed += 0.1f;
 		break;
 	}
 
@@ -71,9 +76,14 @@ int Ennemy::getHp() const
 	return hp;
 }
 
+bool Ennemy::getPassif() const
+{
+	return canShootVerif;
+}
+
 const Vector2f Ennemy::getPosition() const
 {
-	return this->sprite.getPosition();
+	return this->recEnnemy.getPosition();
 }
 
 bool Ennemy::isDead() const
@@ -90,6 +100,22 @@ void Ennemy::damage(int damages)
 bool Ennemy::destroy()
 {
 	return isOutOfScreen;
+}
+
+bool Ennemy::canShoot()
+{
+	return shootCooldown <= 0;
+}
+
+void Ennemy::updateShootCooldown()
+{
+	if (shootCooldown > 0)
+		shootCooldown--;
+}
+
+void Ennemy::resetShootCooldown()
+{
+	shootCooldown = fireRate;
 }
 
 FloatRect Ennemy::getGlobalBounds() const
