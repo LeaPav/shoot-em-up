@@ -12,10 +12,9 @@ void Ennemy::initTexture()
 
 }
 
-Ennemy::Ennemy(MovementType type, int life) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false)
+Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false), 
+shootCooldown(cooldown), fireRate(rate), canShootVerif(passif)
 {
-	shootCooldown = 0;
-	fireRate = 30;
 	initSprite();
 }
 

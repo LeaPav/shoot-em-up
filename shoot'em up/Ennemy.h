@@ -19,12 +19,13 @@ private:
 	void initSprite();
 	void initTexture();
 	bool alive = true;
+	bool canShootVerif;
 	int hp;
 	int shootCooldown;
 	int fireRate;
 	Vector2f velocity;
 public:
-	Ennemy(MovementType type = STRAIGHT, int life =1);
+	Ennemy(MovementType type = STRAIGHT, int life =1, int cooldown = 0, int rate = 30, bool passif = false);
 
 	~Ennemy();
 	void movement(int dx, int dy) override;
