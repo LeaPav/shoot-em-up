@@ -128,7 +128,7 @@ void Game::createProjectilesEnnemy(float x, float y)
 	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
 	projectilesEnnemy.push_back(newProjectile);
 
-	//std::cout << "Projectile créé à (" << x << ", " << y << ")" << std::endl;
+	//cout << "Projectile créé à (" << x << ", " << y << ")" << endl;
 }
 
 void Game::entityRender()
@@ -411,11 +411,6 @@ void Game::handleMenu()
 	}
 }
 
-void Game::handleMenuPause()
-{
-
-}
-
 void Game::renderMenuPause()
 {
 //	pauseMenu.handleMouseHover(*window);
@@ -430,9 +425,7 @@ void Game::renderMenuPause()
 	this->window->draw(overlayTest);
 	pauseMenu.renderPauseMenu(*window);
 
-	
 }
-
 
 void Game::update()
 {

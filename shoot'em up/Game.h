@@ -52,7 +52,6 @@ private:
 	Texture haut_sens2;
 	Texture haut_invers2;
 
-
 	Sprite basSens1;
 	Sprite basInvers1;
 	Sprite basSens2;
@@ -97,7 +96,6 @@ public:
 	// Menu
 	void handleMenuState(Event& event);
 	void handleMenu();
-	void handleMenuPause();
 	void renderMenuPause();
 
 	void update();
