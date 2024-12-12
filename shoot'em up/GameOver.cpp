@@ -12,20 +12,29 @@ void GameOver::initButton()
 {
 	gameOverText.setFont(fontOver);
 	gameOverText.setString("GAME OVER");
-	gameOverText.setCharacterSize(60);
-	gameOverText.setPosition(800, 200);
+	gameOverText.setCharacterSize(80);
+
+	FloatRect gameOverTextBounds = gameOverText.getLocalBounds();
+	float x = (1920 / 2.f) - (gameOverTextBounds.width / 2.f) - gameOverTextBounds.left;
+	gameOverText.setPosition(x, 200);
 	gameOverText.setFillColor(Color::Red);
 
 	retryButton.setFont(fontOver);
 	retryButton.setString("Rejouer");
 	retryButton.setCharacterSize(30);
-	retryButton.setPosition(800, 500);
+
+	FloatRect retryButtonBounds = retryButton.getLocalBounds();
+	float xRetry = (1920 / 2.f) - (retryButtonBounds.width / 2.f) - retryButtonBounds.left;
+	retryButton.setPosition(xRetry, 500);
 	retryButton.setFillColor(Color::White);
 
 	mainMenuButton.setFont(fontOver);
 	mainMenuButton.setString("Retour au menu");
 	mainMenuButton.setCharacterSize(30);
-	mainMenuButton.setPosition(800, 600);
+
+	FloatRect mainMenuButtonBounds = mainMenuButton.getLocalBounds();
+	float xMain = (1920 / 2.f) - (mainMenuButtonBounds.width / 2.f) - mainMenuButtonBounds.left;
+	mainMenuButton.setPosition(xMain, 600);
 	mainMenuButton.setFillColor(Color::White);
 }
 
