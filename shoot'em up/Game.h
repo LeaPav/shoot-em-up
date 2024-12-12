@@ -67,6 +67,7 @@ private:
 	vector<Projectile*> projectilesEnnemy;
 
 	int score;
+	int scoreBonus;
 
 	// Menu
 	Menu mainMenu;
