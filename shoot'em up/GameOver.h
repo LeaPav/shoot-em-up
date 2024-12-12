@@ -14,6 +14,7 @@ private:
 	Clock mouseCooldownClock;
 	const Time mouseCooldown = milliseconds(100);
 public:
+	GameOver();
 	int handleInput(RenderWindow& window, const Event& event);
 	void handleMouseHover(const RenderWindow& window);
 	void render(RenderWindow& window);

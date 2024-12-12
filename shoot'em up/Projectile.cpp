@@ -18,10 +18,6 @@ void Projectile::update()
 {
 	this->projectile.move(this->velocity);
 
-	/*if (this->projectile.getPosition().x > 1920 || this->projectile.getPosition().x < 0 ||
-		this->projectile.getPosition().y > 1080 || this-> projectile.getPosition().y < 0) {
-		this->isOutOfScreen = true;
-	}*/
 }
 
 void Projectile::render(RenderTarget& target)

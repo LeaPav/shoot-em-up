@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Ennemy.h"
 #include "Menu.h"
+#include "GameOver.h"
 #include "Projectile.h"
 
 class Game
@@ -29,7 +30,6 @@ private:
 	void initTexture();
 	void initWindow();
 	void initScore();
-	void initGameOver();
 	void createEnnemy();
 	void createProjectiles(float x, float y);
 	void createProjectilesEnnemy(float x, float y);
@@ -75,10 +75,8 @@ private:
 	bool isPaused;
 
 	//Game over
-	Font fontOver;
-	Text gameOverText;
-	Text retryButton;
-	Text mainMenuButton;
+	GameOver gameOver;
+
 public:
 	Game();
 	~Game();
@@ -97,6 +95,9 @@ public:
 	void handleMenuState(Event& event);
 	void handleMenu();
 	void renderMenuPause();
+
+	//Game over
+	void renderGameOver();
 
 	void update();
 	void render();

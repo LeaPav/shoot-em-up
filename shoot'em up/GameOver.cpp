@@ -2,7 +2,7 @@
 
 int GameOver::initFont()
 {
-	if (!fontOver.loadFromFile("assets/font/test.ttf")) {
+	if (!fontOver.loadFromFile("assets/font/fontpause.ttf")) {
 		cout << "ERREUR";
 	}
 
@@ -12,7 +12,7 @@ void GameOver::initButton()
 {
 	gameOverText.setFont(fontOver);
 	gameOverText.setString("GAME OVER");
-	gameOverText.setCharacterSize(50);
+	gameOverText.setCharacterSize(60);
 	gameOverText.setPosition(800, 200);
 	gameOverText.setFillColor(Color::Red);
 
@@ -27,6 +27,12 @@ void GameOver::initButton()
 	mainMenuButton.setCharacterSize(30);
 	mainMenuButton.setPosition(800, 600);
 	mainMenuButton.setFillColor(Color::White);
+}
+
+GameOver::GameOver()
+{
+	initFont();
+	initButton();
 }
 
 int GameOver::handleInput(RenderWindow& window, const Event& event)

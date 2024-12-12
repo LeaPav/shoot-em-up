@@ -79,30 +79,6 @@ void Game::initScore()
 	textScore.setString(to_string(score));
 }
 
-void Game::initGameOver()
-{
-	if (!fontOver.loadFromFile("assets/font/test.ttf")) {
-		cout << "ERREUR";
-	}
-	gameOverText.setFont(fontOver);
-	gameOverText.setString("GAME OVER");
-	gameOverText.setCharacterSize(50);
-	gameOverText.setPosition(800, 200);
-	gameOverText.setFillColor(Color::Red);
-
-	retryButton.setFont(fontOver);
-	retryButton.setString("Rejouer");
-	retryButton.setCharacterSize(30);
-	retryButton.setPosition(800, 500);
-	retryButton.setFillColor(Color::White);
-
-	mainMenuButton.setFont(fontOver);
-	mainMenuButton.setString("Retour au menu");
-	mainMenuButton.setCharacterSize(30);
-	mainMenuButton.setPosition(800, 600);
-	mainMenuButton.setFillColor(Color::White);
-
-}
 
 void Game::createEnnemy()
 {
@@ -148,7 +124,6 @@ Game::Game() : currentState(MENU), isPaused(false)
 	this->initWindow();
 	this->initPlayer();
 	this->initScore();
-	this->initGameOver();
 }
 
 Game::~Game()
@@ -235,8 +210,8 @@ void Game::checkCollisions()
 	
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
+			ennemy -> damage(1);
 			player->damage(1);
-			ennemiesToRemove.push_back(ennemy);
 		}
 	}
 
@@ -350,6 +325,18 @@ void Game::handleMenuState(Event& event)
 		}
 		
 	}
+	if (currentState == GameState::GAMEOVER) {
+		gameOver.handleMouseHover(*window);
+		int actionGameOver = gameOver.handleInput(*window, event);
+
+		switch (actionGameOver) {
+		case 1: currentState = GameState::PLAYING;
+			break;
+		case 2: currentState = GameState::MENU;
+			gameOver.resetCooldown();
+			break;
+		}
+	}
 	if (currentState == GameState::OPTIONS) {
 		mainMenu.handleMouseHover(*window);
 		int optionsAction = mainMenu.handleInputMenuOptions(*window, event);
@@ -405,9 +392,13 @@ void Game::handleMenu()
 		mainMenu.renderCommands(*window);
 	}
 	if (currentState == GameState::GAMEOVER) {
-		window->draw(gameOverText);
-		window->draw(retryButton);
-		window->draw(mainMenuButton);
+		gameOver.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderGameOver();
 	}
 }
 
@@ -425,6 +416,15 @@ void Game::renderMenuPause()
 	this->window->draw(overlayTest);
 	pauseMenu.renderPauseMenu(*window);
 
+}
+
+void Game::renderGameOver()
+{
+	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlay.setFillColor(Color(0, 0, 0, 125));
+
+	this->window->draw(overlay);
+	gameOver.render(*window);
 }
 
 void Game::update()
@@ -453,7 +453,6 @@ void Game::update()
 
 	}
 
-	
 	if (player->isDead()) {
 		currentState = GameState::GAMEOVER;
 		
