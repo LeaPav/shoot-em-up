@@ -48,7 +48,7 @@ private:
 	int indexButtonSelected;
 
 	Clock mouseCooldownClock;
-	const Time mouseCooldown = milliseconds(100);
+	const Time mouseCooldown = milliseconds(150);
 
 	int initFont();
 	int initBackground();
