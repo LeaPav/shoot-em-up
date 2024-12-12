@@ -1,14 +1,21 @@
 #include "Ennemy.h"
 
-void Ennemy::initSprite()
+int Ennemy::initSprite()
 {
-	recEnnemy.setSize(Vector2f(75.f, 75.f));
+
+	if (!ennemies1.loadFromFile("assets\\Ennemies\\canon.png"))
+		return -1;
+
+
+	//recEnnemy.setSize(Vector2f(75.f, 75.f));
 	//recEnnemy.setFillColor(Color::Red);
 	//recEnnemy.setPosition(1000, 1000);
 }
 
 void Ennemy::initTexture()
 {
+	this->sprite.setTexture(ennemies1);
+	
 
 }
 
@@ -16,6 +23,7 @@ Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif)
 shootCooldown(cooldown), fireRate(rate), canShootVerif(passif)
 {
 	initSprite();
+	initTexture();
 }
 
 Ennemy::~Ennemy()
@@ -31,30 +39,30 @@ void Ennemy::movement(int dx, int dy)
 
 	switch (movementType) {
 	case STRAIGHT:
-		recEnnemy.move(-10.f, 0.f);
+		sprite.move(-10.f, 0.f);
 		break;
 	case STRAIGHT_FAST:
-		recEnnemy.move(-30.f, 0.f);
+		sprite.move(-30.f, 0.f);
 		break;
 	case DIAGONAL:
-		if (recEnnemy.getPosition().x <= 1000) {
-			recEnnemy.move(-0.f, 10.f);
+		if (sprite.getPosition().x <= 500) {
+			sprite.move(-0.f, 10.f);
 		}
 		else {
-			recEnnemy.move(-10.f, 0.f);
+			sprite.move(-10.f, 0.f);
 		}
 		break;
 	case DIAGONAL_INVERSE:
-		if (recEnnemy.getPosition().x <= 1000) {
-			recEnnemy.move(-0.f, -10.f);
+		if (sprite.getPosition().x <= 500) {
+			sprite.move(-0.f, -10.f);
 		}
 		else {
-			recEnnemy.move(-10.f, 0.f);
+			sprite.move(-10.f, 0.f);
 		}
 		break;
 	}
 
-	FloatRect speedEnnemy = recEnnemy.getGlobalBounds();
+	FloatRect speedEnnemy = sprite.getGlobalBounds();
 	if (speedEnnemy.left + speedEnnemy.width <= 0) {
 		isOutOfScreen = true;
 	}
@@ -69,7 +77,7 @@ void Ennemy::movement(int dx, int dy)
 
 void Ennemy::setPosition(const float x, const float y)
 {
-	recEnnemy.setPosition(x, y);
+	sprite.setPosition(x, y);
 }
 
 void Ennemy::update()
@@ -80,7 +88,7 @@ void Ennemy::update()
 
 void Ennemy::render(RenderTarget& target)
 {
-	target.draw(recEnnemy);
+	target.draw(sprite);
 }
 
 int Ennemy::getHp() const
@@ -95,7 +103,7 @@ bool Ennemy::getPassif() const
 
 const Vector2f Ennemy::getPosition() const
 {
-	return this->recEnnemy.getPosition();
+	return this->sprite.getPosition();
 }
 
 bool Ennemy::isDead() const
@@ -132,5 +140,5 @@ void Ennemy::resetShootCooldown()
 
 FloatRect Ennemy::getGlobalBounds() const
 {
-	return this->recEnnemy.getGlobalBounds();
+	return this->sprite.getGlobalBounds();
 }

@@ -22,7 +22,7 @@ void Player::initTexture()
 
 void Player::initHealthBar()
 {
-	this->maxHp = 3;
+	this->maxHp = 500;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));
