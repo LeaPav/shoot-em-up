@@ -66,7 +66,7 @@ private:
 	vector<Projectile*> projectilesPlayer;
 	vector<Projectile*> projectilesEnnemy;
 
-	int score;
+	int score = 0;
 
 	// Menu
 	Menu mainMenu;
@@ -104,6 +104,9 @@ public:
 
 	void fonduNiveau1();
 	void renderNiveau1();
+	//score
+
+	void resetGame();
 
 };
 

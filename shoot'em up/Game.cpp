@@ -124,6 +124,7 @@ Game::Game() : currentState(MENU), isPaused(false)
 	this->initWindow();
 	this->initPlayer();
 	this->initScore();
+	score = 0;
 }
 
 Game::~Game()
@@ -288,8 +289,11 @@ void Game::shootEnnemy()
 void Game::handleMenuState(Event& event)
 {
 	if (currentState == GameState::MENU) {
+		player->reset();
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
+		player->reset();
+	
 
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
@@ -320,6 +324,7 @@ void Game::handleMenuState(Event& event)
 			currentState = GameState::PLAYING;
 			break;
 		case 3: currentState = GameState::MENU;
+			resetGame();
 			mainMenu.resetCooldown();
 			break;
 		}
@@ -328,12 +333,15 @@ void Game::handleMenuState(Event& event)
 	if (currentState == GameState::GAMEOVER) {
 		gameOver.handleMouseHover(*window);
 		int actionGameOver = gameOver.handleInput(*window, event);
-
+		this->player->udpateHealthBar();
 		switch (actionGameOver) {
 		case 1: currentState = GameState::PLAYING;
+			resetGame();
 			break;
 		case 2: currentState = GameState::MENU;
-			gameOver.resetCooldown();
+			resetGame();
+			mainMenu.resetCooldown();
+			//player->reset();
 			break;
 		}
 	}
@@ -422,7 +430,6 @@ void Game::renderGameOver()
 {
 	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
 	overlay.setFillColor(Color(0, 0, 0, 125));
-
 	this->window->draw(overlay);
 	gameOver.render(*window);
 }
@@ -523,6 +530,16 @@ void Game::renderNiveau1()
 	this->window->draw(hautSens2);
 	this->window->draw(hautInvers1);
 	this->window->draw(hautInvers2);
+}
+
+void Game::resetGame()
+{
+	player->reset();
+	ennemies.clear();
+	projectilesPlayer.clear();
+	projectilesEnnemy.clear();
+	score = 0;
+	textScore.setString(to_string(score));
 }
 
 

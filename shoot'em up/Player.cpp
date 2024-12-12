@@ -149,5 +149,5 @@ int Player::getHealth() const
 void Player::reset()
 {
 	hp = maxHp;
-	recPlayer.setPosition(10, 10);
+	sprite.setPosition(10, 10);
 }

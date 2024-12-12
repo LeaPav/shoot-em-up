@@ -12,7 +12,7 @@ private:
 	void initButton();
 
 	Clock mouseCooldownClock;
-	const Time mouseCooldown = milliseconds(100);
+	const Time mouseCooldown = milliseconds(150);
 public:
 	GameOver();
 	int handleInput(RenderWindow& window, const Event& event);
