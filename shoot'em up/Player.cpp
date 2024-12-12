@@ -17,7 +17,7 @@ void Player::initSprite()
 void Player::initTexture()
 {
 	this->sprite.setTexture(vaisseau);
-	this->sprite.setPosition(10, 10);
+	this->sprite.setPosition(10, 540);
 }
 
 void Player::initHealthBar()
