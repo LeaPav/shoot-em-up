@@ -1,34 +1,45 @@
 #include "Projectile.h"
 
-void Projectile::initProjectiles()
+int Projectile::initProjectiles()
 {
-	projectile.setSize(Vector2f(40.f, 20.f));
-	projectile.setFillColor(Color::Blue);
+
+	if (!projoAll.loadFromFile("assets\\Ennemies\\Projo lisse.png"))
+		return -1;
+
+	
+	//projectile.setSize(Vector2f(40.f, 20.f));
+	//projectile.setFillColor(Color::Blue);
+}
+
+void Projectile::initTexture()
+{
+	this->sprite.setTexture(projoAll);
 }
 
 Projectile::Projectile(float x, float y, float speedX, float speedY) : velocity(speedX, speedY), isOutOfScreen(false)
 {
 	this->initProjectiles();
-	this->projectile.setPosition(x, y);
+	this->initTexture();
+	this->sprite.setPosition(x, y);
 }
 
 Projectile::~Projectile(){}
 
 void Projectile::update()
 {
-	this->projectile.move(this->velocity);
+	this->sprite.move(this->velocity);
 
 	
 }
 
 void Projectile::render(RenderTarget& target)
 {
-	target.draw(this->projectile);
+	target.draw(this->sprite);
 }
 
 FloatRect Projectile::getGlobalBounds() const
 {
-	return this->projectile.getGlobalBounds();
+	return this->sprite.getGlobalBounds();
 }
 
 void Projectile::markAsOutOfScreen()

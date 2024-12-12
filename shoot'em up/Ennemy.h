@@ -15,6 +15,7 @@ class Ennemy : public Entity
 {
 private:
 	Sprite sprite;
+	
 
 	Texture ennemies1;
 
