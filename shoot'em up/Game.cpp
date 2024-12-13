@@ -1,6 +1,301 @@
 #include "Game.h"
 
-int Game::initSprite()
+Game::Game() : currentState(MENU), isPaused(false)
+{
+	this->initSprite();
+	this->initTexture();
+	this->initWindow();
+	this->initPlayer();
+	this->initScore();
+	score = 0;
+}
+
+Game::~Game()
+{
+	delete this->window;
+	delete this->player;
+
+}
+
+/////////////////////////////////////////maj du Game affichage (Update)/////////////////////////////////////
+
+
+
+void Game::update()
+{
+	Event event;
+
+	while (this->window->pollEvent(event)) {
+
+		if (event.type == Event::Closed)
+			this->window->close();
+		if (Keyboard::isKeyPressed(Keyboard::J)) {
+			this->window->close();
+
+
+		}
+		if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
+			if (currentState == GameState::PLAYING) {
+				isPaused = true;
+				currentState = GameState::PAUSE;
+			}
+			else if (currentState == GameState::PAUSE) {
+				isPaused = false;
+				currentState = GameState::PLAYING;
+			}
+		}
+
+	}
+
+	if (player->isDead()) {
+		currentState = GameState::GAMEOVER;
+
+	}
+	handleMenuState(event);
+
+}
+
+
+
+void Game::playerUpdate()
+{
+	this->player->playerUpdate();
+	this->player->udpateHealthBar();
+}
+
+void Game::projectileUpdate()
+{
+	for (auto& projectile : projectilesPlayer) {
+		projectile->update();
+	}
+
+	for (auto& projectile : projectilesEnnemy) {
+		projectile->update();
+	}
+
+}
+
+void Game::ennemyUpdate()
+{
+
+	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
+	const int spawnInterval = 60;
+
+	timer++;
+	if (timer >= spawnInterval) {
+		this->createEnnemy();
+		timer = 0;
+	}
+	this->shootEnnemy();
+}
+
+const bool Game::windowIsOpen()
+{
+	return this->window->isOpen();
+}
+
+void Game::resetGame()
+{
+	player->reset();
+	ennemies.clear();
+	projectilesPlayer.clear();
+	projectilesEnnemy.clear();
+	score = 0;
+	textScore.setString(to_string(score));
+}
+
+///////////////////////////////////////////maj du Game affichage (Render)/////////////////////////////////////////////////
+
+void Game::render()
+{
+	this->window->clear();
+	this->handleMenu();
+	this->window->display();
+
+}
+
+void Game::renderMenuPause()
+{
+
+	RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlayTest.setFillColor(Color(0, 0, 0, 125));
+	RectangleShape test(Vector2f(200.f, 40.f));
+
+	this->window->draw(overlayTest);
+	pauseMenu.renderPauseMenu(*window);
+
+}
+
+void Game::renderGameOver()
+{
+	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlay.setFillColor(Color(0, 0, 0, 125));
+	this->window->draw(overlay);
+	gameOver.render(*window);
+}
+
+
+void Game::renderNiveau1()
+{
+	this->window->draw(basSens1);
+	this->window->draw(basSens2);
+	this->window->draw(basInvers1);
+	this->window->draw(basInvers2);
+	this->window->draw(hautSens1);
+	this->window->draw(hautSens2);
+	this->window->draw(hautInvers1);
+	this->window->draw(hautInvers2);
+}
+
+void Game::entityRender()
+{
+	this->player->render(*this->window);
+	this->player->renderHealthBar(*this->window);
+
+	for (auto& ennemy : ennemies) {
+		ennemy->render(*this->window);
+	}
+}
+
+void Game::projectileRender()
+{
+	for (auto& projectile : projectilesPlayer) {
+		projectile->render(*this->window);
+	}
+
+	for (auto& projectile2 : projectilesEnnemy) {
+		projectile2->render(*this->window);
+	}
+}
+
+////////////////////////////////////////////////////////////////////etat du jeu////////////////////////////////////////////////////////////////
+
+void Game::handleMenu() //les etats du jeu
+{
+	if (currentState == GameState::MENU) {
+		mainMenu.render(*window);
+	}
+	if (currentState == GameState::PLAYING) {
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+	}
+	if (currentState == GameState::PAUSE) {
+		pauseMenu.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderMenuPause();
+	}
+	if (currentState == GameState::OPTIONS) {
+		mainMenu.handleMouseHover(*window);
+		mainMenu.renderOptions(*window);
+	}
+	if (currentState == GameState::EDITOR) {
+		mainMenu.handleMouseHover(*window);
+		mainMenu.renderEditor(*window);
+	}
+	if (currentState == GameState::COMMANDS) {
+		mainMenu.renderCommands(*window);
+	}
+	if (currentState == GameState::GAMEOVER) {
+		gameOver.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderGameOver();
+	}
+}
+
+void Game::handleMenuState(Event& event) // gere les etat du jeu
+{
+	if (currentState == GameState::MENU) {
+		player->reset();
+		mainMenu.handleMouseHover(*window);
+		int action = mainMenu.handleInputMainMenu(*window, event);
+		player->reset();
+
+
+		switch (action) {
+		case 1: currentState = GameState::PLAYING;
+			break;
+		case 2: currentState = GameState::OPTIONS;
+			break;
+		case 3: currentState = GameState::EDITOR;
+			break;
+		case 4:
+			this->window->close();
+			break;
+		}
+	}
+	if (currentState == GameState::PLAYING) {
+		this->playerUpdate();
+		this->ennemyUpdate();
+		this->projectileUpdate();
+		this->checkCollisions();
+		this->shoot();
+		this->fonduNiveau1();
+	}
+	if (currentState == GameState::PAUSE) {
+		pauseMenu.handleMouseHover(*window);
+		int mouseAction = pauseMenu.handleInputPauseMenu(*window, event);
+
+		switch (mouseAction) {
+		case 1:
+			currentState = GameState::PLAYING;
+			break;
+		case 3: currentState = GameState::MENU;
+			resetGame();
+			mainMenu.resetCooldown();
+			break;
+		}
+
+	}
+	if (currentState == GameState::GAMEOVER) {
+		gameOver.handleMouseHover(*window);
+		int actionGameOver = gameOver.handleInput(*window, event);
+		this->player->udpateHealthBar();
+		switch (actionGameOver) {
+		case 1: currentState = GameState::PLAYING;
+			resetGame();
+			break;
+		case 2: currentState = GameState::MENU;
+			resetGame();
+			mainMenu.resetCooldown();
+			//player->reset();
+			break;
+		}
+	}
+	if (currentState == GameState::OPTIONS) {
+		mainMenu.handleMouseHover(*window);
+		int optionsAction = mainMenu.handleInputMenuOptions(*window, event);
+
+		switch (optionsAction) {
+		case 1: currentState = GameState::COMMANDS;
+			break;
+		case 4: currentState = GameState::MENU;
+			break;
+		}
+	}
+	if (currentState == GameState::COMMANDS) {
+		mainMenu.handleMouseHover(*window);
+		int actionCommands = mainMenu.handleInputMenuOptions(*window, event);
+
+		switch (actionCommands) {
+		case 4: currentState = GameState::OPTIONS;
+			break;
+		}
+	}
+}
+/////////////////////////////////////////maj du Game fenetre (niveau in game) /////////////////////////////////////
+
+int Game::initSprite() //fond du niveau
 {	
 	if (!bas_Sens1.loadFromFile("assets\\Fond_1\\ocean_final_sens_normal-1622-1080_bas.png")) 
 		return -1; 
@@ -28,14 +323,9 @@ int Game::initSprite()
 	
 }
 
-void Game::initPlayer()
+void Game::initTexture() //metre texture sur les sprite
 {
-	this->player = new Player();
-}
-
-void Game::initTexture()
-{
-	basSens1.setTexture(bas_Sens1);					//metre texture sur les sprite
+	basSens1.setTexture(bas_Sens1);					
 	basInvers1.setTexture(bas_invers1);
 	basSens2.setTexture(bas_Sens2);
 	basInvers2.setTexture(bas_invers2);
@@ -58,7 +348,51 @@ void Game::initTexture()
 	hautInvers2.setPosition(Vector2f(4866.f, 0.f));
 }
 
-void Game::initWindow()
+void Game::fonduNiveau1()
+{
+	float depop = 1622.f;
+
+	if (basSens1.getPosition().x <= -depop) {
+		basSens1.setPosition(basInvers2.getPosition().x + depop, basSens1.getPosition().y);
+	}
+	if (basInvers1.getPosition().x <= -depop) {
+		basInvers1.setPosition(basSens1.getPosition().x + depop, basInvers1.getPosition().y);
+	}
+	if (basSens2.getPosition().x <= -depop) {
+		basSens2.setPosition(basInvers1.getPosition().x + depop, basSens2.getPosition().y);
+	}
+	if (basInvers2.getPosition().x <= -depop) {
+		basInvers2.setPosition(basSens2.getPosition().x + depop, basSens2.getPosition().y);
+	}
+
+
+	if (hautSens1.getPosition().x <= -depop) {
+		hautSens1.setPosition(hautInvers2.getPosition().x + depop, hautSens1.getPosition().y);
+	}
+	if (hautInvers1.getPosition().x <= -depop) {
+		hautInvers1.setPosition(hautSens1.getPosition().x + depop, hautInvers1.getPosition().y);
+	}
+	if (hautSens2.getPosition().x <= -depop) {
+		hautSens2.setPosition(hautInvers1.getPosition().x + depop, hautSens2.getPosition().y);
+	}
+	if (hautInvers2.getPosition().x <= -depop) {
+		hautInvers2.setPosition(hautSens2.getPosition().x + depop, hautInvers2.getPosition().y);
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+	basSens1.move(Vector2f(-10, 0.f));
+	basSens2.move(Vector2f(-10, 0.f));
+	basInvers1.move(Vector2f(-10, 0.f));
+	basInvers2.move(Vector2f(-10, 0.f));
+	hautSens1.move(Vector2f(-3, 0.f));
+	hautSens2.move(Vector2f(-3, 0.f));
+	hautInvers1.move(Vector2f(-3, 0.f));
+	hautInvers2.move(Vector2f(-3, 0.f));
+
+}
+
+void Game::initWindow() //création fenetre
 {
 	this->videoMode.width = mapWidth;
 	this->videoMode.height = mapHeight;
@@ -67,7 +401,7 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
-void Game::initScore()
+void Game::initScore() //création score
 {
 	if (!font.loadFromFile("assets/font/test.ttf")) {
 		cout << "ERREUR";
@@ -79,18 +413,25 @@ void Game::initScore()
 	textScore.setString(to_string(score));
 }
 
+/////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
 
-void Game::createEnnemy()
+void Game::initPlayer() // création du J
+{
+	this->player = new Player();
+}
+
+void Game::createEnnemy() //créateur des ennemies + vagues
 {
 	int distance = 2020;
 	int random = rand() % 5;
-	static int nmbGrp;
+
 	bool peacefull = false;
 	int pv = 2;
 	
 	/*
 	if(scoreBonus>=20){
 	phase bonus();
+	scoreBonus=0;
 	}
 	else if(score>=200){
 	phase de boss()
@@ -129,7 +470,7 @@ void Game::createEnnemy()
 		}
 		ennemies.push_back(newEnnemy3);
 
-		nmbGrp += 1;
+		
 		
 	}
 	else if (random == 2) { //mur par 3 passif
@@ -159,7 +500,7 @@ void Game::createEnnemy()
 		}
 		ennemies.push_back(newEnnemy3);
 
-		nmbGrp += 1;
+		
 	}
 	else if (random == 3 && score >= 40) { // pyramide par 5 tir
 
@@ -200,12 +541,16 @@ void Game::createEnnemy()
 		}
 		ennemies.push_back(newEnnemy5);
 
-		nmbGrp += 1;
+		
 		
 	}
 	else if (random == 4 && score >= 20) { //mur par 5
 
 		MovementType randomType = static_cast<MovementType>(rand() % 2);
+
+		if (score <= 30) {
+			randomType = STRAIGHT;
+		}
 
 		int largeur = rand() % this->videoMode.height;
 
@@ -244,14 +589,15 @@ void Game::createEnnemy()
 		}
 		ennemies.push_back(newEnnemy5);
 
-		nmbGrp += 1;
+		
 		
 	}
-	cout << nmbGrp << endl;
-	cout << random << endl;
 
 	
 }
+
+
+/////////////////////////////////////////projo////////////////////////////////////////
 
 void Game::createProjectiles(float x, float y)
 {
@@ -263,84 +609,9 @@ void Game::createProjectilesEnnemy(float x, float y)
 {
 	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
 	projectilesEnnemy.push_back(newProjectile);
-
-	//cout << "Projectile créé à (" << x << ", " << y << ")" << endl;
 }
 
-void Game::entityRender()
-{
-	this->player->render(*this->window);
-	this->player->renderHealthBar(*this->window);
-
-	for (auto& ennemy : ennemies) {
-		ennemy->render(*this->window);
-	}
-}
-
-Game::Game() : currentState(MENU), isPaused(false)
-{
-	this->initSprite();
-	this->initTexture();
-	this->initWindow();
-	this->initPlayer();
-	this->initScore();
-	score = 0;
-}
-
-Game::~Game()
-{
-	delete this->window;
-	delete this->player;
-
-}
-
-const bool Game::windowIsOpen()
-{
-	return this->window->isOpen();
-}
-
-void Game::playerUpdate()
-{
-	this->player->playerUpdate();
-	this->player->udpateHealthBar();
-}
-
-void Game::projectileUpdate()
-{
-	for (auto& projectile : projectilesPlayer) {
-		projectile->update();
-	}
-
-	for (auto& projectile : projectilesEnnemy) {
-		projectile->update();
-	}
-
-}
-
-void Game::ennemyUpdate()
-{
-
-	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
-	const int spawnInterval = 60;
-
-	timer++;
-	if (timer >= spawnInterval) {
-		this->createEnnemy();
-		timer = 0;
-	}
-	this->shootEnnemy();
-}
-
-void Game::projectileRender()
-{
-	for (auto& projectile : projectilesPlayer) {
-		projectile->render(*this->window);
-	}
-
-	for (auto& projectile2 : projectilesEnnemy) {
-		projectile2->render(*this->window);
-	}
-}
+//////////////////////////////////////////colision////////////////////////////////////////////////////////
 
 void Game::checkCollisions()
 {
@@ -417,6 +688,8 @@ void Game::checkCollisions()
 	);
 }
 
+////////////////////////////////degats//////////////////////////////////////////////////////////////////////////////////////////
+
 void Game::shoot()
 {
 	static int cooldownShoot = 0;
@@ -447,260 +720,13 @@ void Game::shootEnnemy()
 	}
 }
 
-void Game::handleMenuState(Event& event)
-{
-	if (currentState == GameState::MENU) {
-		player->reset();
-		mainMenu.handleMouseHover(*window);
-		int action = mainMenu.handleInputMainMenu(*window, event);
-		player->reset();
-	
-
-		switch (action) {
-		case 1: currentState = GameState::PLAYING;
-			break;
-		case 2: currentState = GameState::OPTIONS;
-			break;
-		case 3: currentState = GameState::EDITOR;
-			break;
-		case 4:
-			this->window->close();
-			break;
-		}	
-	}
-	if (currentState == GameState::PLAYING) {
-			this->playerUpdate();
-			this->ennemyUpdate();
-			this->projectileUpdate();
-			this->checkCollisions();
-			this->shoot();
-			this->fonduNiveau1();
-	}
-	if (currentState == GameState::PAUSE) {
-		pauseMenu.handleMouseHover(*window); 
-		int mouseAction = pauseMenu.handleInputPauseMenu(*window, event);
-
-		switch (mouseAction) {
-		case 1: 
-			currentState = GameState::PLAYING;
-			break;
-		case 3: currentState = GameState::MENU;
-			resetGame();
-			mainMenu.resetCooldown();
-			break;
-		}
-		
-	}
-	if (currentState == GameState::GAMEOVER) {
-		gameOver.handleMouseHover(*window);
-		int actionGameOver = gameOver.handleInput(*window, event);
-		this->player->udpateHealthBar();
-		switch (actionGameOver) {
-		case 1: currentState = GameState::PLAYING;
-			resetGame();
-			break;
-		case 2: currentState = GameState::MENU;
-			resetGame();
-			mainMenu.resetCooldown();
-			//player->reset();
-			break;
-		}
-	}
-	if (currentState == GameState::OPTIONS) {
-		mainMenu.handleMouseHover(*window);
-		int optionsAction = mainMenu.handleInputMenuOptions(*window, event);
-
-		switch (optionsAction) {
-		case 1: currentState = GameState::COMMANDS;
-			break;
-		case 4: currentState = GameState::MENU;
-			break;
-		}
-	}
-	if (currentState == GameState::COMMANDS) {
-		mainMenu.handleMouseHover(*window);
-		int actionCommands = mainMenu.handleInputMenuOptions(*window, event);
-
-		switch (actionCommands) {
-		case 4: currentState = GameState::OPTIONS;
-				break;
-		}
-	}
-}
-
-void Game::handleMenu()
-{
-	if (currentState == GameState::MENU) {
-		mainMenu.render(*window);
-	}
-	if (currentState == GameState::PLAYING) {
-		this->renderNiveau1();
-		this->window->draw(this->spriteMap);
-		this->entityRender();
-		this->projectileRender();
-		this->window->draw(textScore);
-	}
-	if (currentState == GameState::PAUSE) {
-		pauseMenu.handleMouseHover(*window);
-		this->renderNiveau1();
-		this->window->draw(this->spriteMap);
-		this->entityRender();
-		this->projectileRender();
-		this->window->draw(textScore);
-		this->renderMenuPause();
-	}
-	if (currentState == GameState::OPTIONS) {
-		mainMenu.handleMouseHover(*window);
-		mainMenu.renderOptions(*window);
-	}
-	if (currentState == GameState::EDITOR) {
-		mainMenu.handleMouseHover(*window);
-		mainMenu.renderEditor(*window);
-	}
-	if (currentState == GameState::COMMANDS) {
-		mainMenu.renderCommands(*window);
-	}
-	if (currentState == GameState::GAMEOVER) {
-		gameOver.handleMouseHover(*window);
-		this->renderNiveau1();
-		this->window->draw(this->spriteMap);
-		this->entityRender();
-		this->projectileRender();
-		this->window->draw(textScore);
-		this->renderGameOver();
-	}
-}
-
-void Game::renderMenuPause()
-{
-//	pauseMenu.handleMouseHover(*window);
 
 
-	RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
-	overlayTest.setFillColor(Color(0, 0, 0, 125));
-	//his->window->draw(overlayTest);
-	RectangleShape test(Vector2f(200.f, 40.f));
-	//this->window->draw(test);
-
-	this->window->draw(overlayTest);
-	pauseMenu.renderPauseMenu(*window);
-
-}
-
-void Game::renderGameOver()
-{
-	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
-	overlay.setFillColor(Color(0, 0, 0, 125));
-	this->window->draw(overlay);
-	gameOver.render(*window);
-}
-
-void Game::update()
-{
-	Event event;
-	//handleMenuState(event);
-	while (this->window->pollEvent(event)) {
-
-		if (event.type == Event::Closed)
-			this->window->close();
-		if (Keyboard::isKeyPressed(Keyboard::J)) {
-			this->window->close();
 
 
-		}
-		if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
-			if (currentState == GameState::PLAYING) {
-				isPaused = true;
-				currentState = GameState::PAUSE;
-			}
-			else if (currentState == GameState::PAUSE) {
-				isPaused = false;
-				currentState = GameState::PLAYING;
-			}
-		}
-
-	}
-
-	if (player->isDead()) {
-		currentState = GameState::GAMEOVER;
-		
-	}
-	handleMenuState(event);
-	
-}
-
-void Game::render()
-{
-	this->window->clear();
-	this->handleMenu();
-	this->window ->display();
-
-}
-
-void Game::fonduNiveau1()
-{
-	float depop = 1622.f;
-
-	if (basSens1.getPosition().x <= -depop) {
-		basSens1.setPosition(basInvers2.getPosition().x + depop, basSens1.getPosition().y);
-	}
-	if (basInvers1.getPosition().x <= -depop) {
-		basInvers1.setPosition(basSens1.getPosition().x + depop, basInvers1.getPosition().y);
-	}
-	if (basSens2.getPosition().x <= -depop) {
-		basSens2.setPosition(basInvers1.getPosition().x + depop, basSens2.getPosition().y);
-	}
-	if (basInvers2.getPosition().x <= -depop) {
-		basInvers2.setPosition(basSens2.getPosition().x + depop, basSens2.getPosition().y);
-	}
 
 
-	if (hautSens1.getPosition().x <= -depop) {
-		hautSens1.setPosition(hautInvers2.getPosition().x + depop, hautSens1.getPosition().y);
-	}
-	if (hautInvers1.getPosition().x <= -depop) {
-		hautInvers1.setPosition(hautSens1.getPosition().x + depop, hautInvers1.getPosition().y);
-	}
-	if (hautSens2.getPosition().x <= -depop) {
-		hautSens2.setPosition(hautInvers1.getPosition().x + depop, hautSens2.getPosition().y);
-	}
-	if (hautInvers2.getPosition().x <= -depop) {
-		hautInvers2.setPosition(hautSens2.getPosition().x + depop, hautInvers2.getPosition().y);
-	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////
 
-	basSens1.move(Vector2f(-10, 0.f));
-	basSens2.move(Vector2f(-10, 0.f));
-	basInvers1.move(Vector2f(-10, 0.f));
-	basInvers2.move(Vector2f(-10, 0.f));
-	hautSens1.move(Vector2f(-3, 0.f));
-	hautSens2.move(Vector2f(-3, 0.f));
-	hautInvers1.move(Vector2f(-3, 0.f));
-	hautInvers2.move(Vector2f(-3, 0.f));
-
-}
-
-void Game::renderNiveau1()
-{
-	this->window->draw(basSens1);
-	this->window->draw(basSens2);
-	this->window->draw(basInvers1);
-	this->window->draw(basInvers2);
-	this->window->draw(hautSens1);
-	this->window->draw(hautSens2);
-	this->window->draw(hautInvers1);
-	this->window->draw(hautInvers2);
-}
-
-void Game::resetGame()
-{
-	player->reset();
-	ennemies.clear();
-	projectilesPlayer.clear();
-	projectilesEnnemy.clear();
-	score = 0;
-	textScore.setString(to_string(score));
-}
 
 
