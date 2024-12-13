@@ -100,6 +100,8 @@ void Game::resetGame()
 	projectilesPlayer.clear();
 	projectilesEnnemy.clear();
 	score = 0;
+	scoreBonus = 0;
+	scoreBoss = 0;
 	textScore.setString(to_string(score));
 }
 
@@ -422,10 +424,10 @@ void Game::initPlayer() // création du J
 void Game::createEnnemy() //créateur des ennemies + vagues
 {
 	int distance = 2020;
-	int random = 2;// rand() % 5;
+	int random = rand() % 5;
 
 	bool peacefull = false;
-	int pv = 2;
+	int pv = 1;
 	
 	/*
 	if(scoreBonus>=20){
