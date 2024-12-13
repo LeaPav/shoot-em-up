@@ -18,7 +18,7 @@ void Boss::initTexture()
 
 }
 
-Boss::Boss() /*: hp(100), isActive(false), shootSpeed(2.f)*/
+Boss::Boss() : hp(100), isActive(false), shootSpeed(2.f), velocity(Vector2f(-5.f, 2.f))
 {
     this->initSprite();
    // initTexture();
@@ -35,9 +35,18 @@ void Boss::takeDamage(int damage)
 
 void Boss::movement(int x, int y)
 {
-    if (recBoss.getPosition().x > 1400) {
+    if (recBoss.getPosition().x > 1900) {
         recBoss.move(-10.f, 0.f);
-    } 
+    }
+    else {
+        recBoss.move(velocity);
+        if (recBoss.getPosition().x <= 1000 || recBoss.getPosition().x >= 1900) {
+            velocity.x = -velocity.x;
+        } 
+        if (recBoss.getPosition().y <= 0 || recBoss.getPosition().y >= 830) {
+            velocity.y = -velocity.y;
+        }
+    }
  
 }
 

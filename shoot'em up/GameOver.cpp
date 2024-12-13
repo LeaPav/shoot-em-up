@@ -11,7 +11,7 @@ GameOver::GameOver()
 int GameOver::initFont() //la police
 {
 	if (!fontOver.loadFromFile("assets/font/fontpause.ttf")) {
-		cout << "ERREUR";
+		return -1;
 	}
 
 }

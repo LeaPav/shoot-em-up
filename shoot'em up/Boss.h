@@ -12,6 +12,7 @@ private:
 	bool isActive;
 	Vector2f targetPosition; // là où il doit se rendre
 	Vector2f initialPosition;
+	Vector2f velocity;
 	float shootSpeed;
 
 	void initSprite();

@@ -201,6 +201,7 @@ void Game::handleMenu() //les etats du jeu
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
+		this->renderBoss();
 		this->projectileRender();
 		this->window->draw(textScore);
 		this->renderMenuPause();
@@ -221,6 +222,7 @@ void Game::handleMenu() //les etats du jeu
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
+		this->renderBoss();
 		this->projectileRender();
 		this->window->draw(textScore);
 		this->renderGameOver();
