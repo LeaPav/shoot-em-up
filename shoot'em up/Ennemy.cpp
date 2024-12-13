@@ -1,35 +1,64 @@
 #include "Ennemy.h"
 
-int Ennemy::initSprite()
+Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false),
+shootCooldown(cooldown), fireRate(rate), canShootVerif(passif) // création ennemies
+{
+	initSprite();
+	initTexture();
+}
+Ennemy::~Ennemy() {}
+
+/////////////////////////////////////////maj de l'ennemi/////////////////////////////////////
+int Ennemy::initSprite() //chargement de l'image de l'ennemies
 {
 
 	if (!ennemies1.loadFromFile("assets\\Ennemies\\canon.png"))
 		return -1;
 
-
-	//recEnnemy.setSize(Vector2f(75.f, 75.f));
-	//recEnnemy.setFillColor(Color::Red);
-	//recEnnemy.setPosition(1000, 1000);
 }
 
-void Ennemy::initTexture()
+void Ennemy::initTexture() // sprite de l'ennemie charger
 {
 	this->sprite.setTexture(ennemies1);
 	
 
 }
 
-Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false), 
-shootCooldown(cooldown), fireRate(rate), canShootVerif(passif)
+void Ennemy::render(RenderTarget& target)
 {
-	initSprite();
-	initTexture();
+	target.draw(sprite);
+}
+/////////////////////geter/////////////////////////////////////////////////////
+
+int Ennemy::getHp() const
+{
+	return hp;
 }
 
-Ennemy::~Ennemy()
+bool Ennemy::getPassif() const
 {
-	
+	return canShootVerif;
 }
+
+const Vector2f Ennemy::getPosition() const
+{
+	return this->sprite.getPosition();
+}
+
+FloatRect Ennemy::getGlobalBounds() const
+{
+	return this->sprite.getGlobalBounds();
+}
+
+
+////////////////////////////////////////////deplacement/////////////////////////////////////
+void Ennemy::update()
+{
+	movement(x, y);
+
+}
+
+
 
 void Ennemy::movement(int dx, int dy)
 {
@@ -70,57 +99,19 @@ void Ennemy::movement(int dx, int dy)
 		isOutOfScreen = true;
 	}
 
-	if (speedEnnemy.getPosition().y  > 1080) {
+	if (speedEnnemy.getPosition().y > 1080) {
 		isOutOfScreen = true;
 	}
-} 
+}
 
 void Ennemy::setPosition(const float x, const float y)
 {
 	sprite.setPosition(x, y);
 }
 
-void Ennemy::update()
-{
-	movement(x, y);
 
-}
+///////////////////////degats///////////////////////////////////////////////
 
-void Ennemy::render(RenderTarget& target)
-{
-	target.draw(sprite);
-}
-
-int Ennemy::getHp() const
-{
-	return hp;
-}
-
-bool Ennemy::getPassif() const
-{
-	return canShootVerif;
-}
-
-const Vector2f Ennemy::getPosition() const
-{
-	return this->sprite.getPosition();
-}
-
-bool Ennemy::isDead() const
-{
-	return this->hp <= 0;
-}
-
-void Ennemy::damage(int damages)
-{
-	this->hp -= damages;
-	if (this->hp <= 0) this->hp = 0;
-}
-
-bool Ennemy::destroy()
-{
-	return isOutOfScreen;
-}
 
 bool Ennemy::canShoot()
 {
@@ -138,7 +129,20 @@ void Ennemy::resetShootCooldown()
 	shootCooldown = fireRate;
 }
 
-FloatRect Ennemy::getGlobalBounds() const
+//////////////////////////////life//////////////////////////////
+
+void Ennemy::damage(int damages)
 {
-	return this->sprite.getGlobalBounds();
+	this->hp -= damages;
+	if (this->hp <= 0) this->hp = 0;
+}
+
+bool Ennemy::destroy()
+{
+	return isOutOfScreen;
+}
+
+bool Ennemy::isDead() const
+{
+	return this->hp <= 0;
 }
