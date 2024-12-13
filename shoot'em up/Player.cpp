@@ -17,12 +17,12 @@ void Player::initSprite()
 void Player::initTexture()
 {
 	this->sprite.setTexture(vaisseau);
-	this->sprite.setPosition(10, 10);
+	this->sprite.setPosition(10, 540);
 }
 
 void Player::initHealthBar()
 {
-	this->maxHp = 5;
+	this->maxHp = 500;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));

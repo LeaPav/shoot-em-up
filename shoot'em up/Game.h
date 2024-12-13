@@ -34,7 +34,7 @@ private:
 	void createProjectiles(float x, float y);
 	void createProjectilesEnnemy(float x, float y);
 
-	//taille de l'écran
+	//taille de l'Ã©cran
 	int mapWidth = 1920;
 	int mapHeight = 1080;
 
@@ -61,13 +61,14 @@ private:
 	Sprite hautSens2;
 	Sprite hautInvers2;
 
-	//vectors des entités 
+	//vectors des entitÃ©s 
 	vector<Ennemy*> ennemies;
 	vector<Projectile*> projectilesPlayer;
 	vector<Projectile*> projectilesEnnemy;
 
 	int score;
 	int scoreBonus;
+
 	// Menu
 	Menu mainMenu;
 	Menu pauseMenu;

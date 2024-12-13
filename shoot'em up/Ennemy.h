@@ -5,18 +5,24 @@
 
 enum MovementType {
 	STRAIGHT,
+	STRAIGHT_FAST,
+	DIAGONAL_INVERSE,
 	DIAGONAL,
-	SINUSOIDAL
+	
 };
 
 class Ennemy : public Entity
 {
 private:
 	Sprite sprite;
-	RectangleShape recEnnemy;
+	
+
+	Texture ennemies1;
+
+	//RectangleShape recEnnemy;
 	MovementType movementType;
 	float timeElapsed;
-	void initSprite();
+	int initSprite();
 	void initTexture();
 	bool alive = true;
 	bool canShootVerif;
