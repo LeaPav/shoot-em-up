@@ -108,7 +108,7 @@ void Game::resetGame()
 	score = 0;
 	scoreBonus = 0;
 	scoreBoss = 0;
-	textScore.setString(to_string(score));
+	textScore.setString("Score : " + to_string(score));
 }
 
 ///////////////////////////////////////////maj du Game affichage (Render)/////////////////////////////////////////////////
@@ -669,6 +669,12 @@ void Game::checkCollisions()
 		}
 	}
 
+	for (auto& projectile : projectilesPlayer) {
+		if (projectile->getGlobalBounds().intersects(boss->getGlobalBounds())) {
+			boss->takeDamage(5);
+			projectile->markAsOutOfScreen();
+		}
+	}
 	for (auto& projectile : projectilesToRemove) {
 		projectilesPlayer.erase(remove(projectilesPlayer.begin(), projectilesPlayer.end(), projectile), projectilesPlayer.end());
 		delete projectile; 
@@ -677,7 +683,6 @@ void Game::checkCollisions()
 		ennemies.erase(remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());
 		delete ennemy; 
 	}
-
 	projectilesPlayer.erase(remove_if(projectilesPlayer.begin(), projectilesPlayer.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
 			delete p;

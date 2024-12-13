@@ -57,6 +57,11 @@ void Boss::render(RenderTarget& target)
     target.draw(this->recRobot);
 }
 
+FloatRect Boss::getGlobalBounds() const
+{
+    return this->recBoss.getGlobalBounds();
+}
+
 void Boss::update()
 {
     movement(x, y);

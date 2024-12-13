@@ -24,6 +24,7 @@ public:
 	const Vector2f getPosition() const;
 	int getHp();
 	void render(RenderTarget& target);
+	FloatRect getGlobalBounds() const;
 	void update();
 	bool canSpawn(int bossScore);
 	void reset();
