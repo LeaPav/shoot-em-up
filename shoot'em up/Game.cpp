@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false)
 {
 	this->initSprite();
 	this->initTexture();
@@ -17,7 +17,6 @@ Game::~Game()
 }
 
 /////////////////////////////////////////maj du Game affichage (Update)/////////////////////////////////////
-
 
 
 void Game::update()
@@ -88,6 +87,12 @@ void Game::ennemyUpdate()
 	this->shootEnnemy();
 }
 
+void Game::updateBoss()
+{
+	if (this->boss->canSpawn(scoreBoss))
+	this->boss->update();
+}
+
 const bool Game::windowIsOpen()
 {
 	return this->window->isOpen();
@@ -97,6 +102,7 @@ void Game::resetGame()
 {
 	player->reset();
 	ennemies.clear();
+	boss->reset();
 	projectilesPlayer.clear();
 	projectilesEnnemy.clear();
 	score = 0;
@@ -169,6 +175,11 @@ void Game::projectileRender()
 	}
 }
 
+void Game::renderBoss()
+{
+	this->boss->render(*this->window);
+}
+
 ////////////////////////////////////////////////////////////////////etat du jeu////////////////////////////////////////////////////////////////
 
 void Game::handleMenu() //les etats du jeu
@@ -177,9 +188,11 @@ void Game::handleMenu() //les etats du jeu
 		mainMenu.render(*window);
 	}
 	if (currentState == GameState::PLAYING) {
+		
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
+		this->renderBoss();
 		this->projectileRender();
 		this->window->draw(textScore);
 	}
@@ -217,12 +230,9 @@ void Game::handleMenu() //les etats du jeu
 void Game::handleMenuState(Event& event) // gere les etat du jeu
 {
 	if (currentState == GameState::MENU) {
-		player->reset();
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
-		player->reset();
-
-
+		
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
 			break;
@@ -236,8 +246,13 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 	}
 	if (currentState == GameState::PLAYING) {
+		if (scoreBoss >= 5) {
+			this->updateBoss();
+		}
+		else {
+			this->ennemyUpdate();
+		}
 		this->playerUpdate();
-		this->ennemyUpdate();
 		this->projectileUpdate();
 		this->checkCollisions();
 		this->shoot();
@@ -269,7 +284,6 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		case 2: currentState = GameState::MENU;
 			resetGame();
 			mainMenu.resetCooldown();
-			//player->reset();
 			break;
 		}
 	}
@@ -419,6 +433,7 @@ void Game::initScore() //création score
 void Game::initPlayer() // création du J
 {
 	this->player = new Player();
+	this->boss = new Boss();
 }
 
 void Game::createEnnemy() //créateur des ennemies + vagues
@@ -634,6 +649,7 @@ void Game::checkCollisions()
 					scoreBonus++;
 					textScore.setString("Score: " + to_string(score));
 					ennemiesToRemove.push_back(ennemy);
+					cout << "Score boss: " << scoreBoss << endl;
 				}
 			}
 		}

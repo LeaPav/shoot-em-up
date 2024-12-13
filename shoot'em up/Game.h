@@ -4,6 +4,7 @@
 #include "Ennemy.h"
 #include "Menu.h"
 #include "GameOver.h"
+#include "Boss.h"
 #include "Projectile.h"
 
 class Game
@@ -22,6 +23,7 @@ private:
 	RenderWindow* window;
 	VideoMode videoMode;
 	Player* player;
+	Boss* boss;
 	Font font;
 	Text textScore;
 	//fonctions
@@ -69,6 +71,7 @@ private:
 	int score;
 	int scoreBonus;
 	int scoreBoss;
+	int* scoreBossTest;
 	int killStreak;
 
 	// Menu
@@ -79,6 +82,9 @@ private:
 
 	//Game over
 	GameOver gameOver;
+	
+	//Spawn du boss
+	bool bossSpawn;
 
 public:
 	Game();
@@ -101,6 +107,10 @@ public:
 
 	//Game over
 	void renderGameOver();
+
+	//boss
+	void renderBoss();
+	void updateBoss();
 
 	void update();
 	void render();
