@@ -22,7 +22,7 @@ void Player::initTexture()
 
 void Player::initHealthBar()
 {
-	this->maxHp = 500;
+	this->maxHp = 3;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));
@@ -149,5 +149,5 @@ int Player::getHealth() const
 void Player::reset()
 {
 	hp = maxHp;
-	sprite.setPosition(10, 10);
+	sprite.setPosition(10, 540);
 }
