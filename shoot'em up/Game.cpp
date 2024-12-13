@@ -7,7 +7,6 @@ Game::Game() : currentState(MENU), isPaused(false)
 	this->initWindow();
 	this->initPlayer();
 	this->initScore();
-	score = 0;
 }
 
 Game::~Game()
@@ -403,14 +402,14 @@ void Game::initWindow() //création fenetre
 
 void Game::initScore() //création score
 {
-	if (!font.loadFromFile("assets/font/test.ttf")) {
+	if (!font.loadFromFile("assets/font/fontpause.ttf")) {
 		cout << "ERREUR";
 	}
 	textScore.setFont(font);
 	textScore.setPosition(0, 0);
-	textScore.setCharacterSize(30);
-	textScore.setFillColor(Color::Green);
-	textScore.setString(to_string(score));
+	textScore.setCharacterSize(50);
+	textScore.setFillColor(Color::Red);
+	textScore.setString("Score: " + to_string(score));
 }
 
 /////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
@@ -423,7 +422,7 @@ void Game::initPlayer() // création du J
 void Game::createEnnemy() //créateur des ennemies + vagues
 {
 	int distance = 2020;
-	int random = rand() % 5;
+	int random = 2;// rand() % 5;
 
 	bool peacefull = false;
 	int pv = 2;
@@ -502,7 +501,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 		
 	}
-	else if (random == 3 && score >= 40) { // pyramide par 5 tir
+	else if (random == 3 && scoreBoss >= 40) { // pyramide par 5 tir
 
 		int largeur = rand() % this->videoMode.height;
 
@@ -544,11 +543,11 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 		
 		
 	}
-	else if (random == 4 && score >= 20) { //mur par 5
+	else if (random == 4 && scoreBoss >= 20) { //mur par 5
 
 		MovementType randomType = static_cast<MovementType>(rand() % 2);
 
-		if (score <= 30) {
+		if (scoreBoss <= 30) {
 			randomType = STRAIGHT;
 		}
 
@@ -625,9 +624,13 @@ void Game::checkCollisions()
 				projectile->markAsOutOfScreen();
 
 				if (ennemy->isDead()) {
-					score++;
+
+					killStreak++;
+					int multiplicateur = 1 + (1*killStreak);
+					score = score + multiplicateur;
+					scoreBoss++;
 					scoreBonus++;
-					textScore.setString(to_string(score));
+					textScore.setString("Score: " + to_string(score));
 					ennemiesToRemove.push_back(ennemy);
 				}
 			}

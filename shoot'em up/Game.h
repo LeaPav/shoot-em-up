@@ -68,6 +68,8 @@ private:
 
 	int score;
 	int scoreBonus;
+	int scoreBoss;
+	int killStreak;
 
 	// Menu
 	Menu mainMenu;
