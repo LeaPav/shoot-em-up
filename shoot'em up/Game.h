@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Ennemy.h"
 #include "Menu.h"
+#include "GameOver.h"
 #include "Projectile.h"
 
 class Game
@@ -13,6 +14,7 @@ public:
 		OPTIONS,
 		COMMANDS,
 		EDITOR,
+		GAMEOVER,
 		PAUSE,
 		PLAYING
 	};
@@ -22,7 +24,6 @@ private:
 	Player* player;
 	Font font;
 	Text textScore;
-	Text reprendre;
 	//fonctions
 	int initSprite();
 	void initPlayer();
@@ -33,7 +34,7 @@ private:
 	void createProjectiles(float x, float y);
 	void createProjectilesEnnemy(float x, float y);
 
-	//taille de l'écran
+	//taille de l'Ã©cran
 	int mapWidth = 1920;
 	int mapHeight = 1080;
 
@@ -51,7 +52,6 @@ private:
 	Texture haut_sens2;
 	Texture haut_invers2;
 
-
 	Sprite basSens1;
 	Sprite basInvers1;
 	Sprite basSens2;
@@ -61,7 +61,7 @@ private:
 	Sprite hautSens2;
 	Sprite hautInvers2;
 
-	//vectors des entités 
+	//vectors des entitÃ©s 
 	vector<Ennemy*> ennemies;
 	vector<Projectile*> projectilesPlayer;
 	vector<Projectile*> projectilesEnnemy;
@@ -71,8 +71,13 @@ private:
 
 	// Menu
 	Menu mainMenu;
+	Menu pauseMenu;
 	GameState currentState;
 	bool isPaused;
+
+	//Game over
+	GameOver gameOver;
+
 public:
 	Game();
 	~Game();
@@ -88,15 +93,21 @@ public:
 	void shootEnnemy();
 
 	// Menu
-	void handleMenuState();
+	void handleMenuState(Event& event);
 	void handleMenu();
 	void renderMenuPause();
+
+	//Game over
+	void renderGameOver();
 
 	void update();
 	void render();
 
 	void fonduNiveau1();
 	void renderNiveau1();
+	//score
+
+	void resetGame();
 
 };
 

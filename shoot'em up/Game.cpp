@@ -69,7 +69,7 @@ void Game::initWindow()
 
 void Game::initScore()
 {
-	if (!font.loadFromFile("assets/test.ttf")) {
+	if (!font.loadFromFile("assets/font/test.ttf")) {
 		cout << "ERREUR";
 	}
 	textScore.setFont(font);
@@ -78,6 +78,7 @@ void Game::initScore()
 	textScore.setFillColor(Color::Green);
 	textScore.setString(to_string(score));
 }
+
 
 void Game::createEnnemy()
 {
@@ -263,7 +264,7 @@ void Game::createProjectilesEnnemy(float x, float y)
 	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
 	projectilesEnnemy.push_back(newProjectile);
 
-	//std::cout << "Projectile créé à (" << x << ", " << y << ")" << std::endl;
+	//cout << "Projectile crÃ©Ã© Ã  (" << x << ", " << y << ")" << endl;
 }
 
 void Game::entityRender()
@@ -283,6 +284,7 @@ Game::Game() : currentState(MENU), isPaused(false)
 	this->initWindow();
 	this->initPlayer();
 	this->initScore();
+	score = 0;
 }
 
 Game::~Game()
@@ -318,7 +320,7 @@ void Game::projectileUpdate()
 void Game::ennemyUpdate()
 {
 
-	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
+	static int timer = 0; //utilisatin de static pour pas qu'il se remette Ã  0 Ã  chaque appel de la fonction
 	const int spawnInterval = 60;
 
 	timer++;
@@ -396,7 +398,7 @@ void Game::checkCollisions()
 
 	projectilesEnnemy.erase(remove_if(projectilesEnnemy.begin(), projectilesEnnemy.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
-			cout << "Suppression d'un projectile ennemi" << endl;
+			//cout << "Suppression d'un projectile ennemi" << endl;
 			delete p;
 			return true;
 		}
@@ -445,11 +447,14 @@ void Game::shootEnnemy()
 	}
 }
 
-void Game::handleMenuState()
+void Game::handleMenuState(Event& event)
 {
 	if (currentState == GameState::MENU) {
+		player->reset();
 		mainMenu.handleMouseHover(*window);
-		int action = mainMenu.handleInputMainMenu(*window);
+		int action = mainMenu.handleInputMainMenu(*window, event);
+		player->reset();
+	
 
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
@@ -463,7 +468,7 @@ void Game::handleMenuState()
 			break;
 		}	
 	}
-	else if (currentState == GameState::PLAYING) {
+	if (currentState == GameState::PLAYING) {
 			this->playerUpdate();
 			this->ennemyUpdate();
 			this->projectileUpdate();
@@ -471,9 +476,39 @@ void Game::handleMenuState()
 			this->shoot();
 			this->fonduNiveau1();
 	}
+	if (currentState == GameState::PAUSE) {
+		pauseMenu.handleMouseHover(*window); 
+		int mouseAction = pauseMenu.handleInputPauseMenu(*window, event);
+
+		switch (mouseAction) {
+		case 1: 
+			currentState = GameState::PLAYING;
+			break;
+		case 3: currentState = GameState::MENU;
+			resetGame();
+			mainMenu.resetCooldown();
+			break;
+		}
+		
+	}
+	if (currentState == GameState::GAMEOVER) {
+		gameOver.handleMouseHover(*window);
+		int actionGameOver = gameOver.handleInput(*window, event);
+		this->player->udpateHealthBar();
+		switch (actionGameOver) {
+		case 1: currentState = GameState::PLAYING;
+			resetGame();
+			break;
+		case 2: currentState = GameState::MENU;
+			resetGame();
+			mainMenu.resetCooldown();
+			//player->reset();
+			break;
+		}
+	}
 	if (currentState == GameState::OPTIONS) {
 		mainMenu.handleMouseHover(*window);
-		int optionsAction = mainMenu.handleInputMenuOptions(*window);
+		int optionsAction = mainMenu.handleInputMenuOptions(*window, event);
 
 		switch (optionsAction) {
 		case 1: currentState = GameState::COMMANDS;
@@ -484,7 +519,7 @@ void Game::handleMenuState()
 	}
 	if (currentState == GameState::COMMANDS) {
 		mainMenu.handleMouseHover(*window);
-		int actionCommands = mainMenu.handleInputMenuOptions(*window);
+		int actionCommands = mainMenu.handleInputMenuOptions(*window, event);
 
 		switch (actionCommands) {
 		case 4: currentState = GameState::OPTIONS;
@@ -498,14 +533,15 @@ void Game::handleMenu()
 	if (currentState == GameState::MENU) {
 		mainMenu.render(*window);
 	}
-	else if (currentState == GameState::PLAYING) {
+	if (currentState == GameState::PLAYING) {
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
 		this->projectileRender();
 		this->window->draw(textScore);
 	}
-	else if (currentState == GameState::PAUSE) {
+	if (currentState == GameState::PAUSE) {
+		pauseMenu.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
@@ -513,47 +549,58 @@ void Game::handleMenu()
 		this->window->draw(textScore);
 		this->renderMenuPause();
 	}
-	else if (currentState == GameState::OPTIONS) {
+	if (currentState == GameState::OPTIONS) {
+		mainMenu.handleMouseHover(*window);
 		mainMenu.renderOptions(*window);
 	}
-	else if (currentState == GameState::EDITOR) {
-		//mainMenu.handleMouseHover(*window);
+	if (currentState == GameState::EDITOR) {
+		mainMenu.handleMouseHover(*window);
 		mainMenu.renderEditor(*window);
 	}
-	else if (currentState == GameState::COMMANDS) {
+	if (currentState == GameState::COMMANDS) {
 		mainMenu.renderCommands(*window);
+	}
+	if (currentState == GameState::GAMEOVER) {
+		gameOver.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderGameOver();
 	}
 }
 
 void Game::renderMenuPause()
 {
-	if (!font.loadFromFile("assets/test.ttf")) {
-		cout << "ERREUR";
-	}
+//	pauseMenu.handleMouseHover(*window);
+
+
 	RectangleShape overlayTest(Vector2f(this->videoMode.width, this->videoMode.height));
 	overlayTest.setFillColor(Color(0, 0, 0, 125));
 	//his->window->draw(overlayTest);
 	RectangleShape test(Vector2f(200.f, 40.f));
 	//this->window->draw(test);
 
-	reprendre.setFont(font);
-	reprendre.setPosition(0, 0);
-	reprendre.setCharacterSize(24);
-	reprendre.setFillColor(Color::Red);
-	reprendre.setString("Reprendre");
-
 	this->window->draw(overlayTest);
-	this->window->draw(test);
-	this->window->draw(reprendre);
-	
+	pauseMenu.renderPauseMenu(*window);
+
 }
 
+void Game::renderGameOver()
+{
+	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlay.setFillColor(Color(0, 0, 0, 125));
+	this->window->draw(overlay);
+	gameOver.render(*window);
+}
 
 void Game::update()
 {
 	Event event;
-
+	//handleMenuState(event);
 	while (this->window->pollEvent(event)) {
+
 		if (event.type == Event::Closed)
 			this->window->close();
 		if (Keyboard::isKeyPressed(Keyboard::J)) {
@@ -571,17 +618,15 @@ void Game::update()
 				currentState = GameState::PLAYING;
 			}
 		}
+
 	}
 
-	if (!isPaused) {
-		handleMenuState();
-		if (player->isDead()) {
-			cout << "Game over";
-			this->window->close();
-			return;
-		}
+	if (player->isDead()) {
+		currentState = GameState::GAMEOVER;
+		
 	}
-
+	handleMenuState(event);
+	
 }
 
 void Game::render()
@@ -646,6 +691,16 @@ void Game::renderNiveau1()
 	this->window->draw(hautSens2);
 	this->window->draw(hautInvers1);
 	this->window->draw(hautInvers2);
+}
+
+void Game::resetGame()
+{
+	player->reset();
+	ennemies.clear();
+	projectilesPlayer.clear();
+	projectilesEnnemy.clear();
+	score = 0;
+	textScore.setString(to_string(score));
 }
 
 

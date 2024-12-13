@@ -140,3 +140,14 @@ FloatRect Player::getGlobalBounds() const
 	return this->sprite.getGlobalBounds();
 
 }
+
+int Player::getHealth() const
+{
+	return hp;
+}
+
+void Player::reset()
+{
+	hp = maxHp;
+	sprite.setPosition(10, 10);
+}

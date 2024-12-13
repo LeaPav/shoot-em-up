@@ -11,7 +11,11 @@ Menu::Menu() : indexButtonSelected(0)
 
 int Menu::initFont()
 {
-	if (!font.loadFromFile("assets/test.ttf")) {
+	if (!fontMainMenu.loadFromFile("assets/font/menu.ttf")) {
+		return -1;
+	}
+
+	if (!fontPauseMenu.loadFromFile("assets/font/fontpause.ttf")) {
 		return -1;
 	}
 }
@@ -47,26 +51,26 @@ void Menu::initButton()
 	quitButtonRect.setFillColor(Color(165, 191, 208));
 	quitButtonRect.setPosition(705.f, 735.f);
 
-	playButton.setFont(this->font);
-	playButton.setString("JOUER");
-	playButton.setCharacterSize(50);
-	playButton.setPosition(870.f, 300.f);
+	playButton.setFont(this->fontMainMenu);
+	playButton.setString("Jouer");
+	playButton.setCharacterSize(40);
+	playButton.setPosition(880.f, 310.f);
 
-	optionsButton.setFont(this->font);
-	optionsButton.setString("OPTIONS");
-	optionsButton.setCharacterSize(50);
+	optionsButton.setFont(this->fontMainMenu);
+	optionsButton.setString("Options");
+	optionsButton.setCharacterSize(40);
 	optionsButton.setFillColor(Color::White);
-	optionsButton.setPosition(860.f, 455.f);
+	optionsButton.setPosition(870.f, 465.f);
 
-	editorButton.setFont(this->font);
-	editorButton.setString("EDITEUR DE NIVEAU");
-	editorButton.setCharacterSize(50);
+	editorButton.setFont(this->fontMainMenu);
+	editorButton.setString("Editeur de niveau");
+	editorButton.setCharacterSize(40);
 	editorButton.setFillColor(Color::White);
-	editorButton.setPosition(765.f, 600.f);
+	editorButton.setPosition(735.f, 605.f);
 
-	quitButton.setFont(this->font);
-	quitButton.setString("QUITTER");
-	quitButton.setCharacterSize(50);
+	quitButton.setFont(this->fontMainMenu);
+	quitButton.setString("Quitter");
+	quitButton.setCharacterSize(40);
 	quitButton.setFillColor(Color::White);
 	quitButton.setPosition(870.f, 755.f);
 }
@@ -88,25 +92,56 @@ void Menu::initOptionsButton()
 	returnButtonRect.setFillColor(Color(165, 191, 208));
 	returnButtonRect.setPosition(1550.f, 980.f);
 
-	commandsButton.setFont(this->font);
-	commandsButton.setString("COMMANDES");
-	commandsButton.setCharacterSize(50);
-	commandsButton.setPosition(870.f, 300.f);
+	commandsButton.setFont(this->fontMainMenu);
+	commandsButton.setString("Commandes");
+	commandsButton.setCharacterSize(40);
+	commandsButton.setPosition(830.f, 305.f);
 
-	settingsButton.setFont(this->font);
-	settingsButton.setString("PARAMÈTRES");
-	settingsButton.setCharacterSize(50);
-	settingsButton.setPosition(870.f, 455.f);
+	settingsButton.setFont(this->fontMainMenu);
+	settingsButton.setString("Paramètres");
+	settingsButton.setCharacterSize(40);
+	settingsButton.setPosition(820.f, 460.f);
 
-	difficultyButton.setFont(this->font);
-	difficultyButton.setString("DIFFICULTÉ");
-	difficultyButton.setCharacterSize(50);
-	difficultyButton.setPosition(870.f, 600.f);
+	difficultyButton.setFont(this->fontMainMenu);
+	difficultyButton.setString("Difficulté");
+	difficultyButton.setCharacterSize(40);
+	difficultyButton.setPosition(840.f, 605.f);
 
-	returnButton.setFont(this->font);
-	returnButton.setString("RETOUR");
-	returnButton.setCharacterSize(50);
-	returnButton.setPosition(1650.f, 985.f);
+	returnButton.setFont(this->fontMainMenu);
+	returnButton.setString("Retour");
+	returnButton.setCharacterSize(40);
+	returnButton.setPosition(1650.f, 990.f);
+
+	resumeButton.setFont(fontPauseMenu);
+	resumeButton.setCharacterSize(28);
+	resumeButton.setString("Reprendre");
+	FloatRect resumeButtonBounds = resumeButton.getLocalBounds();
+	float xResume = (1920 / 2.f) - (resumeButtonBounds.width / 2.f) - resumeButtonBounds.left;
+	resumeButton.setPosition(xResume, 400);
+	
+
+	settingsPauseButton.setFont(fontPauseMenu);
+	settingsPauseButton.setCharacterSize(28);
+	settingsPauseButton.setString("Paramètres");
+	FloatRect settingsButtonBounds = settingsPauseButton.getLocalBounds();
+	float xSettings = (1920 / 2.f) - (settingsButtonBounds.width / 2.f) - settingsButtonBounds.left;
+	settingsPauseButton.setPosition(xSettings, 500);
+
+	returnToMainMenuButton.setFont(fontPauseMenu);
+	returnToMainMenuButton.setCharacterSize(28);
+	returnToMainMenuButton.setString("Retour au menu");
+	FloatRect returnToMainMenuButtonBounds = returnToMainMenuButton.getLocalBounds();
+	float xReturn = (1920 / 2.f) - (returnToMainMenuButtonBounds.width / 2.f) - returnToMainMenuButtonBounds.left;
+	returnToMainMenuButton.setPosition(xReturn, 600);
+
+	pause.setFont(fontPauseMenu);
+	pause.setCharacterSize(80);
+	pause.setString("PAUSE");
+	pause.setFillColor(Color(255, 235, 108));
+	FloatRect pauseBounds = pause.getLocalBounds();
+	float xpause = (1920 / 2.f) - (pauseBounds.width / 2.f) - pauseBounds.left;
+	pause.setPosition(xpause, 100);
+
 }
 void Menu::initCommandsButton()
 {
@@ -114,48 +149,76 @@ void Menu::initCommandsButton()
 	returnButtonRect.setFillColor(Color(165, 191, 208));
 	returnButtonRect.setPosition(1550.f, 980.f);
 
-	returnButton.setFont(this->font);
-	returnButton.setString("RETOUR");
-	returnButton.setCharacterSize(50);
-	returnButton.setPosition(1650.f, 985.f);
 }
-int Menu::handleInputMainMenu(RenderWindow& window)
+int Menu::handleInputMainMenu(RenderWindow& window, const Event& event)
 {
-	if (Mouse::isButtonPressed(Mouse::Left)) {
-		Vector2i mousePos = Mouse::getPosition(window);
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
 
+			if (playButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (optionsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (editorButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
+			if (quitButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
+		}
 		
-		if (playButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 1;
-		}
-		if (optionsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 2;
-		}
-		if (editorButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 3;
-		}
-		if (quitButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 4;
-		}
 
 	}
 	return 0;
 }
-int Menu::handleInputMenuOptions(RenderWindow& window)
+int Menu::handleInputMenuOptions(RenderWindow& window, const Event& event)
 {
-	if (Mouse::isButtonPressed(Mouse::Left)) {
-		Vector2i mousePos = Mouse::getPosition(window);
-		if (commandsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 1;
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (commandsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (settingsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (difficultyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				return 3;
+			}
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
 		}
-		if (settingsButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 2;
-		}
-		if (difficultyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 3;
-		}
-		if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-			return 4;
+	}
+	return 0;
+}
+int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (resumeButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (settingsPauseButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (returnToMainMenuButton.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
 		}
 	}
 	return 0;
@@ -199,7 +262,7 @@ void Menu::renderCommands(RenderWindow& window)
 {
 	window.draw(optionsBackground);
 	Text text;
-	text.setFont(font);
+	text.setFont(fontMainMenu);
 	text.setCharacterSize(40);
 	text.setFillColor(Color::White);
 	text.setPosition(750, 200);
@@ -208,6 +271,19 @@ void Menu::renderCommands(RenderWindow& window)
 
 	window.draw(returnButtonRect);
 	window.draw(returnButton);
+}
+
+void Menu::renderPauseMenu(RenderWindow& window)
+{
+	window.draw(pause);
+	window.draw(resumeButton);
+	window.draw(settingsPauseButton);
+	window.draw(returnToMainMenuButton);
+}
+
+void Menu::renderSettingsPauseMenu(RenderWindow& window)
+{
+
 }
 
 
@@ -285,5 +361,33 @@ void Menu::handleMouseHover(const RenderWindow& window)
 		returnButtonRect.setFillColor(Color(165, 191, 208));
 		returnButton.setFillColor(Color::White);
 	}
+	if (resumeButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		resumeButton.setFillColor(Color(251, 239, 165));
+	}
+	else {
+		resumeButton.setFillColor(Color::White);
+	}
+	if (settingsPauseButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		settingsPauseButton.setFillColor(Color(251, 239, 165));
+	}
+	else {
+		settingsPauseButton.setFillColor(Color::White);
+	}
+	if (returnToMainMenuButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		returnToMainMenuButton.setFillColor(Color(251, 239, 165));
+	}
+	else {
+		returnToMainMenuButton.setFillColor(Color::White);
+	}
+}
+
+bool Menu::isCooldownActive()
+{
+	return mouseCooldownClock.getElapsedTime() < mouseCooldown;
+}
+
+void Menu::resetCooldown()
+{
+	mouseCooldownClock.restart();
 }
 

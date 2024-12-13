@@ -9,7 +9,8 @@ public:
 private:
 	
 	// button mainMenu
-	Font font;
+	Font fontMainMenu;
+	Font fontPauseMenu;
 	Text playButton;
 	Text optionsButton;
 	Text editorButton;
@@ -33,11 +34,22 @@ private:
 	Text returnButton;
 	Text returnMenuOptionsButton;
 
+	// buton paramètres
+
+	// button menu pause;
+	Text resumeButton;
+	Text settingsPauseButton;
+	Text returnToMainMenuButton;
+	Text pause;
+
 	Sprite background;
 	Sprite optionsBackground;
 	Texture backgroundTexture;
 	Texture optionsTexture;
 	int indexButtonSelected;
+
+	Clock mouseCooldownClock;
+	const Time mouseCooldown = milliseconds(150);
 
 	int initFont();
 	int initBackground();
@@ -47,14 +59,20 @@ private:
 public:
 	Menu();
 
-	int handleInputMainMenu(RenderWindow& window);
-	int handleInputMenuOptions(RenderWindow& window);
+	int handleInputMainMenu(RenderWindow& window, const Event& event);
+	int handleInputMenuOptions(RenderWindow& window, const Event& event);
+	int handleInputPauseMenu(RenderWindow& window, const Event& event);
 
 	void render(RenderWindow& window);
 	void renderOptions(RenderWindow& window);
 	void renderEditor(RenderWindow& window);
 	void renderCommands(RenderWindow& window);
+	void renderPauseMenu(RenderWindow& window);
+	void renderSettingsPauseMenu(RenderWindow& window);
 	void setBackground(const string& backgroundImage);
 	void handleMouseHover(const RenderWindow& window);
+
+	bool isCooldownActive();
+	void resetCooldown();
 };
 

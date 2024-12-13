@@ -29,7 +29,6 @@ void Projectile::update()
 {
 	this->sprite.move(this->velocity);
 
-	
 }
 
 void Projectile::render(RenderTarget& target)
