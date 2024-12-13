@@ -372,7 +372,7 @@ void Game::checkCollisions()
 	
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
-			ennemy->damage(1);
+			ennemy->damage(10);
 			player->damage(1);
 		}
 	}
