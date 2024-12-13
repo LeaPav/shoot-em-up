@@ -1,7 +1,15 @@
 #include "Player.h"
 
+Player::Player()   //création joueur
+{
+	this->initHealthBar();
+	this->initSprite();
+	this->initTexture();
+}
 
-void Player::initSprite()
+/////////////////////////////////////////maj du joueur/////////////////////////////////////
+
+void Player::initSprite()     //chargement du corps du joueur
 {
 
 	recPlayer.setSize(Vector2f(100.f, 100.f));
@@ -14,13 +22,26 @@ void Player::initSprite()
 
 }
 
-void Player::initTexture()
+void Player::initTexture()   //pose la texture sur le sprite et set up la position
 {
 	this->sprite.setTexture(vaisseau);
 	this->sprite.setPosition(10, 540);
 }
 
-void Player::initHealthBar()
+void Player::render(RenderTarget& target)
+{
+	target.draw(this->sprite);
+}
+
+void Player::playerUpdate()
+{
+	playerCollisions();
+	playerMovement();
+}
+
+///////////////////////////////life///////////////////////////////////////////////
+
+void Player::initHealthBar()   // santé et barre de vie
 {
 	this->maxHp = 3;
 	this->hp = this->maxHp;
@@ -31,27 +52,50 @@ void Player::initHealthBar()
 	this->backgroundHealthBar.setFillColor(Color(117, 117, 117));
 }
 
-Player::Player() 
+void Player::udpateHealthBar()
 {
-	this->initHealthBar();
-	this->initSprite();
-	this->initTexture();
+	float healthPercentage = static_cast<float>(this->hp) / static_cast<float>(this->maxHp);
+	this->healthBar.setSize(Vector2f(200.f * healthPercentage, 20.f));
 }
 
-void Player::movement(int dx, int dy)
+void Player::renderHealthBar(RenderTarget& target)
 {
-	recPlayer.setPosition(x, y);
+	this->backgroundHealthBar.setPosition(10.f, 1050.f);
+	this->healthBar.setPosition(10.f, 1050.f);
+
+	target.draw(this->backgroundHealthBar);
+	target.draw(this->healthBar);
+
 }
 
-void Player::setPosition(const float x, const float y)
+void Player::reset()
 {
-
+	hp = maxHp;
+	sprite.setPosition(10, 540);
 }
+
+
+
+
+
+/////////////////////geter/////////////////////////////////////////////////////
 
 const Vector2f Player::getPosition() const
 {
 	return this->sprite.getPosition();
 }
+
+FloatRect Player::getGlobalBounds() const
+{
+	return this->sprite.getGlobalBounds();
+
+}
+
+int Player::getHealth() const
+{
+	return hp;
+}
+///////////////////////////collision////////////////////////////////////////////////
 
 void Player::playerCollisions()
 {
@@ -77,6 +121,13 @@ void Player::playerCollisions()
 	}
 }
 
+////////////////////////////////////////////deplacement/////////////////////////////////////
+
+void Player::movement(int dx, int dy)   //set up pour mouvement
+{
+	recPlayer.setPosition(x, y);
+}
+
 void Player::playerMovement()
 {
 	playerCollisions();
@@ -95,6 +146,8 @@ void Player::playerMovement()
 	
 }
 
+///////////////////////degats///////////////////////////////////////////////
+
 void Player::damage(int damages)
 {
 	this->hp -= damages;
@@ -107,47 +160,3 @@ bool Player::isDead() const
 	return this->hp <= 0;
 }
 
-
-void Player::playerUpdate()
-{
-	playerCollisions();
-	playerMovement();
-}
-
-void Player::render(RenderTarget& target)
-{
-	target.draw(this->sprite);
-}
-
-void Player::udpateHealthBar()
-{
-	float healthPercentage = static_cast<float>(this->hp) / static_cast<float>(this->maxHp);
-	this->healthBar.setSize(Vector2f(200.f * healthPercentage, 20.f));
-}
-
-void Player::renderHealthBar(RenderTarget& target)
-{
-	this->backgroundHealthBar.setPosition(10.f, 1050.f);
-	this->healthBar.setPosition(10.f, 1050.f);
-
-	target.draw(this->backgroundHealthBar);
-	target.draw(this->healthBar);
-
-}
-
-FloatRect Player::getGlobalBounds() const
-{
-	return this->sprite.getGlobalBounds();
-
-}
-
-int Player::getHealth() const
-{
-	return hp;
-}
-
-void Player::reset()
-{
-	hp = maxHp;
-	sprite.setPosition(10, 540);
-}
