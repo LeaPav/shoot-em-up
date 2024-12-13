@@ -9,7 +9,9 @@ Menu::Menu() : indexButtonSelected(0)
 	initCommandsButton();
 }
 
-int Menu::initFont()
+/////////////////////////////////////////maj du Game Over/////////////////////////////////////
+
+int Menu::initFont() //chargement font
 {
 	if (!fontMainMenu.loadFromFile("assets/font/menu.ttf")) {
 		return -1;
@@ -20,7 +22,7 @@ int Menu::initFont()
 	}
 }
 
-int Menu::initBackground()
+int Menu::initBackground() //chargement image
 {
 	if (!backgroundTexture.loadFromFile("assets/menu/menuStarWater.png")) {
 		return -1;
@@ -32,6 +34,8 @@ int Menu::initBackground()
 	optionsBackground.setTexture(optionsTexture);
 }
 
+//////////////////////////////////////////////////bouton//////////////////////////////////////////
+
 void Menu::initButton()
 {
 	
@@ -39,22 +43,15 @@ void Menu::initButton()
 	playButtonRect.setFillColor(Color(165, 191, 208));
 	playButtonRect.setPosition(705.f ,290.f);
 
-	optionsButtonRect.setSize(Vector2f(510.f, 95.f));
-	optionsButtonRect.setFillColor(Color(165, 191, 208));
-	optionsButtonRect.setPosition(705.f, 442.f);
-
-	editorButtonRect.setSize(Vector2f(510.f, 95.f));
-	editorButtonRect.setFillColor(Color(165, 191, 208));
-	editorButtonRect.setPosition(705.f, 585.f);
-
-	quitButtonRect.setSize(Vector2f(510.f, 95.f));
-	quitButtonRect.setFillColor(Color(165, 191, 208));
-	quitButtonRect.setPosition(705.f, 735.f);
-
 	playButton.setFont(this->fontMainMenu);
 	playButton.setString("Jouer");
 	playButton.setCharacterSize(40);
 	playButton.setPosition(880.f, 310.f);
+
+
+	optionsButtonRect.setSize(Vector2f(510.f, 95.f));
+	optionsButtonRect.setFillColor(Color(165, 191, 208));
+	optionsButtonRect.setPosition(705.f, 442.f);
 
 	optionsButton.setFont(this->fontMainMenu);
 	optionsButton.setString("Options");
@@ -62,11 +59,21 @@ void Menu::initButton()
 	optionsButton.setFillColor(Color::White);
 	optionsButton.setPosition(870.f, 465.f);
 
+
+	editorButtonRect.setSize(Vector2f(510.f, 95.f));
+	editorButtonRect.setFillColor(Color(165, 191, 208));
+	editorButtonRect.setPosition(705.f, 585.f);
+
 	editorButton.setFont(this->fontMainMenu);
 	editorButton.setString("Editeur de niveau");
 	editorButton.setCharacterSize(40);
 	editorButton.setFillColor(Color::White);
 	editorButton.setPosition(735.f, 605.f);
+
+
+	quitButtonRect.setSize(Vector2f(510.f, 95.f));
+	quitButtonRect.setFillColor(Color(165, 191, 208));
+	quitButtonRect.setPosition(705.f, 735.f);
 
 	quitButton.setFont(this->fontMainMenu);
 	quitButton.setString("Quitter");
@@ -80,41 +87,47 @@ void Menu::initOptionsButton()
 	commandsButtonRect.setFillColor(Color(165, 191, 208));
 	commandsButtonRect.setPosition(705.f, 290.f);
 
-	settingsButtonRect.setSize(Vector2f(510.f, 95.f));
-	settingsButtonRect.setFillColor(Color(165, 191, 208));
-	settingsButtonRect.setPosition(705.f, 442.f);
-
-	difficultyButtonRect.setSize(Vector2f(510.f, 95.f));
-	difficultyButtonRect.setFillColor(Color(165, 191, 208));
-	difficultyButtonRect.setPosition(705.f, 585.f);
-
-	returnButtonRect.setSize(Vector2f(350.f, 75.f));
-	returnButtonRect.setFillColor(Color(165, 191, 208));
-	returnButtonRect.setPosition(1550.f, 980.f);
-
 	commandsButton.setFont(this->fontMainMenu);
 	commandsButton.setString("Commandes");
 	commandsButton.setCharacterSize(40);
 	commandsButton.setPosition(830.f, 305.f);
+
+
+	settingsButtonRect.setSize(Vector2f(510.f, 95.f));
+	settingsButtonRect.setFillColor(Color(165, 191, 208));
+	settingsButtonRect.setPosition(705.f, 442.f);
 
 	settingsButton.setFont(this->fontMainMenu);
 	settingsButton.setString("Paramètres");
 	settingsButton.setCharacterSize(40);
 	settingsButton.setPosition(820.f, 460.f);
 
+
+	difficultyButtonRect.setSize(Vector2f(510.f, 95.f));
+	difficultyButtonRect.setFillColor(Color(165, 191, 208));
+	difficultyButtonRect.setPosition(705.f, 585.f);
+
 	difficultyButton.setFont(this->fontMainMenu);
 	difficultyButton.setString("Difficulté");
 	difficultyButton.setCharacterSize(40);
 	difficultyButton.setPosition(840.f, 605.f);
+
+
+	returnButtonRect.setSize(Vector2f(350.f, 75.f));
+	returnButtonRect.setFillColor(Color(165, 191, 208));
+	returnButtonRect.setPosition(1550.f, 980.f);
 
 	returnButton.setFont(this->fontMainMenu);
 	returnButton.setString("Retour");
 	returnButton.setCharacterSize(40);
 	returnButton.setPosition(1650.f, 990.f);
 
+	/////////////////////////menu pause////////////////////////////
+
 	resumeButton.setFont(fontPauseMenu);
 	resumeButton.setCharacterSize(28);
 	resumeButton.setString("Reprendre");
+
 	FloatRect resumeButtonBounds = resumeButton.getLocalBounds();
 	float xResume = (1920 / 2.f) - (resumeButtonBounds.width / 2.f) - resumeButtonBounds.left;
 	resumeButton.setPosition(xResume, 400);
@@ -123,6 +136,7 @@ void Menu::initOptionsButton()
 	settingsPauseButton.setFont(fontPauseMenu);
 	settingsPauseButton.setCharacterSize(28);
 	settingsPauseButton.setString("Paramètres");
+
 	FloatRect settingsButtonBounds = settingsPauseButton.getLocalBounds();
 	float xSettings = (1920 / 2.f) - (settingsButtonBounds.width / 2.f) - settingsButtonBounds.left;
 	settingsPauseButton.setPosition(xSettings, 500);
@@ -130,6 +144,7 @@ void Menu::initOptionsButton()
 	returnToMainMenuButton.setFont(fontPauseMenu);
 	returnToMainMenuButton.setCharacterSize(28);
 	returnToMainMenuButton.setString("Retour au menu");
+
 	FloatRect returnToMainMenuButtonBounds = returnToMainMenuButton.getLocalBounds();
 	float xReturn = (1920 / 2.f) - (returnToMainMenuButtonBounds.width / 2.f) - returnToMainMenuButtonBounds.left;
 	returnToMainMenuButton.setPosition(xReturn, 600);
@@ -138,19 +153,25 @@ void Menu::initOptionsButton()
 	pause.setCharacterSize(80);
 	pause.setString("PAUSE");
 	pause.setFillColor(Color(255, 235, 108));
+
 	FloatRect pauseBounds = pause.getLocalBounds();
 	float xpause = (1920 / 2.f) - (pauseBounds.width / 2.f) - pauseBounds.left;
 	pause.setPosition(xpause, 100);
 
 }
-void Menu::initCommandsButton()
+
+
+void Menu::initCommandsButton() //bouton retour 
 {
 	returnButtonRect.setSize(Vector2f(350.f, 75.f));
 	returnButtonRect.setFillColor(Color(165, 191, 208));
 	returnButtonRect.setPosition(1550.f, 980.f);
 
 }
-int Menu::handleInputMainMenu(RenderWindow& window, const Event& event)
+
+///////////////////////////////////////clique souris//////////////////////////////////////////
+
+int Menu::handleInputMainMenu(RenderWindow& window, const Event& event) //changement des etat du jeu 
 {
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
@@ -178,7 +199,18 @@ int Menu::handleInputMainMenu(RenderWindow& window, const Event& event)
 	}
 	return 0;
 }
-int Menu::handleInputMenuOptions(RenderWindow& window, const Event& event)
+
+bool Menu::isCooldownActive() // cooldown pour les clique bouton
+{
+	return mouseCooldownClock.getElapsedTime() < mouseCooldown;
+}
+
+void Menu::resetCooldown() //reset du clique 
+{
+	mouseCooldownClock.restart();
+}
+
+int Menu::handleInputMenuOptions(RenderWindow& window, const Event& event) //changement des etat du jeu dans le menu option
 {
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
@@ -202,7 +234,8 @@ int Menu::handleInputMenuOptions(RenderWindow& window, const Event& event)
 	}
 	return 0;
 }
-int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event)
+
+int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event) //changement des etat du jeu dans le menu pause
 {
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
@@ -223,7 +256,10 @@ int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event)
 	}
 	return 0;
 }
-void Menu::render(RenderWindow& window)
+
+///////////////////////////////////////////////affichage//////////////////////////////////////////////
+
+void Menu::render(RenderWindow& window) //menu principale
 {
 
 	window.draw(background);
@@ -239,7 +275,7 @@ void Menu::render(RenderWindow& window)
 	window.draw(quitButton);
 }
 
-void Menu::renderOptions(RenderWindow& window)
+void Menu::renderOptions(RenderWindow& window) // menu option 
 {
 	window.draw(optionsBackground);
 	window.draw(commandsButtonRect);
@@ -253,12 +289,12 @@ void Menu::renderOptions(RenderWindow& window)
 	window.draw(this->returnButton);
 }
 
-void Menu::renderEditor(RenderWindow& window)
+void Menu::renderEditor(RenderWindow& window) // menu éditeur
 {
 	window.draw(optionsBackground);
 }
 
-void Menu::renderCommands(RenderWindow& window)
+void Menu::renderCommands(RenderWindow& window) // menu commande
 {
 	window.draw(optionsBackground);
 	Text text;
@@ -273,7 +309,7 @@ void Menu::renderCommands(RenderWindow& window)
 	window.draw(returnButton);
 }
 
-void Menu::renderPauseMenu(RenderWindow& window)
+void Menu::renderPauseMenu(RenderWindow& window) //menu pause
 {
 	window.draw(pause);
 	window.draw(resumeButton);
@@ -281,15 +317,17 @@ void Menu::renderPauseMenu(RenderWindow& window)
 	window.draw(returnToMainMenuButton);
 }
 
-void Menu::renderSettingsPauseMenu(RenderWindow& window)
+void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramètre menu pause
 {
 
 }
 
 
-void Menu::setBackground(const string& backgroundImage)
+void Menu::setBackground(const string& backgroundImage) // changer de fond si besoin
 {
 }
+
+/////////////////////////////////////////surbrillance///////////////////////////////////////////////////////////
 
 void Menu::handleMouseHover(const RenderWindow& window)
 {
@@ -381,13 +419,7 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	}
 }
 
-bool Menu::isCooldownActive()
-{
-	return mouseCooldownClock.getElapsedTime() < mouseCooldown;
-}
 
-void Menu::resetCooldown()
-{
-	mouseCooldownClock.restart();
-}
+
+
 
