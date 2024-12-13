@@ -40,6 +40,7 @@ private:
 	Text resumeButton;
 	Text settingsPauseButton;
 	Text returnToMainMenuButton;
+	Text pause;
 
 	Sprite background;
 	Sprite optionsBackground;

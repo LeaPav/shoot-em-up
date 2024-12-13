@@ -17,7 +17,7 @@ void GameOver::initButton()
 	FloatRect gameOverTextBounds = gameOverText.getLocalBounds();
 	float x = (1920 / 2.f) - (gameOverTextBounds.width / 2.f) - gameOverTextBounds.left;
 	gameOverText.setPosition(x, 200);
-	gameOverText.setFillColor(Color::Red);
+	gameOverText.setFillColor(Color(172, 27, 4));
 
 	retryButton.setFont(fontOver);
 	retryButton.setString("Rejouer");
@@ -67,13 +67,13 @@ void GameOver::handleMouseHover(const RenderWindow& window)
 	Vector2i mousePos = Mouse::getPosition(window);
 
 	if (retryButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-		retryButton.setFillColor(Color(218, 218, 218));
+		retryButton.setFillColor(Color(163, 57, 41));
 	}
 	else {
 		retryButton.setFillColor(Color::White);
 	}
 	if (mainMenuButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-		mainMenuButton.setFillColor(Color(218, 218, 218));
+		mainMenuButton.setFillColor(Color(163, 57, 41));
 	}
 	else {
 		mainMenuButton.setFillColor(Color::White);
