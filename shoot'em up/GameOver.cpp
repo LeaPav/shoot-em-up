@@ -1,6 +1,14 @@
 #include "GameOver.h"
 
-int GameOver::initFont()
+GameOver::GameOver()
+{
+	initFont();
+	initButton();
+}
+
+/////////////////////////////////////////maj du Game Over/////////////////////////////////////
+
+int GameOver::initFont() //la police
 {
 	if (!fontOver.loadFromFile("assets/font/fontpause.ttf")) {
 		cout << "ERREUR";
@@ -8,7 +16,15 @@ int GameOver::initFont()
 
 }
 
-void GameOver::initButton()
+void GameOver::render(RenderWindow& window)
+{
+	window.draw(gameOverText);
+	window.draw(retryButton);
+	window.draw(mainMenuButton);
+}
+////////////////////////////////////////bouton//////////////////////////////////////////
+
+void GameOver::initButton() // tout les bouton du menu
 {
 	gameOverText.setFont(fontOver);
 	gameOverText.setString("GAME OVER");
@@ -38,13 +54,9 @@ void GameOver::initButton()
 	mainMenuButton.setFillColor(Color::White);
 }
 
-GameOver::GameOver()
-{
-	initFont();
-	initButton();
-}
 
-int GameOver::handleInput(RenderWindow& window, const Event& event)
+
+int GameOver::handleInput(RenderWindow& window, const Event& event)   //gere l'input lag a la pression des bouton
 {
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
@@ -62,7 +74,8 @@ int GameOver::handleInput(RenderWindow& window, const Event& event)
 	return 0;
 }
 
-void GameOver::handleMouseHover(const RenderWindow& window)
+
+void GameOver::handleMouseHover(const RenderWindow& window) //surbrillance des boutons
 {
 	Vector2i mousePos = Mouse::getPosition(window);
 
@@ -80,12 +93,8 @@ void GameOver::handleMouseHover(const RenderWindow& window)
 	}
 }
 
-void GameOver::render(RenderWindow& window)
-{
-	window.draw(gameOverText);
-	window.draw(retryButton);
-	window.draw(mainMenuButton);
-}
+///////////////////////////////////////clique souris //////////////////////////////////
+
 
 bool GameOver::isCooldownActive()
 {
