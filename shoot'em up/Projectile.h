@@ -3,19 +3,25 @@
 
 class Projectile
 {
+public: 
+	enum ProjectileType {
+		PLAYER,
+		ENNEMY,
+		BOSS
+	};
 private:
 	RectangleShape projectile;
 	Vector2f velocity;
 
-	Texture projoAll;
+	Texture projoPlayer, projoBoss, projoEnnemy;
 	Sprite sprite;
-
+	ProjectileType type;
 	bool isOutOfScreen;
-	int initProjectiles();
+	void initProjectiles();
 	
 	void initTexture();
 public:
-	Projectile(float x, float y, float speedX, float speedY);
+	Projectile(float x, float y, float speedX, float speedY, ProjectileType type);
 	~Projectile();
 
 	void update();

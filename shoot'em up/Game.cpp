@@ -70,6 +70,9 @@ void Game::projectileUpdate()
 	for (auto& projectile : projectilesEnnemy) {
 		projectile->update();
 	}
+	for (auto& projectile2 : projectilesBoss) {
+		projectile2->update();
+	}
 
 }
 
@@ -91,6 +94,7 @@ void Game::updateBoss()
 {
 	if (this->boss->canSpawn(scoreBoss))
 	this->boss->update();
+	shootingBoss();
 }
 
 const bool Game::windowIsOpen()
@@ -172,6 +176,9 @@ void Game::projectileRender()
 
 	for (auto& projectile2 : projectilesEnnemy) {
 		projectile2->render(*this->window);
+	}
+	for (auto& projectile3 : projectilesBoss) {
+		projectile3->render(*this->window);
 	}
 }
 
@@ -617,16 +624,22 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 /////////////////////////////////////////projo////////////////////////////////////////
 
-void Game::createProjectiles(float x, float y)
+void Game::createProjectilesPlayer(float x, float y)
 {
-	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f);
+	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f, Projectile::ProjectileType::PLAYER);
 	projectilesPlayer.push_back(newProjectile);
 }
 
 void Game::createProjectilesEnnemy(float x, float y)
 {
-	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f);
+	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f, Projectile::ProjectileType::ENNEMY);
 	projectilesEnnemy.push_back(newProjectile);
+}
+
+void Game::createProjectilesBoss(float x, float y)
+{
+	Projectile* newProjectile = new Projectile(x, y, -15.f, 0.f, Projectile::ProjectileType::BOSS);
+	projectilesBoss.push_back(newProjectile);
 }
 
 //////////////////////////////////////////colision////////////////////////////////////////////////////////
@@ -726,7 +739,7 @@ void Game::shoot()
 	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
 		float playerX = this->player->getPosition().x + 80.f;
 		float playerY = this->player->getPosition().y + 40.f;
-		createProjectiles(playerX, playerY);
+		createProjectilesPlayer(playerX, playerY);
 		cooldownShoot = fireRate;
 	}
 	if (cooldownShoot > 0) {
@@ -745,6 +758,19 @@ void Game::shootEnnemy()
 			createProjectilesEnnemy(ennemyX, ennemyY);
 			ennemy->resetShootCooldown();
 		}
+	}
+}
+
+void Game::shootingBoss()
+{
+	if (boss->shouldShoot()) {
+		float bossX = boss->getPosition().x;
+		float bossY = boss->getPosition().y + 125.f;
+
+		if (boss->getPhase() == 1 || boss->getPhase() == 3) {
+			this->createProjectilesBoss(bossX, bossY);
+		}
+		boss->restartShootClock();
 	}
 }
 

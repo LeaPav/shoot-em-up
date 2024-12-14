@@ -116,7 +116,7 @@ void Boss::update()
         velocity.x *= 1.5;
         velocity.y *= 1.5;
     }
-    shooting();
+    
     if (phase == 2) {
         handleRobots();
     }
@@ -152,12 +152,14 @@ void Boss::shooting()
 {
    
     if (shootClock.getElapsedTime().asSeconds() > shootSpeed) {
+        if (phase == 1 || phase == 3) {
+
         RectangleShape projectile;
         projectile.setSize(Vector2f(60.f, 20.f));
         projectile.setFillColor(Color::Red);
         projectile.setPosition(recBoss.getPosition().x, recBoss.getPosition().y + recBoss.getSize().y / 2);
         projectiles.push_back(projectile);
-
+    }
         if (phase == 2) {
             RectangleShape robotProjectile1, robotProjectile2;
             robotProjectile1.setSize(Vector2f(60.f, 20.f));
@@ -165,12 +167,29 @@ void Boss::shooting()
             robotProjectile1.setFillColor(Color::Red);
             robotProjectile2.setFillColor(Color::Red);
 
-            robotProjectile1.setPosition(recRobot1.getPosition().x + recRobot1.getSize().x / 2, recRobot1.getPosition().y + recRobot1.getSize().y);
-            robotProjectile2.setPosition(recRobot2.getPosition().x + recRobot2.getSize().x / 2, recRobot2.getPosition().y + recRobot1.getSize().y);
+            robotProjectile1.setPosition(recRobot1.getPosition().x, recRobot1.getPosition().y + recRobot1.getSize().y / 2);
+            robotProjectile2.setPosition(recRobot2.getPosition().x, recRobot2.getPosition().y + recRobot1.getSize().y / 2);
+            projectiles.push_back(robotProjectile1);
+            projectiles.push_back(robotProjectile2);
         }
         shootClock.restart();
     }
     for (auto& projectile : projectiles) {
         projectile.move(-10.f, 0.f);
     }
+}
+
+bool Boss::shouldShoot() const
+{
+    return shootClock.getElapsedTime().asSeconds() > shootSpeed;
+}
+
+int Boss::getPhase() const
+{
+    return phase;
+}
+
+void Boss::restartShootClock()
+{
+    shootClock.restart();
 }

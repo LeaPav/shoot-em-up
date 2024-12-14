@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Entity.h"
+#include "Player.h"
 class Boss : public Entity
 {
 private:
@@ -38,5 +39,12 @@ public:
 	void reset();
 	void handleRobots();
 	void shooting();
-};
+	bool shouldShoot() const;
+	int getPhase() const;
+	Vector2f getRobot1Position() const;
+	Vector2f getRobot2Position() const;
+	Vector2f getRobotSize() const;
+	void restartShootClock();
+
+}; 
 

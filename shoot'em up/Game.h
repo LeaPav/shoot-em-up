@@ -33,8 +33,9 @@ private:
 	void initWindow();
 	void initScore();
 	void createEnnemy();
-	void createProjectiles(float x, float y);
+	void createProjectilesPlayer(float x, float y);
 	void createProjectilesEnnemy(float x, float y);
+	void createProjectilesBoss(float x, float y);
 
 	//taille de l'écran
 	int mapWidth = 1920;
@@ -67,6 +68,7 @@ private:
 	vector<Ennemy*> ennemies;
 	vector<Projectile*> projectilesPlayer;
 	vector<Projectile*> projectilesEnnemy;
+	vector<Projectile*> projectilesBoss;
 
 	int score;
 	int scoreBonus;
@@ -99,6 +101,7 @@ public:
 	void checkCollisions();
 	void shoot();
 	void shootEnnemy();
+	void shootingBoss();
 
 	// Menu
 	void handleMenuState(Event& event);
