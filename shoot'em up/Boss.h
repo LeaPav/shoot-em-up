@@ -7,13 +7,19 @@ private:
 	Sprite sprite;
 	Texture boss;
 	RectangleShape recBoss;
-	RectangleShape recRobot;
+	RectangleShape recRobot1, recRobot2;
 	int hp;
 	bool isActive;
-	Vector2f targetPosition; // là où il doit se rendre
-	Vector2f initialPosition;
+	
 	Vector2f velocity;
 	float shootSpeed;
+
+	int phase;
+	int robotHp1, robotHp2;
+
+	//Projectiles
+	vector<RectangleShape> projectiles;
+	Clock shootClock;
 
 	void initSprite();
 	void initTexture();
@@ -28,6 +34,9 @@ public:
 	FloatRect getGlobalBounds() const;
 	void update();
 	bool canSpawn(int bossScore);
+	bool isBossActive() const;
 	void reset();
+	void handleRobots();
+	void shooting();
 };
 
