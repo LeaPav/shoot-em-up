@@ -686,7 +686,9 @@ void Game::checkCollisions()
 
 	for (auto& projectile : projectilesPlayer) {
 		if (projectile->getGlobalBounds().intersects(boss->getGlobalBounds())) {
-			boss->takeDamage(5);
+			if (boss->getPhase() == 1 || boss->getPhase() ==3) {
+				boss->takeDamage(5);
+			}
 			projectile->markAsOutOfScreen();
 		}
 		if (projectile->getGlobalBounds().intersects(boss->getRobot1Bounds())) {
@@ -696,6 +698,9 @@ void Game::checkCollisions()
 		if (projectile->getGlobalBounds().intersects(boss->getRobot2Bounds())) {
 			boss->damageRobot2(5);
 			projectile->markAsOutOfScreen();
+		}
+		if (boss->isBossDead()) {
+			boss->handleBoss();
 		}
 	}
 	//Collisions des projectiles du joueur avec les robots :

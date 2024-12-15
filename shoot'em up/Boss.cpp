@@ -136,6 +136,11 @@ bool Boss::isBossActive() const
     return isActive;
 }
 
+bool Boss::isBossDead() const
+{
+    return hp <= 0;
+}
+
 void Boss::reset()
 {
     this->recBoss.setPosition(2000.f, 100.f);
@@ -146,6 +151,11 @@ void Boss::handleRobots()
 {
     if (robotHp1 <= 0) recRobot1.setSize(Vector2f(0, 0));
     if (robotHp2 <= 0) recRobot2.setSize(Vector2f(0, 0));
+}
+
+void Boss::handleBoss()
+{
+    recBoss.setSize(Vector2f(0, 0));
 }
 
 void Boss::shooting()

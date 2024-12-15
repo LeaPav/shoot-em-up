@@ -36,8 +36,10 @@ public:
 	void update();
 	bool canSpawn(int bossScore);
 	bool isBossActive() const;
+	bool isBossDead() const;
 	void reset();
 	void handleRobots();
+	void handleBoss();
 	void shooting();
 	bool shouldShoot() const;
 	int getPhase() const;
