@@ -40,7 +40,7 @@ public:
 	void reset();
 	void handleRobots();
 	void handleBoss();
-	void shooting();
+	
 	bool shouldShoot() const;
 	int getPhase() const;
 	Vector2f getRobot1Position() const;

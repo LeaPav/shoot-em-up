@@ -58,6 +58,9 @@ FloatRect Projectile::getGlobalBounds() const
 void Projectile::update()
 {
 	this->sprite.move(this->velocity);
+	if (sprite.getPosition().x < 0 || sprite.getPosition().x > 1950 || sprite.getPosition().y < 0 || sprite.getPosition().y > 1080) {
+		markAsOutOfScreen();
+	}
 }
 
 void Projectile::markAsOutOfScreen()

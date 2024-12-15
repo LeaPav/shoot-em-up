@@ -56,6 +56,8 @@ void Ennemy::update()
 {
 	movement(x, y);
 
+
+
 }
 
 

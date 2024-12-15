@@ -92,9 +92,10 @@ void Game::ennemyUpdate()
 
 void Game::updateBoss()
 {
-	if (this->boss->canSpawn(scoreBoss))
-	this->boss->update();
-	shootingBoss();
+	if (this->boss->canSpawn(scoreBoss)) {
+		this->boss->update();
+		this->shootingBoss();
+	}
 }
 
 const bool Game::windowIsOpen()
@@ -109,6 +110,7 @@ void Game::resetGame()
 	boss->reset();
 	projectilesPlayer.clear();
 	projectilesEnnemy.clear();
+	projectilesBoss.clear();
 	score = 0;
 	scoreBonus = 0;
 	scoreBoss = 0;
@@ -257,6 +259,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 	if (currentState == GameState::PLAYING) {
 		if (scoreBoss >= 5) {
 			this->updateBoss();
+			this->ennemies.clear();
 		}
 		else {
 			this->ennemyUpdate();
@@ -684,6 +687,13 @@ void Game::checkCollisions()
 		}
 	}
 
+	for (auto& projectile : projectilesBoss) {
+		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
+			player->damage(2);
+			projectile->markAsOutOfScreen();
+		}
+	}
+
 	for (auto& projectile : projectilesPlayer) {
 		if (projectile->getGlobalBounds().intersects(boss->getGlobalBounds())) {
 			if (boss->getPhase() == 1 || boss->getPhase() ==3) {
@@ -703,16 +713,7 @@ void Game::checkCollisions()
 			boss->handleBoss();
 		}
 	}
-	//Collisions des projectiles du joueur avec les robots :
 	
-	for (auto& projectile : projectilesToRemove) {
-		projectilesPlayer.erase(remove(projectilesPlayer.begin(), projectilesPlayer.end(), projectile), projectilesPlayer.end());
-		delete projectile; 
-	}
-	for (auto& ennemy : ennemiesToRemove) {
-		ennemies.erase(remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());
-		delete ennemy; 
-	}
 	projectilesPlayer.erase(remove_if(projectilesPlayer.begin(), projectilesPlayer.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
 			delete p;
@@ -722,10 +723,17 @@ void Game::checkCollisions()
 		}),
 		projectilesPlayer.end()
 	);
-
+	projectilesBoss.erase(remove_if(projectilesBoss.begin(), projectilesBoss.end(), [](Projectile* p) {
+		if (p->outOfScreen()) {
+			delete p;
+			return true;
+		}
+		return false;
+		}),
+		projectilesBoss.end()
+	);
 	projectilesEnnemy.erase(remove_if(projectilesEnnemy.begin(), projectilesEnnemy.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
-			//cout << "Suppression d'un projectile ennemi" << endl;
 			delete p;
 			return true;
 		}
@@ -778,7 +786,7 @@ void Game::shootEnnemy()
 
 void Game::shootingBoss()
 {
-	if (boss->shouldShoot()) {
+	if (boss->shouldShoot() && !boss->isBossDead()) {
 		float bossX = boss->getPosition().x;
 		float bossY = boss->getPosition().y + 125.f;
 
