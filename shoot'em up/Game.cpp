@@ -689,7 +689,17 @@ void Game::checkCollisions()
 			boss->takeDamage(5);
 			projectile->markAsOutOfScreen();
 		}
+		if (projectile->getGlobalBounds().intersects(boss->getRobot1Bounds())) {
+			boss->damageRobot1(5);
+			projectile->markAsOutOfScreen();
+		}
+		if (projectile->getGlobalBounds().intersects(boss->getRobot2Bounds())) {
+			boss->damageRobot2(5);
+			projectile->markAsOutOfScreen();
+		}
 	}
+	//Collisions des projectiles du joueur avec les robots :
+	
 	for (auto& projectile : projectilesToRemove) {
 		projectilesPlayer.erase(remove(projectilesPlayer.begin(), projectilesPlayer.end(), projectile), projectilesPlayer.end());
 		delete projectile; 
@@ -769,6 +779,15 @@ void Game::shootingBoss()
 
 		if (boss->getPhase() == 1 || boss->getPhase() == 3) {
 			this->createProjectilesBoss(bossX, bossY);
+		}
+		if (boss->getPhase() == 2) {
+			float robot1X = boss->getRobot1Position().x;
+			float robot1Y = boss->getRobot1Position().y + 50.f;
+			this->createProjectilesBoss(robot1X, robot1Y);
+
+			float robot2X = boss->getRobot2Position().x;
+			float robot2Y = boss->getRobot2Position().y + 50.f;
+			this->createProjectilesBoss(robot2X, robot2Y);
 		}
 		boss->restartShootClock();
 	}

@@ -23,7 +23,7 @@ void Boss::initTexture()
 
 }
 
-Boss::Boss() : hp(100), isActive(false), shootSpeed(2.f), velocity(Vector2f(-5.f, 2.f)), phase(1)
+Boss::Boss() : hp(100), isActive(false), shootSpeed(3.f), velocity(Vector2f(-5.f, 2.f)), phase(1)
 {
     this->initSprite();
    // initTexture();
@@ -112,7 +112,7 @@ void Boss::update()
     }
     if (robotHp1 <= 0 && robotHp2 <= 0 && phase == 2) {
         phase = 3;
-        shootSpeed = 3.0f;
+        shootSpeed = 1.0f;
         velocity.x *= 1.5;
         velocity.y *= 1.5;
     }
@@ -189,7 +189,70 @@ int Boss::getPhase() const
     return phase;
 }
 
+Vector2f Boss::getRobot1Position() const
+{
+    return recRobot1.getPosition();
+}
+
+Vector2f Boss::getRobot2Position() const
+{
+    return recRobot2.getPosition();
+}
+
+Vector2f Boss::getRobotSize() const
+{
+    return recRobot1.getSize();
+}
+
 void Boss::restartShootClock()
 {
     shootClock.restart();
+}
+
+bool Boss::isRobot1Active() const
+{
+    return robotHp1 > 0;
+}
+
+bool Boss::isRobot2Active() const
+{
+    return robotHp2 > 0;
+}
+
+FloatRect Boss::getRobot1Bounds() const
+{
+    return recRobot1.getGlobalBounds();
+}
+
+FloatRect Boss::getRobot2Bounds() const
+{
+    return recRobot2.getGlobalBounds();
+}
+
+void Boss::damageRobot1(int damage)
+{
+    robotHp1 -= damage;
+    cout << "Robot1 hp : " << robotHp1 << endl;
+    if (robotHp1 <= 0) {
+        robotHp1 = 0;
+    }
+}
+
+void Boss::damageRobot2(int damage)
+{
+    robotHp2 -= damage;
+    cout << "Robot2 hp : " << robotHp2 << endl;
+    if (robotHp2 <= 0) {
+        robotHp2 = 0;
+    }
+}
+
+bool Boss::isRobot1Dead()
+{
+    return robotHp1 <= 0;
+}
+
+bool Boss::isRobot2Dead()
+{
+    return robotHp2 <= 0;
 }

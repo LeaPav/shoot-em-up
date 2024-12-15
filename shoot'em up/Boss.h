@@ -46,5 +46,16 @@ public:
 	Vector2f getRobotSize() const;
 	void restartShootClock();
 
+	bool isRobot1Active() const;
+	bool isRobot2Active() const;
+
+	FloatRect getRobot1Bounds() const;
+	FloatRect getRobot2Bounds() const;
+
+	void damageRobot1(int damage);
+	void damageRobot2(int damage);
+	 
+	bool isRobot1Dead();
+	bool isRobot2Dead();
 }; 
 
