@@ -688,7 +688,7 @@ void Game::checkCollisions()
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 		
 			
-			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
+			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
 				cout << "test1" << endl;
 		    	e->explosion();
 
