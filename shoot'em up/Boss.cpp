@@ -1,6 +1,6 @@
 #include "Boss.h"
 
-Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(3.f), velocity(Vector2f(-5.f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
+Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(3.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
 firstMove(true)
 {
     this->initSprite();
@@ -96,8 +96,8 @@ void Boss::update()
     if (robotHp1 <= 0 && robotHp2 <= 0 && phase == 2) {
         phase = 3;
         shootSpeed = 1.0f;
-        velocity.x *= 1.5;
-        velocity.y *= 1.5;
+        velocity.x *= 2;
+        velocity.y *= 2;
     }
 
     if (phase == 2) {
@@ -172,7 +172,7 @@ FloatRect Boss::getRobot2Bounds() const
 void Boss::movement(int x, int y)
 {
 
-    static Vector2f direction(speedX, speedY);
+  //  static Vector2f direction = velocity;
     static int frameCounter = 0;
     float speed = 3.5f;
 
@@ -185,13 +185,12 @@ void Boss::movement(int x, int y)
         }
     }
     else {
-        sprite.move(direction);
-        cout << speedX << endl;
+        sprite.move(velocity);
         if (sprite.getPosition().x < 1000 || sprite.getPosition().x  > 1600) {
-            direction.x = -direction.x;
+            velocity.x = -velocity.x;
         }
         if (sprite.getPosition().y < 0 || sprite.getPosition().y  > 860) {
-            direction.y = -direction.y;
+            velocity.y = -velocity.y;
         }
     }
     if (phase == 2) {
@@ -326,11 +325,3 @@ void Boss::renderHealthBar(RenderTarget& target)
     target.draw(this->healthBar);
 
 }
-
-
-
-
-
-
-
-
