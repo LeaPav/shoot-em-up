@@ -663,10 +663,7 @@ void Game::checkCollisions()
 		projectilesPlayer.erase(remove(projectilesPlayer.begin(), projectilesPlayer.end(), projectile), projectilesPlayer.end());
 		delete projectile; 
 	}
-	/*for (auto& ennemy : ennemiesToRemove) {
-		ennemies.erase(remove(ennemies.begin(), ennemies.end(), ennemy), ennemies.end());
-		delete ennemy; 
-	}*/
+	
 
 	projectilesPlayer.erase(remove_if(projectilesPlayer.begin(), projectilesPlayer.end(), [](Projectile* p) {
 		if (p->outOfScreen()) {
