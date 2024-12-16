@@ -1,19 +1,42 @@
 #include "Ennemy.h"
 
-Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false),
-shootCooldown(cooldown), fireRate(rate), canShootVerif(passif) // création ennemies
+Ennemy::Ennemy(MovementType type, int life, int cooldown, int rate, bool passif, int texture) : movementType(type), hp(life), timeElapsed(0.f), isOutOfScreen(false),
+shootCooldown(cooldown), fireRate(rate), canShootVerif(passif), apparence(texture) // création ennemies
 {
-	initSprite();
+	initSprite(apparence);
 	initTexture();
 }
 Ennemy::~Ennemy() {}
 
 /////////////////////////////////////////maj de l'ennemi/////////////////////////////////////
-int Ennemy::initSprite() //chargement de l'image de l'ennemies
+int Ennemy::initSprite(int text) //chargement de l'image de l'ennemies
 {
+	if (text == 0) {
+		int test = rand() % 2;
 
-	if (!ennemies1.loadFromFile("assets\\Ennemies\\canon.png"))
-		return -1;
+		if(test == 0){
+			if (!ennemies1.loadFromFile("assets\\Ennemies\\boom.png"))
+				return -1;
+		}
+
+		if (test == 1) {
+			if (!ennemies1.loadFromFile("assets\\Ennemies\\baam.png"))
+				return -1;
+		}
+		
+
+	}
+
+	if (text == 1) {
+
+		if (!ennemies1.loadFromFile("assets\\Ennemies\\canon.png"))
+			return -1;
+	}
+
+	if (text == 2) {
+		if (!ennemies1.loadFromFile("assets\\Ennemies\\robot passif.png"))
+			return -1;
+	}
 
 }
 
@@ -35,6 +58,11 @@ int Ennemy::getHp() const
 	return hp;
 }
 
+int Ennemy::getApparence() const
+{
+	return apparence;
+}
+
 bool Ennemy::getPassif() const
 {
 	return canShootVerif;
@@ -49,6 +77,8 @@ FloatRect Ennemy::getGlobalBounds() const
 {
 	return this->sprite.getGlobalBounds();
 }
+
+
 
 
 ////////////////////////////////////////////deplacement/////////////////////////////////////
@@ -139,10 +169,23 @@ void Ennemy::damage(int damages)
 
 bool Ennemy::destroy()
 {
+	
 	return isOutOfScreen;
 }
 
-bool Ennemy::isDead() const
+bool Ennemy::isDead() 
 {
+	tpsdead.restart();
 	return this->hp <= 0;
+}
+
+void Ennemy::explosion()
+{
+	if (hp <= 0) {
+		
+		initSprite(0);
+		initTexture();
+
+	}
+	
 }

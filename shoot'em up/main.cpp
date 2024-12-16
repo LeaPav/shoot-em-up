@@ -10,6 +10,7 @@ int main() {
 		game.update();
 		game.render();
 
+
 	}
 	//RenderWindow window(VideoMode(500, 500), "Fenêtre SFML");
 
