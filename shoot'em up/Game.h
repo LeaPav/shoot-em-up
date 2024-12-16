@@ -29,6 +29,7 @@ private:
 	//fonctions
 	int initSprite();
 	void initPlayer();
+	void initBoss();
 	void initTexture();
 	void initWindow();
 	void initScore();

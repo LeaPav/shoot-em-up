@@ -6,6 +6,7 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false)
 	this->initTexture();
 	this->initWindow();
 	this->initPlayer();
+	this->initBoss();
 	this->initScore();
 }
 
@@ -94,6 +95,7 @@ void Game::updateBoss()
 {
 	if (this->boss->canSpawn(scoreBoss)) {
 		this->boss->update();
+		this->boss->udpateHealthBar();
 		this->shootingBoss();
 	}
 }
@@ -187,6 +189,9 @@ void Game::projectileRender()
 void Game::renderBoss()
 {
 	this->boss->render(*this->window);
+	if (scoreBoss >= 5) {
+		this->boss->renderHealthBar(*this->window);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////etat du jeu////////////////////////////////////////////////////////////////
@@ -445,6 +450,10 @@ void Game::initScore() //création score
 void Game::initPlayer() // création du J
 {
 	this->player = new Player();
+}
+
+void Game::initBoss()
+{
 	this->boss = new Boss();
 }
 

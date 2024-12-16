@@ -9,11 +9,15 @@ private:
 	Texture boss, bossPhase2, bossPhaseInterHaut, bossPhaseInterBas, bossPresqueMort;
 	Texture robot1, robot2;
 	int hp;
+	int maxHp;
 	bool isActive;
-	
+	bool firstMove;
 	Vector2f velocity;
 	float shootSpeed;
-
+	float speedX; 
+	float speedY;
+	
+	Vector2f direction;
 	int phase;
 	int robotHp1, robotHp2;
 
@@ -24,8 +28,12 @@ private:
 	void initSprite();
 	void initTexture();
 
+	//Barre de vie
+	RectangleShape healthBar;
+	RectangleShape backgroundHealthBar;
+
 public:
-	Boss();
+	Boss(float x = 3.5f, float y = 2.f);
 	void takeDamage(int damage);
 	void movement(int dx, int dy) override;
 	const Vector2f getPosition() const;
@@ -36,6 +44,9 @@ public:
 	bool canSpawn(int bossScore);
 	bool isBossActive() const;
 	bool isBossDead() const;
+	void initHealthBar();
+	void udpateHealthBar();
+	void renderHealthBar(RenderTarget& target);
 	void reset();
 	void handleRobots();
 	void handleBoss();
@@ -55,7 +66,8 @@ public:
 
 	void damageRobot1(int damage);
 	void damageRobot2(int damage);
-	 
+	
+	
 	bool isRobot1Dead();
 	bool isRobot2Dead();
 }; 

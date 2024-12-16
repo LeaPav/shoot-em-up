@@ -1,9 +1,11 @@
 #include "Boss.h"
 
-Boss::Boss() : hp(100), isActive(false), shootSpeed(3.f), velocity(Vector2f(-5.f, 2.f)), phase(1), robotHp1(3), robotHp2(3)
+Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(3.f), velocity(Vector2f(-5.f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
+firstMove(true)
 {
     this->initSprite();
     this->initTexture();
+    this->initHealthBar();
 
 }
 
@@ -169,27 +171,31 @@ FloatRect Boss::getRobot2Bounds() const
 
 void Boss::movement(int x, int y)
 {
-    static Vector2f direction(-5.f, 3.f);
+    if (phase == 3) {
+        speedX = 10.f;
+        speedY = 10.f;
+    }
+    static Vector2f direction(speedX, speedY);
     static int frameCounter = 0;
     float speed = 3.5f;
 
-    if (sprite.getPosition().x > 1500) {
-        sprite.move(-speed, 0.f);
+    if (firstMove) {
+        if (sprite.getPosition().x > 1600) {
+            sprite.move(-speed, 0.f);
+        }
+        else {
+            firstMove = false;
+        }
     }
     else {
+      
         sprite.move(direction);
-        if (sprite.getPosition().x < 1000 || sprite.getPosition().x  > 1900) {
+        cout << speedX << endl;
+        if (sprite.getPosition().x < 1000 || sprite.getPosition().x  > 1600) {
             direction.x = -direction.x;
         }
-        if (sprite.getPosition().y < 0 || sprite.getPosition().y  > 830) {
+        if (sprite.getPosition().y < 0 || sprite.getPosition().y  > 860) {
             direction.y = -direction.y;
-        }
-
-        frameCounter++;
-        if (frameCounter > 120) {
-            direction.x = (rand() % 2 == 0) ? speed : -speed;
-            direction.y = (rand() % 2 == 0) ? speed : -speed;
-            frameCounter = 0;
         }
     }
     if (phase == 2) {
@@ -298,7 +304,32 @@ bool Boss::isBossDead() const
     return hp <= 0;
 }
 
+void Boss::initHealthBar()   // santé et barre de vie
+{
+    this->maxHp = 100;
+    this->hp = this->maxHp;
+    this->healthBar.setSize(Vector2f(800.f, 20.f));
+    this->healthBar.setFillColor(Color(255, 0, 0));
 
+    this->backgroundHealthBar.setSize(Vector2f(800.f, 20.f));
+    this->backgroundHealthBar.setFillColor(Color(117, 117, 117));
+}
+
+void Boss::udpateHealthBar()
+{
+    float healthPercentage = static_cast<float>(this->hp) / static_cast<float>(this->maxHp);
+    this->healthBar.setSize(Vector2f(800.f * healthPercentage, 20.f));
+}
+
+void Boss::renderHealthBar(RenderTarget& target)
+{
+    this->backgroundHealthBar.setPosition(1100.f, 1050.f);
+    this->healthBar.setPosition(1100.f, 1050.f);
+
+    target.draw(this->backgroundHealthBar);
+    target.draw(this->healthBar);
+
+}
 
 
 
