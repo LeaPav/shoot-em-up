@@ -98,10 +98,6 @@ void Boss::update()
         velocity.x *= 2;
         velocity.y *= 2;
     }
-
-    if (phase == 2) {
-        handleRobots();
-    }
     if (hp <= 0) {
         sprite.setPosition(0, -500);
     }

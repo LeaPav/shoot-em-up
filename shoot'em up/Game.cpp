@@ -752,9 +752,6 @@ void Game::checkCollisions()
 			boss->damageRobot2(1);
 			projectile->markAsOutOfScreen();
 		}
-		if (boss->isBossDead()) {
-			boss->handleBoss();
-		}
 	}
 	
 	projectilesPlayer.erase(remove_if(projectilesPlayer.begin(), projectilesPlayer.end(), [](Projectile* p) {
