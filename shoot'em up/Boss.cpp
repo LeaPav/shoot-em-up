@@ -171,10 +171,7 @@ FloatRect Boss::getRobot2Bounds() const
 
 void Boss::movement(int x, int y)
 {
-    if (phase == 3) {
-        speedX = 10.f;
-        speedY = 10.f;
-    }
+
     static Vector2f direction(speedX, speedY);
     static int frameCounter = 0;
     float speed = 3.5f;
@@ -188,7 +185,6 @@ void Boss::movement(int x, int y)
         }
     }
     else {
-      
         sprite.move(direction);
         cout << speedX << endl;
         if (sprite.getPosition().x < 1000 || sprite.getPosition().x  > 1600) {
