@@ -41,15 +41,13 @@ public:
 	void render(RenderTarget& target);
 	FloatRect getGlobalBounds() const;
 	void update();
-	bool canSpawn(int bossScore);
+	bool canSpawn(int bossScore, int spawnBoss);
 	bool isBossActive() const;
 	bool isBossDead() const;
 	void initHealthBar();
 	void udpateHealthBar();
 	void renderHealthBar(RenderTarget& target);
 	void reset();
-	void handleRobots();
-	void handleBoss();
 	
 	bool shouldShoot() const;
 	int getPhase() const;

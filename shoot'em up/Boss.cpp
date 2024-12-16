@@ -1,6 +1,6 @@
 #include "Boss.h"
 
-Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(3.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
+Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
 firstMove(true)
 {
     this->initSprite();
@@ -94,7 +94,7 @@ void Boss::update()
     }
     if (robotHp1 <= 0 && robotHp2 <= 0 && phase == 2) {
         phase = 3;
-        shootSpeed = 1.0f;
+        shootSpeed = 0.5f;
         velocity.x *= 2;
         velocity.y *= 2;
     }
@@ -123,6 +123,9 @@ void Boss::reset()
     hp = 100;
     robotHp1 = 3;
     robotHp2 = 3;
+
+    velocity.x = 3.5f;
+    velocity.y = 2.f;
 
 }
 /////////////////////////////////geter//////////////////////////////////
@@ -226,17 +229,6 @@ void Boss::restartShootClock()
 
 ////////////////////////////////droide/////////////////////////////////
 
-void Boss::handleRobots()
-{
-    /* if (robotHp1 <= 0) recRobot1.setSize(Vector2f(0, 0));
-     if (robotHp2 <= 0) recRobot2.setSize(Vector2f(0, 0));*/
-}
-
-void Boss::handleBoss()
-{
-    //recBoss.setSize(Vector2f(0, 0));
-}
-
 bool Boss::isRobot1Active() const
 {
     return robotHp1 > 0;
@@ -246,8 +238,6 @@ bool Boss::isRobot2Active() const
 {
     return robotHp2 > 0;
 }
-
-
 
 void Boss::damageRobot1(int damage)
 {
@@ -279,9 +269,9 @@ bool Boss::isRobot2Dead()
 
 ///////////////////////////////life in game///////////////////////////
 
-bool Boss::canSpawn(int bossScore)
+bool Boss::canSpawn(int bossScore, int spawnBoss)
 {
-    if (bossScore >= 5) {
+    if (bossScore >= spawnBoss) {
         isActive = true;
         return true;
     }

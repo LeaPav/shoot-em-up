@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (10)
 {
 	this->initSprite();
 	this->initTexture();
@@ -96,7 +96,7 @@ void Game::ennemyUpdate()
 
 void Game::updateBoss()
 {
-	if (this->boss->canSpawn(scoreBoss)) {
+	if (this->boss->canSpawn(scoreBoss, spawnBoss)) {
 		this->boss->update();
 		this->boss->udpateHealthBar();
 		this->shootingBoss();
@@ -119,6 +119,7 @@ void Game::resetGame()
 	score = 0;
 	scoreBonus = 0;
 	scoreBoss = 0;
+	killStreak = 0;
 	textScore.setString("Score : " + to_string(score));
 }
 
@@ -158,6 +159,7 @@ void Game::renderWin()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	win.render(*window);
+	win.setScore(score);
 }
 
 
@@ -200,7 +202,7 @@ void Game::projectileRender()
 void Game::renderBoss()
 {
 	this->boss->render(*this->window);
-	if (scoreBoss >= 5) {
+	if (scoreBoss >= spawnBoss) {
 		this->boss->renderHealthBar(*this->window);
 	}
 }
@@ -213,7 +215,6 @@ void Game::handleMenu() //les etats du jeu
 		mainMenu.render(*window);
 	}
 	if (currentState == GameState::PLAYING) {
-		
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
 		this->entityRender();
@@ -283,13 +284,10 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 	}
 	if (currentState == GameState::PLAYING) {
-		if (scoreBoss >= 5) {
+		if (scoreBoss >= spawnBoss) {
 			this->updateBoss();
-			this->ennemies.clear();
 		}
-		else {
-			this->ennemyUpdate();
-		}
+		this->ennemyUpdate();
 		this->playerUpdate();
 		this->projectileUpdate();
 		this->checkCollisions();
@@ -315,6 +313,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		gameOver.handleMouseHover(*window);
 		int actionGameOver = gameOver.handleInput(*window, event);
 		this->player->udpateHealthBar();
+		this->boss->udpateHealthBar();
 		switch (actionGameOver) {
 		case 1: currentState = GameState::PLAYING;
 			resetGame();
@@ -329,6 +328,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		win.handleMouseHover(*window);
 		int actionWin = win.handleInput(*window, event);
 		this->player->udpateHealthBar();
+		this->boss->udpateHealthBar();
 		switch (actionWin) {
 		case 1: currentState = GameState::PLAYING;
 			resetGame();
@@ -510,162 +510,161 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	}
 
 	*/
+	if (scoreBoss < spawnBoss) {
 
-	if (random == 1){   //pyramide par 3 tir
+		if (random == 1) {   //pyramide par 3 tir
 
-		MovementType randomType = static_cast<MovementType>(rand() % 2);
+			MovementType randomType = static_cast<MovementType>(rand() % 2);
 
-		int largeur = rand() % this->videoMode.height;
+			int largeur = rand() % this->videoMode.height;
 
-		if (randomType == STRAIGHT_FAST) {
-			peacefull = true;
+			if (randomType == STRAIGHT_FAST) {
+				peacefull = true;
+			}
+
+			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy1->setPosition(distance, largeur);
+			if (newEnnemy1->destroy()) {
+				delete newEnnemy1;
+			}
+			ennemies.push_back(newEnnemy1);
+
+			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy2->setPosition(distance + 75, largeur + 75);
+			if (newEnnemy2->destroy()) {
+				delete newEnnemy2;
+			}
+			ennemies.push_back(newEnnemy2);
+
+			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy3->setPosition(distance + 75, largeur - 75);
+			if (newEnnemy3->destroy()) {
+				delete newEnnemy3;
+			}
+			ennemies.push_back(newEnnemy3);
+
+
+
+		}
+		else if (random == 2) { //mur par 3 passif
+
+			MovementType randomType = static_cast<MovementType>(rand() % 4);
+
+			int largeur = rand() % this->videoMode.height;
+
+			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy1->setPosition(distance, largeur);
+			if (newEnnemy1->destroy()) {
+				delete newEnnemy1;
+			}
+			ennemies.push_back(newEnnemy1);
+
+			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy2->setPosition(distance, largeur + 80);
+			if (newEnnemy2->destroy()) {
+				delete newEnnemy2;
+			}
+			ennemies.push_back(newEnnemy2);
+
+			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy3->setPosition(distance, largeur - 80);
+			if (newEnnemy3->destroy()) {
+				delete newEnnemy3;
+			}
+			ennemies.push_back(newEnnemy3);
+
+
+		}
+		else if (random == 3 && scoreBoss >= 40) { // pyramide par 5 tir
+
+			int largeur = rand() % this->videoMode.height;
+
+			Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy1->setPosition(distance, largeur);
+			if (newEnnemy1->destroy()) {
+				delete newEnnemy1;
+			}
+			ennemies.push_back(newEnnemy1);
+
+			Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy2->setPosition(distance + 75, largeur + 75);
+			if (newEnnemy2->destroy()) {
+				delete newEnnemy2;
+			}
+			ennemies.push_back(newEnnemy2);
+
+			Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy3->setPosition(distance + 75, largeur - 75);
+			if (newEnnemy3->destroy()) {
+				delete newEnnemy3;
+			}
+			ennemies.push_back(newEnnemy3);
+
+			Ennemy* newEnnemy4 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy4->setPosition(distance + 150, largeur + 150);
+			if (newEnnemy4->destroy()) {
+				delete newEnnemy4;
+			}
+			ennemies.push_back(newEnnemy4);
+
+			Ennemy* newEnnemy5 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			newEnnemy5->setPosition(distance + 150, largeur - 150);
+			if (newEnnemy5->destroy()) {
+				delete newEnnemy5;
+			}
+			ennemies.push_back(newEnnemy5);
+
+
+
+		}
+		else if (random == 4 && scoreBoss >= 20) { //mur par 5
+
+			MovementType randomType = static_cast<MovementType>(rand() % 2);
+
+			if (scoreBoss <= 30) {
+				randomType = STRAIGHT;
+			}
+
+			int largeur = rand() % this->videoMode.height;
+
+			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy1->setPosition(distance, largeur);
+			if (newEnnemy1->destroy()) {
+				delete newEnnemy1;
+			}
+			ennemies.push_back(newEnnemy1);
+
+			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy2->setPosition(distance, largeur + 80);
+			if (newEnnemy2->destroy()) {
+				delete newEnnemy2;
+			}
+			ennemies.push_back(newEnnemy2);
+
+			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy3->setPosition(distance, largeur - 80);
+			if (newEnnemy3->destroy()) {
+				delete newEnnemy3;
+			}
+			ennemies.push_back(newEnnemy3);
+
+			Ennemy* newEnnemy4 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy4->setPosition(distance, largeur - 160);
+			if (newEnnemy4->destroy()) {
+				delete newEnnemy4;
+			}
+			ennemies.push_back(newEnnemy4);
+
+			Ennemy* newEnnemy5 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
+			newEnnemy5->setPosition(distance, largeur + 160);
+			if (newEnnemy5->destroy()) {
+				delete newEnnemy5;
+			}
+			ennemies.push_back(newEnnemy5);
+
 		}
 
-		Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy1->setPosition(distance, largeur);
-		if (newEnnemy1->destroy()) {
-			delete newEnnemy1;
-		}
-		ennemies.push_back(newEnnemy1);
-
-		Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy2->setPosition(distance + 75, largeur + 75);
-		if (newEnnemy2->destroy()) {
-			delete newEnnemy2;
-		}
-		ennemies.push_back(newEnnemy2);
-
-		Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy3->setPosition(distance + 75, largeur - 75);
-		if (newEnnemy3->destroy()) {
-			delete newEnnemy3;
-		}
-		ennemies.push_back(newEnnemy3);
-
-		
-		
 	}
-	else if (random == 2) { //mur par 3 passif
-
-		MovementType randomType = static_cast<MovementType>(rand() % 4) ;
-
-		int largeur = rand() % this->videoMode.height;
-
-		Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy1->setPosition(distance, largeur);
-		if (newEnnemy1->destroy()) {
-			delete newEnnemy1;
-		}
-		ennemies.push_back(newEnnemy1);
-
-		Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy2->setPosition(distance, largeur + 80);
-		if (newEnnemy2->destroy()) {
-			delete newEnnemy2;
-		}
-		ennemies.push_back(newEnnemy2);
-
-		Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy3->setPosition(distance, largeur - 80);
-		if (newEnnemy3->destroy()) {
-			delete newEnnemy3;
-		}
-		ennemies.push_back(newEnnemy3);
-
-		
-	}
-	else if (random == 3 && scoreBoss >= 40) { // pyramide par 5 tir
-
-		int largeur = rand() % this->videoMode.height;
-
-		Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy1->setPosition(distance, largeur);
-		if (newEnnemy1->destroy()) {
-			delete newEnnemy1;
-		}
-		ennemies.push_back(newEnnemy1);
-
-		Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy2->setPosition(distance + 75, largeur + 75);
-		if (newEnnemy2->destroy()) {
-			delete newEnnemy2;
-		}
-		ennemies.push_back(newEnnemy2);
-
-		Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy3->setPosition(distance + 75, largeur - 75);
-		if (newEnnemy3->destroy()) {
-			delete newEnnemy3;
-		}
-		ennemies.push_back(newEnnemy3);
-
-		Ennemy* newEnnemy4 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy4->setPosition(distance + 150, largeur + 150);
-		if (newEnnemy4->destroy()) {
-			delete newEnnemy4;
-		}
-		ennemies.push_back(newEnnemy4);
-
-		Ennemy* newEnnemy5 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-		newEnnemy5->setPosition(distance + 150, largeur - 150);
-		if (newEnnemy5->destroy()) {
-			delete newEnnemy5;
-		}
-		ennemies.push_back(newEnnemy5);
-
-		
-		
-	}
-	else if (random == 4 && scoreBoss >= 20) { //mur par 5
-
-		MovementType randomType = static_cast<MovementType>(rand() % 2);
-
-		if (scoreBoss <= 30) {
-			randomType = STRAIGHT;
-		}
-
-		int largeur = rand() % this->videoMode.height;
-
-		Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy1->setPosition(distance, largeur);
-		if (newEnnemy1->destroy()) {
-			delete newEnnemy1;
-		}
-		ennemies.push_back(newEnnemy1);
-
-		Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy2->setPosition(distance, largeur + 80);
-		if (newEnnemy2->destroy()) {
-			delete newEnnemy2;
-		}
-		ennemies.push_back(newEnnemy2);
-
-		Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy3->setPosition(distance, largeur - 80);
-		if (newEnnemy3->destroy()) {
-			delete newEnnemy3;
-		}
-		ennemies.push_back(newEnnemy3);
-
-		Ennemy* newEnnemy4 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy4->setPosition(distance, largeur - 160);
-		if (newEnnemy4->destroy()) {
-			delete newEnnemy4;
-		}
-		ennemies.push_back(newEnnemy4);
-
-		Ennemy* newEnnemy5 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-		newEnnemy5->setPosition(distance, largeur + 160);
-		if (newEnnemy5->destroy()) {
-			delete newEnnemy5;
-		}
-		ennemies.push_back(newEnnemy5);
-
-		
-		
-	}
-
-	
 }
 
 

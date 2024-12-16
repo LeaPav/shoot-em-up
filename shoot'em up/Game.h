@@ -76,6 +76,7 @@ private:
 	int score;
 	int scoreBonus;
 	int scoreBoss;
+	int spawnBoss;
 	int* scoreBossTest;
 	int killStreak;
 

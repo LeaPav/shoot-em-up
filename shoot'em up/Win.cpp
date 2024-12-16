@@ -17,7 +17,7 @@ void Win::initBouton()
 {
     WinText.setFont(fontWin);
     WinText.setString("WIN");
-    WinText.setCharacterSize(80);
+    WinText.setCharacterSize(100);
     FloatRect WinButtonBounds = WinText.getLocalBounds();
     float x = (1920 / 2.f) - (WinButtonBounds.width / 2.f) - WinButtonBounds.left;
     WinText.setPosition(x, 200);
@@ -38,6 +38,10 @@ void Win::initBouton()
     float xMenu = (1920 / 2.f) - (mainMenuButtonBounds.width / 2.f) - mainMenuButtonBounds.left;
     mainMenuButton.setPosition(xMenu, 600);
     mainMenuButton.setFillColor(Color(172, 27, 4));
+
+    scoreText.setFont(fontWin);
+    scoreText.setCharacterSize(40);
+    scoreText.setFillColor(Color::White);
 }
 ///////////////////////////////////////////Boutons/////////////////////////////////////////////////////
 int Win::handleInput(RenderWindow& window, const Event& event)
@@ -79,6 +83,7 @@ void Win::handleMouseHover(const RenderWindow& window)
 void Win::render(RenderWindow& window)
 {
     window.draw(WinText);
+    window.draw(scoreText);
     window.draw(restartButton);
     window.draw(mainMenuButton);
 }
@@ -96,5 +101,7 @@ void Win::resetCooldown()
 void Win::setScore(int score)
 {
     scoreText.setString("Score : " + to_string(score));
-    scoreText.setPosition(600, 300);
+    FloatRect scoreTextBounds = scoreText.getLocalBounds();
+    float x = (1920 / 2.f) - (scoreTextBounds.width / 2.f) - scoreTextBounds.left;
+    scoreText.setPosition(x, 350);
 }
