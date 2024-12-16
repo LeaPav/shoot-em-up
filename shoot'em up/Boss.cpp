@@ -59,7 +59,6 @@ void Boss::render(RenderTarget& target)
         target.draw(this->sprite);
    }
   
- 
     for (const auto& projectile : projectiles) {
         target.draw(projectile);
     }
@@ -118,6 +117,7 @@ void Boss::reset()
 {
     phase = 1;
     isActive = false;
+    firstMove = true;
     this->sprite.setTexture(boss);
     this->sprite.setPosition(2500.f, 100.f);
     hp = 100;

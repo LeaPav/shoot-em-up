@@ -4,6 +4,7 @@
 #include "Ennemy.h"
 #include "Menu.h"
 #include "GameOver.h"
+#include "Win.h"
 #include "Boss.h"
 #include "Projectile.h"
 
@@ -16,6 +17,7 @@ public:
 		COMMANDS,
 		EDITOR,
 		GAMEOVER,
+		WIN,
 		PAUSE,
 		PLAYING
 	};
@@ -86,6 +88,7 @@ private:
 	//Game over
 	GameOver gameOver;
 	
+	Win win;
 	//Spawn du boss
 	bool bossSpawn;
 
@@ -111,7 +114,7 @@ public:
 
 	//Game over
 	void renderGameOver();
-
+	void renderWin();
 	//boss
 	void renderBoss();
 	void updateBoss();

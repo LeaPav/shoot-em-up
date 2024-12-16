@@ -50,6 +50,9 @@ void Game::update()
 		currentState = GameState::GAMEOVER;
 
 	}
+	if (boss->isBossDead()) {
+		currentState = GameState::WIN;
+	}
 	handleMenuState(event);
 
 }
@@ -149,6 +152,14 @@ void Game::renderGameOver()
 	gameOver.render(*window);
 }
 
+void Game::renderWin()
+{
+	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlay.setFillColor(Color(0, 0, 0, 125));
+	this->window->draw(overlay);
+	win.render(*window);
+}
+
 
 void Game::renderNiveau1()
 {
@@ -241,6 +252,16 @@ void Game::handleMenu() //les etats du jeu
 		this->window->draw(textScore);
 		this->renderGameOver();
 	}
+	if (currentState == GameState::WIN) {
+		win.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->renderBoss();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderWin();
+	}
 }
 
 void Game::handleMenuState(Event& event) // gere les etat du jeu
@@ -295,6 +316,20 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		int actionGameOver = gameOver.handleInput(*window, event);
 		this->player->udpateHealthBar();
 		switch (actionGameOver) {
+		case 1: currentState = GameState::PLAYING;
+			resetGame();
+			break;
+		case 2: currentState = GameState::MENU;
+			resetGame();
+			mainMenu.resetCooldown();
+			break;
+		}
+	}
+	if (currentState == GameState::WIN) {
+		win.handleMouseHover(*window);
+		int actionWin = win.handleInput(*window, event);
+		this->player->udpateHealthBar();
+		switch (actionWin) {
 		case 1: currentState = GameState::PLAYING;
 			resetGame();
 			break;
