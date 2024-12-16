@@ -702,11 +702,11 @@ void Game::checkCollisions()
 			projectile->markAsOutOfScreen();
 		}
 		if (projectile->getGlobalBounds().intersects(boss->getRobot1Bounds())) {
-			boss->damageRobot1(5);
+			boss->damageRobot1(1);
 			projectile->markAsOutOfScreen();
 		}
 		if (projectile->getGlobalBounds().intersects(boss->getRobot2Bounds())) {
-			boss->damageRobot2(5);
+			boss->damageRobot2(1);
 			projectile->markAsOutOfScreen();
 		}
 		if (boss->isBossDead()) {
@@ -786,12 +786,23 @@ void Game::shootEnnemy()
 
 void Game::shootingBoss()
 {
+	static int shootBoss = 0;
 	if (boss->shouldShoot() && !boss->isBossDead()) {
-		float bossX = boss->getPosition().x;
-		float bossY = boss->getPosition().y + 125.f;
+		float boss1ProjoX = boss->getPosition().x;
+		float boss1ProjoY = boss->getPosition().y+50;
+
+		float boss2ProjoX = boss->getPosition().x;
+		float boss2ProjoY = boss->getPosition().y + 200.f;
 
 		if (boss->getPhase() == 1 || boss->getPhase() == 3) {
-			this->createProjectilesBoss(bossX, bossY);
+			if (shootBoss == 0) {
+				this->createProjectilesBoss(boss1ProjoX, boss1ProjoY);
+				shootBoss++;
+			}
+			else if (shootBoss == 1) {
+				this->createProjectilesBoss(boss2ProjoX, boss2ProjoY);
+				shootBoss--;
+			}
 		}
 		if (boss->getPhase() == 2) {
 			float robot1X = boss->getRobot1Position().x;

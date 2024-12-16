@@ -5,10 +5,9 @@
 class Boss : public Entity
 {
 private:
-	Sprite sprite;
-	Texture boss;
-	RectangleShape recBoss;
-	RectangleShape recRobot1, recRobot2;
+	Sprite sprite, spriteRobot1, spriteRobot2;
+	Texture boss, bossPhase2, bossPhaseInterHaut, bossPhaseInterBas, bossPresqueMort;
+	Texture robot1, robot2;
 	int hp;
 	bool isActive;
 	
@@ -45,7 +44,7 @@ public:
 	int getPhase() const;
 	Vector2f getRobot1Position() const;
 	Vector2f getRobot2Position() const;
-	Vector2f getRobotSize() const;
+	
 	void restartShootClock();
 
 	bool isRobot1Active() const;

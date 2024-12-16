@@ -15,13 +15,13 @@ void Projectile::initProjectiles()
 {
 	switch (this->type) {
 	case ProjectileType::PLAYER:
-		if (!projoPlayer.loadFromFile("assets\\joueur\\Projo joueur.png"))
+		if (!projoPlayer.loadFromFile("assets\\joueur\\Projo lisse.png"))
 			cout << "ERREUR, impossible de charger la texture.";
 	case ProjectileType::ENNEMY:
-		if (!projoEnnemy.loadFromFile("assets\\Ennemies\\Projo lisse.png"))
+		if (!projoEnnemy.loadFromFile("assets\\Ennemies\\Projo ennemy.png"))
 			cout << "ERREUR, impossible de charger la texture.";
 	case ProjectileType::BOSS:
-		if (!projoBoss.loadFromFile("assets\\boss\\Projo_lisse_bosse.png"));
+		if (!projoBoss.loadFromFile("assets\\boss\\Projo_boss.png"));
 	}
 	
 }
