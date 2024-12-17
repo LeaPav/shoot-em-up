@@ -6,7 +6,7 @@ class Player : public Entity
 {
 private:
 	Sprite sprite;
-	Texture vaisseau;
+	Texture vaisseau, vaisseauBouclierDef, vaisseauBouclierOff;
 	RectangleShape recPlayer;
 	RectangleShape healthBar;
 	RectangleShape backgroundHealthBar;
@@ -34,8 +34,14 @@ public:
 	void renderHealthBar(RenderTarget& target);
 	FloatRect getGlobalBounds() const;
 
+	void setHealth(int newHp);
 	int getHealth() const;
+	int getHealthMax() const;
 	void reset();
+
+	void resetSprite();
+	void setupBonusShieldDef();
+	void setupBonusShieldOff();
 
 };
 

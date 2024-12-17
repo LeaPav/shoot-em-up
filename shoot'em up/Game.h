@@ -107,11 +107,13 @@ private:
 	const int totalBonus = 9;
 	bool vagueActif;
 	int spawnBonusPhase;
+	int bonusKit = 2;
 	void initBonus();
 	void initZones();
 	void initBonusState();
 	int bonusShotCount = 0;
-	
+	int bonusShieldDef = 5;
+	int bonusShieldOff = 5;
 
 public:
 	Game();
@@ -149,6 +151,7 @@ public:
 
 	void resetGame();
 
+	Clock tpsTouch;
 	//bonus
 	
 	void spawnBonus();

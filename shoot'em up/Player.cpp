@@ -19,6 +19,12 @@ void Player::initSprite()     //chargement du corps du joueur
 	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
 		cout << "ERREUR";
 	}
+	if (!this->vaisseauBouclierDef.loadFromFile("assets/joueur/jouer_proteger.png")) {
+		cout << "Erreur";
+	}
+	if (!this->vaisseauBouclierOff.loadFromFile("assets/joueur/jouer_proteger_pique.png")) {
+		cout << "Erreur";
+	}
 
 }
 
@@ -43,7 +49,7 @@ void Player::playerUpdate()
 
 void Player::initHealthBar()   // santé et barre de vie
 {
-	this->maxHp = 300;
+	this->maxHp = 3;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));
@@ -74,9 +80,20 @@ void Player::reset()
 	sprite.setPosition(10, 540);
 }
 
+void Player::resetSprite()
+{
+	sprite.setTexture(vaisseau);
+}
 
+void Player::setupBonusShieldDef()
+{
+	this->sprite.setTexture(vaisseauBouclierDef);
+}
 
-
+void Player::setupBonusShieldOff()
+{
+	this->sprite.setTexture(vaisseauBouclierOff);
+}
 
 /////////////////////geter/////////////////////////////////////////////////////
 
@@ -91,9 +108,23 @@ FloatRect Player::getGlobalBounds() const
 
 }
 
+void Player::setHealth(int newHp)
+{
+	if (newHp > maxHp) {
+		hp = maxHp;
+	}
+	else {
+		hp = newHp;
+	}
+}
+
 int Player::getHealth() const
 {
 	return hp;
+}
+int Player::getHealthMax() const
+{
+	return maxHp;
 }
 ///////////////////////////collision////////////////////////////////////////////////
 

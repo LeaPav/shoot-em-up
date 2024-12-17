@@ -65,8 +65,11 @@ void Game::update()
 
 void Game::playerUpdate()
 {
+
 	this->player->playerUpdate();
 	this->player->udpateHealthBar();
+
+	
 }
 
 void Game::projectileUpdate()
@@ -115,6 +118,7 @@ void Game::updateBonusZones()
 	for (auto& zoneBonus : bonus) {
 		if (zoneBonus.getBounds().intersects(player->getGlobalBounds())) {
 			Bonus::AllBonus bonusType = zoneBonus.getBonus();
+			//deactivateBonus(Bonus::Shield);
 			fill(bonusActive.begin(), bonusActive.end(), false);
 			activateBonus(bonusType);
 			bonus.clear();
@@ -131,18 +135,28 @@ void Game::activateBonus(Bonus::AllBonus bonusType)
 
 	switch (bonusType) {
 	case Bonus::DoubleShooting:
-
+		fireRate = 15;
 		break;
 	case Bonus::TripleShooting:
-
+		fireRate = 15;
 		break;
 	case Bonus::TripleShootingDiag:
+		fireRate = 15;
 		break;
 	case Bonus::Laser:
 		fireRate = 1;
+		break;
+	case Bonus::HealthKit:
+		if(player->getHealth() < player->getHealthMax())
+			player->setHealth(player->getHealth() + bonusKit);
+	case Bonus::Shield:
+		bonusShieldDef = 5;
+		this->player->setupBonusShieldDef();
+		break;
+	case Bonus::OffensiveShield:
+		this->player->setupBonusShieldOff();
+		break;
 	}
-	
-	
 }
 
 void Game::deactivateBonus(Bonus::AllBonus bonusType)
@@ -154,6 +168,12 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 	case Bonus::Laser:
 		bonusShotCount = 0;
 		fireRate = 15;
+		break;
+	case Bonus::Shield:
+		this->player->resetSprite();
+		break;
+	case Bonus::OffensiveShield:
+		this->player->resetSprite();
 		break;
 	}
 }
@@ -169,6 +189,7 @@ void Game::resetBonus()
 void Game::resetGame()
 {
 	player->reset();
+	player->resetSprite();
 	ennemies.clear();
 	boss->reset();
 	projectilesPlayer.clear();
@@ -241,7 +262,9 @@ void Game::renderNiveau1()
 
 void Game::entityRender()
 {
+	
 	this->player->render(*this->window);
+	
 	this->player->renderHealthBar(*this->window);
 
 	for (auto& ennemy : ennemies) {
@@ -599,7 +622,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::SlowEnnemyProjectiles), bonusTexture[(Bonus::SlowEnnemyProjectiles)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::Shield), bonusTexture[(Bonus::Shield)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
 }
@@ -831,12 +854,8 @@ void Game::checkCollisions()
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
 
-				
-
 				if (ennemy->isDead()) {
 
-					
-					
 					scoreBonus++;
 					killStreak++;
 					int multiplicateur = 1 + (1*killStreak);
@@ -854,7 +873,22 @@ void Game::checkCollisions()
 
 	for (auto& projectile : projectilesEnnemy) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
-			player->damage(1);
+			if (bonusActive[Bonus::Shield]) {
+				if (bonusShieldDef > 0) {
+					bonusShieldDef--;
+					cout << bonusShieldDef << endl;
+				}
+				if (bonusShieldDef == 0) {
+					deactivateBonus(Bonus::Shield);
+				}
+			}
+
+			else if (bonusActive[Bonus::OffensiveShield]) {
+				deactivateBonus(Bonus::OffensiveShield);
+			}
+			else {
+				player->damage(1);
+			}
 			projectile->markAsOutOfScreen();
 		}
 	}
@@ -862,10 +896,22 @@ void Game::checkCollisions()
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
-			player->damage(1);
+			 if (bonusActive[Bonus::OffensiveShield]) {
+	
+			 }
+			 else if (bonusActive[Bonus::Shield]) {
+				// player->setHealth(player->getHealth() + 1);
+				// deactivateBonus(Bonus::Shield);
+			 }
+			else {
+				//
+					player->damage(1);
+				//}
+				//tpsTouch.restart();
+			}
+			
 		}
 	}
-
 
 	for (auto& projectile : projectilesBoss) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
@@ -981,6 +1027,7 @@ void Game::shoot()
 
 		}
 		else {
+			fireRate = 15;
 			createProjectilesPlayer(MidplayerX, MidplayerY);
 		}
 		cooldownShoot = fireRate;
