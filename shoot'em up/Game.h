@@ -4,6 +4,9 @@
 #include "Ennemy.h"
 #include "Menu.h"
 #include "GameOver.h"
+#include "Win.h"
+#include "Boss.h"
+#include "Bonus.h"
 #include "Projectile.h"
 
 class Game
@@ -15,6 +18,7 @@ public:
 		COMMANDS,
 		EDITOR,
 		GAMEOVER,
+		WIN,
 		PAUSE,
 		PLAYING
 	};
@@ -22,17 +26,20 @@ private:
 	RenderWindow* window;
 	VideoMode videoMode;
 	Player* player;
+	Boss* boss;
 	Font font;
 	Text textScore;
 	//fonctions
 	int initSprite();
 	void initPlayer();
+	void initBoss();
 	void initTexture();
 	void initWindow();
 	void initScore();
 	void createEnnemy();
-	void createProjectiles(float x, float y);
+	void createProjectilesPlayer(float x, float y);
 	void createProjectilesEnnemy(float x, float y);
+	void createProjectilesBoss(float x, float y);
 
 	//taille de l'écran
 	int mapWidth = 1920;
@@ -65,10 +72,13 @@ private:
 	vector<Ennemy*> ennemies;
 	vector<Projectile*> projectilesPlayer;
 	vector<Projectile*> projectilesEnnemy;
+	vector<Projectile*> projectilesBoss;
 
 	int score;
 	int scoreBonus;
 	int scoreBoss;
+	int spawnBoss;
+	int* scoreBossTest;
 	int killStreak;
 
 	// Menu
@@ -79,6 +89,17 @@ private:
 
 	//Game over
 	GameOver gameOver;
+	
+	Win win;
+	//Spawn du boss
+	bool bossSpawn;
+
+	//Bonus
+	vector<Bonus> bonus;
+	vector<Vector2f> bonusZones;
+	Texture bonusTexture[6];
+
+	void initBonus();
 
 public:
 	Game();
@@ -93,6 +114,7 @@ public:
 	void checkCollisions();
 	void shoot();
 	void shootEnnemy();
+	void shootingBoss();
 
 	// Menu
 	void handleMenuState(Event& event);
@@ -101,6 +123,10 @@ public:
 
 	//Game over
 	void renderGameOver();
+	void renderWin();
+	//boss
+	void renderBoss();
+	void updateBoss();
 
 	void update();
 	void render();

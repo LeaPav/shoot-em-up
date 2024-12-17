@@ -1,6 +1,6 @@
 #include "Projectile.h"
 
-Projectile::Projectile(float x, float y, float speedX, float speedY) : velocity(speedX, speedY), isOutOfScreen(false)
+Projectile::Projectile(float x, float y, float speedX, float speedY, ProjectileType type) : velocity(speedX, speedY), isOutOfScreen(false), type(type)
 {
 	this->initProjectiles();
 	this->initTexture();
@@ -11,15 +11,34 @@ Projectile::~Projectile() {}
 
 ////////////////////////////////////////maj du projo/////////////////////////////////////
 
-int Projectile::initProjectiles()
+void Projectile::initProjectiles()
 {
-	if (!projoAll.loadFromFile("assets\\Ennemies\\Projo lisse.png"))
-		return -1;
+	switch (this->type) {
+	case ProjectileType::PLAYER:
+		if (!projoPlayer.loadFromFile("assets\\joueur\\Projo lisse.png"))
+			cout << "ERREUR, impossible de charger la texture.";
+	case ProjectileType::ENNEMY:
+		if (!projoEnnemy.loadFromFile("assets\\Ennemies\\Projo ennemy.png"))
+			cout << "ERREUR, impossible de charger la texture.";
+	case ProjectileType::BOSS:
+		if (!projoBoss.loadFromFile("assets\\boss\\Projo_boss.png"));
+	}
+	
 }
 
 void Projectile::initTexture()
 {
-	this->sprite.setTexture(projoAll);
+	switch (this->type) {
+	case ProjectileType::PLAYER:
+		this->sprite.setTexture(projoPlayer);
+		break;
+	case ProjectileType::ENNEMY:
+		this->sprite.setTexture(projoEnnemy);
+		break;
+	case ProjectileType::BOSS:
+		this->sprite.setTexture(projoBoss);
+		break;
+	}
 }
 
 void Projectile::render(RenderTarget& target)
@@ -39,6 +58,9 @@ FloatRect Projectile::getGlobalBounds() const
 void Projectile::update()
 {
 	this->sprite.move(this->velocity);
+	if (sprite.getPosition().x < 0 || sprite.getPosition().x > 1950 || sprite.getPosition().y < 0 || sprite.getPosition().y > 1080) {
+		markAsOutOfScreen();
+	}
 }
 
 void Projectile::markAsOutOfScreen()

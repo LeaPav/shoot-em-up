@@ -49,6 +49,7 @@ public:
 	bool isOutOfScreen;
 	bool destroy();
 	bool canShoot();
+	bool verifSpawnEnnemy();
 	void updateShootCooldown();
 	void resetShootCooldown();
 	void shoot(vector<Projectile*>& projectiles);

@@ -86,6 +86,8 @@ void Ennemy::update()
 {
 	movement(x, y);
 
+
+
 }
 
 
@@ -146,6 +148,11 @@ void Ennemy::setPosition(const float x, const float y)
 bool Ennemy::canShoot()
 {
 	return shootCooldown <= 0;
+}
+
+bool Ennemy::verifSpawnEnnemy()
+{
+	return sprite.getPosition().x < 1900;
 }
 
 void Ennemy::updateShootCooldown()
