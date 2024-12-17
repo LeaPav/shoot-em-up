@@ -56,5 +56,9 @@ public:
 	FloatRect getGlobalBounds() const;
 	void explosion();
 	Clock tpsdead;
+
+	float speed = 10;
+	bool diag = true;
+	bool diagInvers = true;
 };
 

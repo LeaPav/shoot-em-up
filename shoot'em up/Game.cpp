@@ -495,7 +495,7 @@ void Game::initBoss()
 void Game::createEnnemy() //créateur des ennemies + vagues
 {
 	int distance = 2020;
-	int random = rand() % 5;
+	int random = rand() % 4;
 
 	bool peacefull = false;
 	int pv = 1;
@@ -564,6 +564,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
 			}
+			ennemies.push_back(newEnnemy3);
 		}
 		else if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
 
@@ -609,7 +610,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 		}
 		else if (random == 3 && scoreBoss >= 20) { //mur par 5
 
-				MovementType randomType = static_cast<MovementType>(rand() % 2);
+				MovementType randomType = static_cast<MovementType>(rand() % 4);
 
 				if (scoreBoss <= 30) {
 					randomType = STRAIGHT;
