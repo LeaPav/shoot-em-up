@@ -6,12 +6,13 @@ public:
 	enum AllBonus {
 		FastShooting,
 		TripleShooting,
+		TripleShootingDiag,
 		Laser,
 		Shield,
 		HealthKit,
 		SlowEnnemyProjectiles,
 		OffensiveShield,
-		Speed,
+		Speed
 	};
 private:
 	AllBonus bonus;

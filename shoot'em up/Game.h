@@ -95,11 +95,13 @@ private:
 	bool bossSpawn;
 
 	//Bonus
+
 	vector<Bonus> bonus;
 	vector<Vector2f> bonusZones;
-	Texture bonusTexture[6];
+	Texture bonusTexture[9];
 
 	void initBonus();
+	void initZones();
 
 public:
 	Game();
@@ -137,7 +139,11 @@ public:
 
 	void resetGame();
 
-	
+	//bonus
+
+	void spawnBonus();
+	void renderBonusZones();
+	void updateBonusZones();
 
 };
 

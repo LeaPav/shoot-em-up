@@ -11,10 +11,12 @@ void Bonus::initTexture()
 	this->sprite.setTexture(texture);
 }
 
-Bonus::Bonus(AllBonus bonus, const Texture& texture, Vector2f position) : bonus(bonus), isActive(false)
+Bonus::Bonus(AllBonus bonus, const Texture& texture, Vector2f position) : bonus(bonus), isActive(true)
 {
-	this->initSprite();
-	this->initTexture();
+	sprite.setTexture(texture);
+	sprite.setPosition(position);
+	//this->initSprite();
+	
 }
 
 void Bonus::render(RenderTarget& target)

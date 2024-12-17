@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (100)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(10)
 {
 	this->initSprite();
 	this->initTexture();
@@ -8,6 +8,11 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss 
 	this->initPlayer();
 	this->initBoss();
 	this->initScore();
+	this->spawnBonus();
+	this->initBonus();
+	this->spawnBonus();
+	this->initZones();
+
 }
 
 Game::~Game()
@@ -102,7 +107,10 @@ void Game::updateBoss()
 		this->shootingBoss();
 	}
 }
-
+void Game::updateBonusZones()
+{
+	
+}
 const bool Game::windowIsOpen()
 {
 	return this->window->isOpen();
@@ -122,6 +130,8 @@ void Game::resetGame()
 	killStreak = 0;
 	textScore.setString("Score : " + to_string(score));
 }
+
+
 
 ///////////////////////////////////////////maj du Game affichage (Render)/////////////////////////////////////////////////
 
@@ -207,6 +217,15 @@ void Game::renderBoss()
 	}
 }
 
+
+void Game::renderBonusZones()
+{
+	cout << "Test" << endl;
+	for (auto& zone : bonus) {
+		zone.render(*this->window);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////etat du jeu////////////////////////////////////////////////////////////////
 
 void Game::handleMenu() //les etats du jeu
@@ -220,6 +239,7 @@ void Game::handleMenu() //les etats du jeu
 		this->entityRender();
 		this->renderBoss();
 		this->projectileRender();
+		this->renderBonusZones();
 		this->window->draw(textScore);
 	}
 	if (currentState == GameState::PAUSE) {
@@ -480,6 +500,35 @@ void Game::initScore() //création score
 	textScore.setString("Score: " + to_string(score));
 }
 
+////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
+
+void Game::initBonus()
+{
+	bonusTexture[Bonus::FastShooting].loadFromFile("assets/bonus/bonus_2_projo.png");
+	bonusTexture[Bonus::TripleShooting].loadFromFile("assets/bonus/bonus_3_tir.png");
+	bonusTexture[Bonus::TripleShootingDiag].loadFromFile("assets/bonus/bonus_3_diag.png");
+	bonusTexture[Bonus::Laser].loadFromFile("assets/bonus/bonus_gros_projo.png");
+	bonusTexture[Bonus::Shield].loadFromFile("assets/bonus/bonus_protection.png");
+	bonusTexture[Bonus::HealthKit].loadFromFile("assets/bonus/bonus_soin.png");
+	bonusTexture[Bonus::SlowEnnemyProjectiles].loadFromFile("assets/bonus/bonus_anti-speed.png");
+	bonusTexture[Bonus::OffensiveShield].loadFromFile("assets/bonus/bonus_protection_renvoie.png");
+	bonusTexture[Bonus::Speed].loadFromFile("assets/bonus/bonus_speed.png");
+}
+void Game::initZones()
+{
+
+	bonusZones.push_back(Vector2f(1000.f, 200.f));
+	bonusZones.push_back(Vector2f(1000.f, 500.f));
+	bonusZones.push_back(Vector2f(1000.f, 800.f));
+
+	int randomZoneIndex = rand() % bonusZones.size();
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(rand() % 9), bonusTexture[(rand() % 9)], bonusZones[randomZoneIndex]);
+}
+
+void Game::spawnBonus()
+{
+	
+}
 /////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
 
 void Game::initPlayer() // création du J
@@ -502,6 +551,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	
 	/*
 	if(scoreBonus>=20){
+	bool false
 	phase bonus();
 	scoreBonus=0;
 	}

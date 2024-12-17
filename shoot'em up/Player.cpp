@@ -130,18 +130,19 @@ void Player::movement(int dx, int dy)   //set up pour mouvement
 
 void Player::playerMovement()
 {
+	float vit = 12;
 	playerCollisions();
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
-		sprite.move(8.f, 0.f);
+		sprite.move(vit-4.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Q)) {
-		sprite.move(-12.f, 0.f);
+		sprite.move(-vit, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		sprite.move(0.f, -12.f);
+		sprite.move(0.f, -vit);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		sprite.move(0.f, 12.f);
+		sprite.move(0.f, vit);
 	}
 	
 }
