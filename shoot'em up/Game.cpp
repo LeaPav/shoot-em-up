@@ -721,10 +721,21 @@ void Game::checkCollisions()
 	}
 	
 	for (auto& ennemy : ennemies) {
+		
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
-			player->damage(1);
+
+			
+			
+			if(tpsTouch.getElapsedTime().asMilliseconds() > 201) {
+
+				player->damage(1);
+			}
+
+
+			tpsTouch.restart();
 		}
+		
 	}
 
 
@@ -784,7 +795,7 @@ void Game::checkCollisions()
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 		
 			
-			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
+			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
 				
 		    	e->explosion();
 

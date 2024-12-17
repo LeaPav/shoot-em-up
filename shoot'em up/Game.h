@@ -138,7 +138,7 @@ public:
 	void resetGame();
 	
 
-	
+	Clock tpsTouch;
 	
 
 };
