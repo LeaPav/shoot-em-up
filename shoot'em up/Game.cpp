@@ -700,6 +700,7 @@ void Game::checkCollisions()
 
 
 					killStreak++;
+					
 					int multiplicateur = 1 + (1*killStreak);
 					score = score + multiplicateur;
 					scoreBoss++;
@@ -716,6 +717,8 @@ void Game::checkCollisions()
 	for (auto& projectile : projectilesEnnemy) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
 			player->damage(1);
+			killStreak = 0;
+			
 			projectile->markAsOutOfScreen();
 		}
 	}
@@ -728,7 +731,8 @@ void Game::checkCollisions()
 			
 			
 			if(tpsTouch.getElapsedTime().asMilliseconds() > 201) {
-
+				killStreak = 0;
+				
 				player->damage(1);
 			}
 
