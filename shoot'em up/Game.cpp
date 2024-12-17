@@ -126,10 +126,12 @@ void Game::resetGame()
 	projectilesPlayer.clear();
 	projectilesEnnemy.clear();
 	projectilesBoss.clear();
+	bonus.clear();
 	score = 0;
 	scoreBonus = 0;
 	scoreBoss = 0;
 	killStreak = 0;
+	vagueActif = true;
 	textScore.setString("Score : " + to_string(score));
 }
 
@@ -525,6 +527,7 @@ void Game::initZones()
 
 void Game::spawnBonus()
 {
+	cout << "test" << endl;
 	srand(time(0));
 	bonusZones.clear();
 
@@ -578,6 +581,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	if (scoreBonus >= spawnBonusPhase) {
 		vagueActif = false;
 		spawnBonus();
+		scoreBonus = 0;
 	}
 
 	if (scoreBoss < spawnBoss && vagueActif) {
