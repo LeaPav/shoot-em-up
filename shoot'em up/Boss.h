@@ -10,6 +10,7 @@ private:
 	Texture robot1, robot2;
 	int hp;
 	int maxHp;
+	int lifeBoss;
 	bool isActive;
 	bool firstMove;
 	Vector2f velocity;
@@ -33,7 +34,7 @@ private:
 	RectangleShape backgroundHealthBar;
 
 public:
-	Boss(float x = 3.5f, float y = 2.f);
+	Boss(int lifeBoss = 60,float x = 3.5f, float y = 2.f);
 	void takeDamage(int damage);
 	void movement(int dx, int dy) override;
 	const Vector2f getPosition() const;

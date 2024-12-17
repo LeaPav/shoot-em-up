@@ -1,6 +1,6 @@
 #include "Boss.h"
 
-Boss::Boss(float x, float y) : hp(60), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
+Boss::Boss(int lifeBoss, float x, float y) : hp(lifeBoss), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
 firstMove(true)
 {
     this->initSprite();
