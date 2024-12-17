@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(10)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(10), vagueActif(true), spawnBonusPhase(5)
 {
 	this->initSprite();
 	this->initTexture();
@@ -8,9 +8,7 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(
 	this->initPlayer();
 	this->initBoss();
 	this->initScore();
-	this->spawnBonus();
 	this->initBonus();
-	this->spawnBonus();
 	this->initZones();
 
 }
@@ -111,11 +109,15 @@ void Game::updateBonusZones()
 {
 	
 }
+
 const bool Game::windowIsOpen()
 {
 	return this->window->isOpen();
 }
-
+void Game::resetBonus()
+{
+	
+}
 void Game::resetGame()
 {
 	player->reset();
@@ -220,7 +222,6 @@ void Game::renderBoss()
 
 void Game::renderBonusZones()
 {
-	cout << "Test" << endl;
 	for (auto& zone : bonus) {
 		zone.render(*this->window);
 	}
@@ -516,18 +517,31 @@ void Game::initBonus()
 }
 void Game::initZones()
 {
-
 	bonusZones.push_back(Vector2f(1000.f, 200.f));
 	bonusZones.push_back(Vector2f(1000.f, 500.f));
 	bonusZones.push_back(Vector2f(1000.f, 800.f));
-
-	int randomZoneIndex = rand() % bonusZones.size();
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(rand() % 9), bonusTexture[(rand() % 9)], bonusZones[randomZoneIndex]);
+	
 }
 
 void Game::spawnBonus()
 {
-	
+	srand(time(0));
+	bonusZones.clear();
+
+	int randBonus1 = rand() % 9;
+	int randBonus2 = rand() % 9;
+	int randBonus3 = rand() % 9;
+
+	while (randBonus1 == randBonus2) {
+		randBonus2 = rand() % 9;
+	}
+	while (randBonus1 == randBonus3 || randBonus2 == randBonus3) {
+		randBonus3 = rand() % 9;
+	}
+
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
 }
 /////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
 
@@ -551,7 +565,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	
 	/*
 	if(scoreBonus>=20){
-	bool false
+	bool vagueActif false
 	phase bonus();
 	scoreBonus=0;
 	}
@@ -560,7 +574,13 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	}
 
 	*/
-	if (scoreBoss < spawnBoss) {
+	
+	if (scoreBonus >= spawnBonusPhase) {
+		vagueActif = false;
+		spawnBonus();
+	}
+
+	if (scoreBoss < spawnBoss && vagueActif) {
 
 		if (random == 1) {   //pyramide par 3 tir
 
@@ -748,12 +768,12 @@ void Game::checkCollisions()
 
 					
 					
-
+					scoreBonus++;
 					killStreak++;
 					int multiplicateur = 1 + (1*killStreak);
 					score = score + multiplicateur;
 					scoreBoss++;
-					scoreBonus++;
+					
 					textScore.setString("Score: " + to_string(score));
 					
 					ennemiesToRemove.push_back(ennemy);
@@ -835,7 +855,6 @@ void Game::checkCollisions()
 		
 			
 			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
-				cout << "test1" << endl;
 		    	e->explosion();
 
 			}

@@ -100,6 +100,8 @@ private:
 	vector<Vector2f> bonusZones;
 	Texture bonusTexture[9];
 
+	bool vagueActif;
+	int spawnBonusPhase;
 	void initBonus();
 	void initZones();
 
@@ -144,6 +146,7 @@ public:
 	void spawnBonus();
 	void renderBonusZones();
 	void updateBonusZones();
+	void resetBonus();
 
 };
 
