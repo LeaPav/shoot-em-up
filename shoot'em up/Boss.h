@@ -6,7 +6,7 @@ class Boss : public Entity
 {
 private:
 	Sprite sprite, spriteRobot1, spriteRobot2;
-	Texture boss, bossPhase2, bossPhaseInterHaut, bossPhaseInterBas, bossPresqueMort;
+	Texture boss, bossPhase2, bossPhaseInterHaut, bossPhaseInterBas, bossPresqueMort, bossMort;
 	Texture robot1, robot2;
 	int hp;
 	int maxHp;
@@ -48,6 +48,7 @@ public:
 	void initHealthBar();
 	void udpateHealthBar();
 	void renderHealthBar(RenderTarget& target);
+	void initName();
 	void reset();
 	
 	bool shouldShoot() const;
@@ -69,5 +70,8 @@ public:
 	
 	bool isRobot1Dead();
 	bool isRobot2Dead();
+
+	Text nameBoss;
+	Font font;
 }; 
 

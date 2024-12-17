@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (100)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (1)
 {
 	this->initSprite();
 	this->initTexture();
@@ -505,14 +505,10 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	phase bonus();
 	scoreBonus=0;
 	}
-	else if(score>=200){
-	phase de boss()
-	}
-
 	*/
 	if (scoreBoss < spawnBoss) {
 
-		if (random == 1) {   //pyramide par 3 tir
+		if (random == 0) {   //pyramide par 3 tir
 
 			MovementType randomType = static_cast<MovementType>(rand() % 2);
 
@@ -543,7 +539,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		else if (random == 2) { //mur par 3 passif
+		else if (random == 1) { //mur par 3 passif
 
 			MovementType randomType = static_cast<MovementType>(rand() % 4);
 
@@ -568,7 +564,8 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
 			}
-			else if (random == 3 && scoreBoss >= 40) { // pyramide par 5 tir
+		}
+		else if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
 
 				int largeur = rand() % this->videoMode.height;
 
@@ -609,8 +606,8 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 
 
-			}
-			else if (random == 4 && scoreBoss >= 20) { //mur par 5
+		}
+		else if (random == 3 && scoreBoss >= 20) { //mur par 5
 
 				MovementType randomType = static_cast<MovementType>(rand() % 2);
 
@@ -653,8 +650,8 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				if (newEnnemy5->destroy()) {
 					delete newEnnemy5;
 				}
-			}
 		}
+		
 	}
 }
 

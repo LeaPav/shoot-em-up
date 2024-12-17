@@ -1,11 +1,12 @@
 #include "Boss.h"
 
-Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
+Boss::Boss(float x, float y) : hp(60), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
 firstMove(true)
 {
     this->initSprite();
     this->initTexture();
     this->initHealthBar();
+    this->initName();
 
 }
 
@@ -32,6 +33,12 @@ void Boss::initSprite()
     if (!this->bossPresqueMort.loadFromFile("assets/boss/Boss_presque_mort.png")) {
         cout << "Erreur";
     }
+
+    if (!this->bossMort.loadFromFile("assets/boss/Boss BOOM.png")) {
+        cout << "Erreur";
+    }
+
+
     if (!this->robot1.loadFromFile("assets/boss/droide_du_haut.png")) {
         cout << "Erreur";
     }
@@ -50,12 +57,25 @@ void Boss::initTexture()
     spriteRobot2.setTexture(robot2);
 }
 
+void Boss::initName() { //création score
+
+    
+    if (!font.loadFromFile("assets/font/fontpause.ttf")) {
+        cout << "ERREUR";
+    }
+    nameBoss.setFont(font);
+    nameBoss.setPosition(1100, 980);
+    nameBoss.setCharacterSize(50);
+    nameBoss.setFillColor(Color::White);
+    nameBoss.setString("Twoide");
+}
+
 
 //////////////////////////////////actualisation////////////////////////////////////////////////
  
 void Boss::render(RenderTarget& target)
 {
-    if (hp > 0) {
+    if (hp >= 0) {
         target.draw(this->sprite);
    }
   
@@ -80,7 +100,9 @@ void Boss::render(RenderTarget& target)
     if (phase == 3 && hp > 0) {
         sprite.setTexture(bossPresqueMort);
     }
-
+    if (hp <= 0) {
+        sprite.setTexture(bossMort);
+    }
 }
 
 
@@ -311,8 +333,13 @@ void Boss::renderHealthBar(RenderTarget& target)
 {
     this->backgroundHealthBar.setPosition(1100.f, 1050.f);
     this->healthBar.setPosition(1100.f, 1050.f);
+  
 
+    target.draw(this->nameBoss);
     target.draw(this->backgroundHealthBar);
     target.draw(this->healthBar);
 
 }
+
+
+
