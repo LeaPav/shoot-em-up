@@ -795,7 +795,7 @@ void Game::checkCollisions()
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 		
 			
-			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
+			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
 				
 		    	e->explosion();
 
@@ -855,7 +855,7 @@ void Game::shootingBoss()
 		float boss2ProjoX = boss->getPosition().x;
 		float boss2ProjoY = boss->getPosition().y + 200.f;
 
-		if (boss->getPhase() == 1 || boss->getPhase() == 3) {
+		
 			if (shootBoss == 0) {
 				this->createProjectilesBoss(boss1ProjoX, boss1ProjoY);
 				shootBoss++;
@@ -864,7 +864,7 @@ void Game::shootingBoss()
 				this->createProjectilesBoss(boss2ProjoX, boss2ProjoY);
 				shootBoss--;
 			}
-		}
+		
 		if (boss->getPhase() == 2) {
 			float robot1X = boss->getRobot1Position().x;
 			float robot1Y = boss->getRobot1Position().y + 50.f;
