@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(10), vagueActif(true), spawnBonusPhase(5)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(50), vagueActif(true), spawnBonusPhase(5)
 {
 	this->initSprite();
 	this->initTexture();
@@ -9,6 +9,7 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(
 	this->initBoss();
 	this->initScore();
 	this->initBonus();
+	this->initBonusState();
 	this->initZones();
 
 }
@@ -88,7 +89,11 @@ void Game::ennemyUpdate()
 
 	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
 	const int spawnInterval = 60;
-
+	if (bonusActive[Bonus::SlowEnnemyProjectiles]) {
+		for (auto& ennemy : ennemies) {
+			ennemy->setRate(ennemy->getShootRate() + 5);
+		}
+	}
 	timer++;
 	if (timer >= spawnInterval) {
 		this->createEnnemy();
@@ -109,23 +114,47 @@ void Game::updateBonusZones()
 {
 	for (auto& zoneBonus : bonus) {
 		if (zoneBonus.getBounds().intersects(player->getGlobalBounds())) {
-			bonus.clear();
 			Bonus::AllBonus bonusType = zoneBonus.getBonus();
-
-			switch (bonusType) {
-			case Bonus::DoubleShooting:
-	
-				break;
-			case Bonus::TripleShooting:
-				bonusTripleShooting();
-				break;
-			case Bonus::TripleShootingDiag:
-				break;
-			case Bonus::Laser:
-				fireRate = 1;
-			}
+			fill(bonusActive.begin(), bonusActive.end(), false);
+			activateBonus(bonusType);
+			bonus.clear();
 			vagueActif = true;
 		}
+	}
+}
+
+void Game::activateBonus(Bonus::AllBonus bonusType)
+{
+	if (bonusActive[bonusType]) return;
+
+	bonusActive[bonusType] = true;
+
+	switch (bonusType) {
+	case Bonus::DoubleShooting:
+
+		break;
+	case Bonus::TripleShooting:
+
+		break;
+	case Bonus::TripleShootingDiag:
+		break;
+	case Bonus::Laser:
+		fireRate = 1;
+	}
+	
+	
+}
+
+void Game::deactivateBonus(Bonus::AllBonus bonusType)
+{
+	if (!bonusActive[bonusType]) return;
+
+	bonusActive[bonusType] = false;
+	switch (bonusType) {
+	case Bonus::Laser:
+		bonusShotCount = 0;
+		fireRate = 15;
+		break;
 	}
 }
 
@@ -151,6 +180,10 @@ void Game::resetGame()
 	scoreBoss = 0;
 	killStreak = 0;
 	vagueActif = true;
+	fireRate = 15;
+
+	fill(bonusActive.begin(), bonusActive.end(), false);
+
 	textScore.setString("Score : " + to_string(score));
 }
 
@@ -543,9 +576,13 @@ void Game::initZones()
 	
 }
 
+void Game::initBonusState()
+{
+	bonusActive.resize(totalBonus, false);
+}
+
 void Game::spawnBonus()
 {
-	//cout << "test" << endl;
 	ennemies.clear();
 	projectilesEnnemy.clear();
 	srand(time(0));
@@ -562,7 +599,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::TripleShooting), bonusTexture[(Bonus::TripleShooting)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::SlowEnnemyProjectiles), bonusTexture[(Bonus::SlowEnnemyProjectiles)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
 }
@@ -757,7 +794,15 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 void Game::createProjectilesPlayer(float x, float y)
 {
+
 	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f, Projectile::ProjectileType::PLAYER);
+	projectilesPlayer.push_back(newProjectile);
+
+}
+
+void Game::createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag)
+{
+	Projectile* newProjectile = new Projectile(x, y, xDiag,yDiag, Projectile::ProjectileType::PLAYER);
 	projectilesPlayer.push_back(newProjectile);
 }
 
@@ -900,12 +945,44 @@ void Game::checkCollisions()
 void Game::shoot()
 {
 	static int cooldownShoot = 0;
-	/*Bonus::AllBonus bonusType =*/
+
 
 	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
-		float playerX = this->player->getPosition().x + 80.f;
-		float playerY = this->player->getPosition().y + 40.f;
-		createProjectilesPlayer(playerX, playerY);
+		float TopplayerX = this->player->getPosition().x + 73.f;
+		float TopplayerY = this->player->getPosition().y + 5.f;
+
+		float MidplayerX = this->player->getPosition().x + 80.f;
+		float MidplayerY = this->player->getPosition().y + 40.f;
+
+		float LowplayerX = this->player->getPosition().x + 73.f;
+		float LowplayerY = this->player->getPosition().y + 75.f;
+
+		if (bonusActive[Bonus::TripleShooting]) {
+			createProjectilesPlayer(TopplayerX, TopplayerY);
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			createProjectilesPlayer(LowplayerX, LowplayerY);
+		}
+		else if (bonusActive[Bonus::DoubleShooting]) {
+			createProjectilesPlayer(TopplayerX, TopplayerY);
+			createProjectilesPlayer(LowplayerX, LowplayerY);
+		}
+		else if (bonusActive[Bonus::Laser]) {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			bonusShotCount++;
+			if (bonusShotCount >= 500) {
+				deactivateBonus(Bonus::Laser);
+				bonusShotCount = 0;
+			}
+		}
+		else if (bonusActive[Bonus::TripleShootingDiag]) {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			createProjectilesPlayerDiag(TopplayerX, TopplayerY, 10.f, -10.f);
+			createProjectilesPlayerDiag(LowplayerX, LowplayerY, 10.f, 10.f);
+
+		}
+		else {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+		}
 		cooldownShoot = fireRate;
 	}
 	if (cooldownShoot > 0) {
@@ -919,9 +996,11 @@ void Game::shootEnnemy()
 		ennemy->update();
 		ennemy->updateShootCooldown();
 		if (ennemy->canShoot() && !ennemy->getPassif()) {
+	
 			float ennemyX = ennemy->getPosition().x - 37.f;
 			float ennemyY = ennemy->getPosition().y + 37.f;
 			createProjectilesEnnemy(ennemyX, ennemyY);
+
 			ennemy->resetShootCooldown();
 		}
 	}
@@ -960,17 +1039,4 @@ void Game::shootingBoss()
 	}
 }
 
-void Game::bonusTripleShooting()
-{
-	static int cooldownShoot = 0;
-	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
-		static int cooldownShoot = 0;
-		float FirstplayerX = this->player->getPosition().x + 73.f;
-		float FirstplayerY = this->player->getPosition().y + 5.f;
-		float SecondplayerX = this->player->getPosition().x + 73.f;
-		float SecondplayerY = this->player->getPosition().y + 75.f;
-		createProjectilesPlayer(FirstplayerX, FirstplayerY);
-		createProjectilesPlayer(SecondplayerX, SecondplayerY);
-		cooldownShoot = fireRate;
-	}
-}
+

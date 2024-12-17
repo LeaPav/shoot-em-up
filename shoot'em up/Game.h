@@ -38,6 +38,7 @@ private:
 	void initScore();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
+	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
 	void createProjectilesEnnemy(float x, float y);
 	void createProjectilesBoss(float x, float y);
 
@@ -101,12 +102,16 @@ private:
 
 	vector<Bonus> bonus;
 	vector<Vector2f> bonusZones;
+	vector<bool> bonusActive;
 	Texture bonusTexture[9];
-
+	const int totalBonus = 9;
 	bool vagueActif;
 	int spawnBonusPhase;
 	void initBonus();
 	void initZones();
+	void initBonusState();
+	int bonusShotCount = 0;
+	
 
 public:
 	Game();
@@ -145,13 +150,13 @@ public:
 	void resetGame();
 
 	//bonus
-
+	
 	void spawnBonus();
 	void renderBonusZones();
 	void updateBonusZones();
 	void resetBonus();
-
-	void bonusTripleShooting();
+	void activateBonus(Bonus::AllBonus bonusType);
+	void deactivateBonus(Bonus::AllBonus bonusType);
 
 };
 

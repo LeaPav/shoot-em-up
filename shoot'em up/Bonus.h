@@ -23,6 +23,7 @@ private:
 	bool isActive;
 	int initSprite();
 	void initTexture();
+
 public:
 	Bonus(AllBonus bonus, const Texture& texture, Vector2f position);
 	void render(RenderTarget& target);
