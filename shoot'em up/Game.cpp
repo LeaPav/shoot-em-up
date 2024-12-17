@@ -522,12 +522,12 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				peacefull = true;
 			}
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
-			newEnnemy1->setPosition(distance, largeur);
-			if (newEnnemy1->destroy()) {
-				delete newEnnemy1;
-			}
-			ennemies.push_back(newEnnemy1);
+			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif, texture
+		newEnnemy1->setPosition(distance, largeur);
+		if (newEnnemy1->destroy()) {
+			delete newEnnemy1;
+		}
+		ennemies.push_back(newEnnemy1);
 
 			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 			newEnnemy2->setPosition(distance + 75, largeur + 75);
@@ -542,9 +542,6 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				delete newEnnemy3;
 			}
 			ennemies.push_back(newEnnemy3);
-
-
-
 		}
 		else if (random == 2) { //mur par 3 passif
 
@@ -552,28 +549,24 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 			int largeur = rand() % this->videoMode.height;
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy1->setPosition(distance, largeur);
-			if (newEnnemy1->destroy()) {
-				delete newEnnemy1;
-			}
-			ennemies.push_back(newEnnemy1);
+		Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy1->setPosition(distance, largeur);
+		if (newEnnemy1->destroy()) {
+			delete newEnnemy1;
+		}
+		ennemies.push_back(newEnnemy1);
 
-			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy2->setPosition(distance, largeur + 80);
-			if (newEnnemy2->destroy()) {
-				delete newEnnemy2;
-			}
-			ennemies.push_back(newEnnemy2);
+		Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy2->setPosition(distance, largeur + 80);
+		if (newEnnemy2->destroy()) {
+			delete newEnnemy2;
+		}
+		ennemies.push_back(newEnnemy2);
 
-			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy3->setPosition(distance, largeur - 80);
-			if (newEnnemy3->destroy()) {
-				delete newEnnemy3;
-			}
-			ennemies.push_back(newEnnemy3);
-
-
+		Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy3->setPosition(distance, largeur - 80);
+		if (newEnnemy3->destroy()) {
+			delete newEnnemy3;
 		}
 		else if (random == 3 && scoreBoss >= 40) { // pyramide par 5 tir
 
@@ -627,41 +620,38 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 			int largeur = rand() % this->videoMode.height;
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy1->setPosition(distance, largeur);
-			if (newEnnemy1->destroy()) {
-				delete newEnnemy1;
-			}
-			ennemies.push_back(newEnnemy1);
+		Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy1->setPosition(distance, largeur);
+		if (newEnnemy1->destroy()) {
+			delete newEnnemy1;
+		}
+		ennemies.push_back(newEnnemy1);
 
-			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy2->setPosition(distance, largeur + 80);
-			if (newEnnemy2->destroy()) {
-				delete newEnnemy2;
-			}
-			ennemies.push_back(newEnnemy2);
+		Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy2->setPosition(distance, largeur + 80);
+		if (newEnnemy2->destroy()) {
+			delete newEnnemy2;
+		}
+		ennemies.push_back(newEnnemy2);
 
-			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy3->setPosition(distance, largeur - 80);
-			if (newEnnemy3->destroy()) {
-				delete newEnnemy3;
-			}
-			ennemies.push_back(newEnnemy3);
+		Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy3->setPosition(distance, largeur - 80);
+		if (newEnnemy3->destroy()) {
+			delete newEnnemy3;
+		}
+		ennemies.push_back(newEnnemy3);
 
-			Ennemy* newEnnemy4 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy4->setPosition(distance, largeur - 160);
-			if (newEnnemy4->destroy()) {
-				delete newEnnemy4;
-			}
-			ennemies.push_back(newEnnemy4);
+		Ennemy* newEnnemy4 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy4->setPosition(distance, largeur - 160);
+		if (newEnnemy4->destroy()) {
+			delete newEnnemy4;
+		}
+		ennemies.push_back(newEnnemy4);
 
-			Ennemy* newEnnemy5 = new Ennemy(randomType, pv, 0, 90, true); // mouvement, life, cooldown, firerate, passif
-			newEnnemy5->setPosition(distance, largeur + 160);
-			if (newEnnemy5->destroy()) {
-				delete newEnnemy5;
-			}
-			ennemies.push_back(newEnnemy5);
-
+		Ennemy* newEnnemy5 = new Ennemy(randomType, pv, 0, 90, true,2); // mouvement, life, cooldown, firerate, passif
+		newEnnemy5->setPosition(distance, largeur + 160);
+		if (newEnnemy5->destroy()) {
+			delete newEnnemy5;
 		}
 
 	}
@@ -701,7 +691,12 @@ void Game::checkCollisions()
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
 
+				
+
 				if (ennemy->isDead()) {
+
+					
+					
 
 					killStreak++;
 					int multiplicateur = 1 + (1*killStreak);
@@ -709,6 +704,7 @@ void Game::checkCollisions()
 					scoreBoss++;
 					scoreBonus++;
 					textScore.setString("Score: " + to_string(score));
+					
 					ennemiesToRemove.push_back(ennemy);
 					cout << "Score boss: " << scoreBoss << endl;
 				}
@@ -729,6 +725,7 @@ void Game::checkCollisions()
 			player->damage(1);
 		}
 	}
+
 
 	for (auto& projectile : projectilesBoss) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
@@ -784,9 +781,19 @@ void Game::checkCollisions()
 		projectilesEnnemy.end()
 	);
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
-		if (e->destroy() || e->isDead()) {
-			delete e;
-			return true;
+		
+			
+			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
+				cout << "test1" << endl;
+		    	e->explosion();
+
+			}
+		
+		else {
+			if (e->destroy() || e->isDead()) {
+				delete e;
+				return true;
+			}
 		}
 		return false;
 		}),
@@ -858,14 +865,4 @@ void Game::shootingBoss()
 		boss->restartShootClock();
 	}
 }
-
-
-
-
-
-
-
-
-
-
 
