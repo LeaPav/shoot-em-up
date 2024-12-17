@@ -285,6 +285,11 @@ bool Boss::isBossDead() const
     return hp <= 0;
 }
 
+bool Boss::verifSpawnBoss() const
+{
+    return sprite.getPosition().x < 1800;
+}
+
 void Boss::initHealthBar()   // santé et barre de vie
 {
     this->maxHp = 100;

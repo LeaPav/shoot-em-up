@@ -120,6 +120,11 @@ bool Ennemy::canShoot()
 	return shootCooldown <= 0;
 }
 
+bool Ennemy::verifSpawnEnnemy()
+{
+	return sprite.getPosition().x < 1900;
+}
+
 void Ennemy::updateShootCooldown()
 {
 	if (shootCooldown > 0)

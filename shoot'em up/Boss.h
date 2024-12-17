@@ -44,6 +44,7 @@ public:
 	bool canSpawn(int bossScore, int spawnBoss);
 	bool isBossActive() const;
 	bool isBossDead() const;
+	bool verifSpawnBoss() const;
 	void initHealthBar();
 	void udpateHealthBar();
 	void renderHealthBar(RenderTarget& target);

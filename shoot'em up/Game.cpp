@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (10)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (100)
 {
 	this->initSprite();
 	this->initTexture();
@@ -697,7 +697,7 @@ void Game::checkCollisions()
 
 	for (auto& projectile : projectilesPlayer) {
 		for (auto& ennemy : ennemies) {
-			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds())) {	
+			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds()) && ennemy->verifSpawnEnnemy()) {	
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
 
@@ -739,8 +739,10 @@ void Game::checkCollisions()
 
 	for (auto& projectile : projectilesPlayer) {
 		if (projectile->getGlobalBounds().intersects(boss->getGlobalBounds())) {
-			if (boss->getPhase() == 1 || boss->getPhase() ==3) {
-				boss->takeDamage(5);
+			if (boss->verifSpawnBoss()) {
+				if (boss->getPhase() == 1 || boss->getPhase() == 3) {
+					boss->takeDamage(1);
+				}
 			}
 			projectile->markAsOutOfScreen();
 		}

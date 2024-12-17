@@ -6,6 +6,7 @@
 #include "GameOver.h"
 #include "Win.h"
 #include "Boss.h"
+#include "Bonus.h"
 #include "Projectile.h"
 
 class Game
@@ -92,6 +93,13 @@ private:
 	Win win;
 	//Spawn du boss
 	bool bossSpawn;
+
+	//Bonus
+	vector<Bonus> bonus;
+	vector<Vector2f> bonusZones;
+	Texture bonusTexture[6];
+
+	void initBonus();
 
 public:
 	Game();

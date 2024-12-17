@@ -2,14 +2,29 @@
 #include "stdafx.h"
 class Bonus
 {
+public:
+	enum AllBonus {
+		FastShooting,
+		TripleShooting,
+		Laser,
+		Shield,
+		HealthKit,
+		SlowEnnemyProjectiles,
+		OffensiveShield,
+		Speed,
+	};
 private:
+	AllBonus bonus;
 	Sprite sprite;
 	Texture texture;
-	Vector2f position;
+	bool isActive;
+	int initSprite();
+	void initTexture();
 public:
-	Bonus();
+	Bonus(AllBonus bonus, const Texture& texture, Vector2f position);
 	void render(RenderTarget& target);
-	FloatRect getGlobalBounds() const;
-
+	const FloatRect getBounds() const;
+	AllBonus getBonus() const;
+	void deactivate();
 };
 
