@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(50), vagueActif(true), spawnBonusPhase(5)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(5), vagueActif(true), spawnBonusPhase(5)
 {
 	this->initSprite();
 	this->initTexture();
@@ -118,7 +118,8 @@ void Game::updateBonusZones()
 	for (auto& zoneBonus : bonus) {
 		if (zoneBonus.getBounds().intersects(player->getGlobalBounds())) {
 			Bonus::AllBonus bonusType = zoneBonus.getBonus();
-			//deactivateBonus(Bonus::Shield);
+			deactivateBonus(Bonus::Shield);
+			deactivateBonus(Bonus::OffensiveShield);
 			fill(bonusActive.begin(), bonusActive.end(), false);
 			activateBonus(bonusType);
 			bonus.clear();
@@ -870,7 +871,9 @@ void Game::checkCollisions()
 			}
 		}
 	}
-
+	if (player->getGlobalBounds().intersects(boss->getGlobalBounds())) {
+		player->damage(100);
+	}
 	for (auto& projectile : projectilesEnnemy) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
 			if (bonusActive[Bonus::Shield]) {
