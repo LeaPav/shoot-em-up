@@ -11,6 +11,7 @@ Win::Win()
 int Win::initFont()
 {
     if (!fontWin.loadFromFile("assets/font/fontpause.ttf"));
+    return -1;
 }
 
 void Win::initBouton()
