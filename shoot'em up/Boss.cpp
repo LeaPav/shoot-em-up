@@ -111,7 +111,7 @@ void Boss::update()
 {
     movement(x, y);
 
-    if (hp <= 50 && phase == 1) {
+    if (hp <= hpMax / 2 && phase == 1) {
         phase = 2;
     }
     if (robotHp1 <= 0 && robotHp2 <= 0 && phase == 2) {
@@ -138,7 +138,7 @@ void Boss::reset()
     firstMove = true;
     this->sprite.setTexture(boss);
     this->sprite.setPosition(2500.f, 100.f);
-    hp = 100;
+    hp = hpMax;
     robotHp1 = 3;
     robotHp2 = 3;
 
@@ -314,7 +314,7 @@ bool Boss::verifSpawnBoss() const
 
 void Boss::initHealthBar()   // santé et barre de vie
 {
-    this->maxHp = 100;
+    this->maxHp = hpMax;
     this->hp = this->maxHp;
     this->healthBar.setSize(Vector2f(800.f, 20.f));
     this->healthBar.setFillColor(Color(255, 0, 0));

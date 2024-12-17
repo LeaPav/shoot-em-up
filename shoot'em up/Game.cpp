@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (1)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (100)
 {
 	this->initSprite();
 	this->initTexture();
@@ -51,6 +51,8 @@ void Game::update()
 
 	}
 	if (boss->isBossDead()) {
+		
+		
 		currentState = GameState::WIN;
 	}
 	handleMenuState(event);
@@ -120,6 +122,7 @@ void Game::resetGame()
 	scoreBonus = 0;
 	scoreBoss = 0;
 	killStreak = 0;
+	
 	textScore.setString("Score : " + to_string(score));
 }
 
@@ -159,7 +162,7 @@ void Game::renderWin()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	win.render(*window);
-	win.setScore(score);
+	win.setScore(score,killStreak);
 }
 
 
@@ -651,6 +654,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				if (newEnnemy5->destroy()) {
 					delete newEnnemy5;
 				}
+				ennemies.push_back(newEnnemy5);
 		}
 		
 	}
@@ -694,8 +698,6 @@ void Game::checkCollisions()
 
 				if (ennemy->isDead()) {
 
-					
-					
 
 					killStreak++;
 					int multiplicateur = 1 + (1*killStreak);
@@ -782,8 +784,8 @@ void Game::checkCollisions()
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 		
 			
-			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
-				cout << "test1" << endl;
+			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
+				
 		    	e->explosion();
 
 			}

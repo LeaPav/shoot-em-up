@@ -136,7 +136,9 @@ public:
 	//score
 
 	void resetGame();
+	
 
+	
 	
 
 };

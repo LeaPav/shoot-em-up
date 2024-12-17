@@ -34,7 +34,7 @@ private:
 	RectangleShape backgroundHealthBar;
 
 public:
-	Boss(int lifeBoss = 60,float x = 3.5f, float y = 2.f);
+	Boss(int lifeBoss = 20,float x = 3.5f, float y = 2.f);
 	void takeDamage(int damage);
 	void movement(int dx, int dy) override;
 	const Vector2f getPosition() const;
@@ -74,5 +74,7 @@ public:
 
 	Text nameBoss;
 	Font font;
+
+	float hpMax = hp;
 }; 
 
