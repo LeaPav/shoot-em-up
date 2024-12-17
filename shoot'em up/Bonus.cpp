@@ -11,10 +11,10 @@ void Bonus::initTexture()
 	this->sprite.setTexture(texture);
 }
 
-Bonus::Bonus(AllBonus bonus, const Texture& texture, Vector2f position) : bonus(bonus), isActive(true)
+Bonus::Bonus(AllBonus bonus, const Texture& texture, Vector2f pos) : bonus(bonus), isActive(true), position(pos)
 {
 	sprite.setTexture(texture);
-	sprite.setPosition(position);
+	sprite.setPosition(pos);
 	//this->initSprite();
 	
 }
@@ -26,9 +26,14 @@ void Bonus::render(RenderTarget& target)
 	}
 }
 
-const FloatRect Bonus::getBounds() const
+FloatRect Bonus::getBounds() const
 {
-	return sprite.getGlobalBounds();
+	return this->sprite.getGlobalBounds();
+}
+
+bool Bonus::contains(const FloatRect& bounds) const
+{
+	return FloatRect(position, size).intersects(bounds);
 }
 
 Bonus::AllBonus Bonus::getBonus() const

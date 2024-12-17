@@ -4,7 +4,7 @@ class Bonus
 {
 public:
 	enum AllBonus {
-		FastShooting,
+		DoubleShooting,
 		TripleShooting,
 		TripleShootingDiag,
 		Laser,
@@ -18,13 +18,16 @@ private:
 	AllBonus bonus;
 	Sprite sprite;
 	Texture texture;
+	Vector2f position;
+	Vector2f size;
 	bool isActive;
 	int initSprite();
 	void initTexture();
 public:
 	Bonus(AllBonus bonus, const Texture& texture, Vector2f position);
 	void render(RenderTarget& target);
-	const FloatRect getBounds() const;
+	FloatRect getBounds() const;
+	bool contains(const FloatRect& bounds) const;
 	AllBonus getBonus() const;
 	void deactivate();
 };

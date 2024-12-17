@@ -107,7 +107,26 @@ void Game::updateBoss()
 }
 void Game::updateBonusZones()
 {
+	for (auto& zoneBonus : bonus) {
+		if (zoneBonus.getBounds().intersects(player->getGlobalBounds())) {
+			bonus.clear();
+			Bonus::AllBonus bonusType = zoneBonus.getBonus();
+
+			switch (bonusType) {
+			case Bonus::DoubleShooting:
 	
+				break;
+			case Bonus::TripleShooting:
+				bonusTripleShooting();
+				break;
+			case Bonus::TripleShootingDiag:
+				break;
+			case Bonus::Laser:
+				fireRate = 1;
+			}
+			vagueActif = true;
+		}
+	}
 }
 
 const bool Game::windowIsOpen()
@@ -134,8 +153,6 @@ void Game::resetGame()
 	vagueActif = true;
 	textScore.setString("Score : " + to_string(score));
 }
-
-
 
 ///////////////////////////////////////////maj du Game affichage (Render)/////////////////////////////////////////////////
 
@@ -312,6 +329,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 		this->ennemyUpdate();
 		this->playerUpdate();
+		this->updateBonusZones();
 		this->projectileUpdate();
 		this->checkCollisions();
 		this->shoot();
@@ -507,7 +525,7 @@ void Game::initScore() //création score
 
 void Game::initBonus()
 {
-	bonusTexture[Bonus::FastShooting].loadFromFile("assets/bonus/bonus_2_projo.png");
+	bonusTexture[Bonus::DoubleShooting].loadFromFile("assets/bonus/bonus_2_projo.png");
 	bonusTexture[Bonus::TripleShooting].loadFromFile("assets/bonus/bonus_3_tir.png");
 	bonusTexture[Bonus::TripleShootingDiag].loadFromFile("assets/bonus/bonus_3_diag.png");
 	bonusTexture[Bonus::Laser].loadFromFile("assets/bonus/bonus_gros_projo.png");
@@ -527,7 +545,9 @@ void Game::initZones()
 
 void Game::spawnBonus()
 {
-	cout << "test" << endl;
+	//cout << "test" << endl;
+	ennemies.clear();
+	projectilesEnnemy.clear();
 	srand(time(0));
 	bonusZones.clear();
 
@@ -542,7 +562,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::TripleShooting), bonusTexture[(Bonus::TripleShooting)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
 }
@@ -880,7 +900,7 @@ void Game::checkCollisions()
 void Game::shoot()
 {
 	static int cooldownShoot = 0;
-	const int fireRate = 15;
+	/*Bonus::AllBonus bonusType =*/
 
 	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
 		float playerX = this->player->getPosition().x + 80.f;
@@ -940,3 +960,17 @@ void Game::shootingBoss()
 	}
 }
 
+void Game::bonusTripleShooting()
+{
+	static int cooldownShoot = 0;
+	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
+		static int cooldownShoot = 0;
+		float FirstplayerX = this->player->getPosition().x + 73.f;
+		float FirstplayerY = this->player->getPosition().y + 5.f;
+		float SecondplayerX = this->player->getPosition().x + 73.f;
+		float SecondplayerY = this->player->getPosition().y + 75.f;
+		createProjectilesPlayer(FirstplayerX, FirstplayerY);
+		createProjectilesPlayer(SecondplayerX, SecondplayerY);
+		cooldownShoot = fireRate;
+	}
+}

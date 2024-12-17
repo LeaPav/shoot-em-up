@@ -74,6 +74,9 @@ private:
 	vector<Projectile*> projectilesEnnemy;
 	vector<Projectile*> projectilesBoss;
 
+	//joueur
+	int fireRate = 15;
+
 	int score;
 	int scoreBonus;
 	int scoreBoss;
@@ -147,6 +150,8 @@ public:
 	void renderBonusZones();
 	void updateBonusZones();
 	void resetBonus();
+
+	void bonusTripleShooting();
 
 };
 
