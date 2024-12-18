@@ -154,6 +154,7 @@ void Game::renderGameOver()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	gameOver.render(*window);
+	gameOver.setScore(score);
 }
 
 void Game::renderWin()
@@ -503,12 +504,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	bool peacefull = false;
 	int pv = 1;
 	
-	/*
-	if(scoreBonus>=20){
-	phase bonus();
-	scoreBonus=0;
-	}
-	*/
+	
 	if (scoreBoss < spawnBoss) {
 
 		if (random == 0) {   //pyramide par 3 tir
@@ -542,7 +538,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		else if (random == 1) { //mur par 3 passif
+		if (random == 1) { //mur par 3 passif
 
 			MovementType randomType = static_cast<MovementType>(rand() % 4);
 
@@ -569,7 +565,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		else if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
+		if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
 
 				int largeur = rand() % this->videoMode.height;
 
@@ -611,7 +607,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 
 		}
-		else if (random == 3 && scoreBoss >= 20) { //mur par 5
+		if (random == 3 && scoreBoss >= 20) { //mur par 5
 
 				MovementType randomType = static_cast<MovementType>(rand() % 4);
 
