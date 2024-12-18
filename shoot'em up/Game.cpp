@@ -66,8 +66,6 @@ void Game::playerUpdate()
 
 	this->player->playerUpdate();
 	this->player->udpateHealthBar();
-
-	
 }
 
 void Game::projectileUpdate()
@@ -143,16 +141,16 @@ void Game::activateBonus(Bonus::AllBonus bonusType)
 	case Bonus::Laser:
 		fireRate = 1;
 		break;
-	case Bonus::HealthKit:
-		if(player->getHealth() < player->getHealthMax())
-			player->setHealth(player->getHealth() + bonusKit);
-		break;
 	case Bonus::Shield:
 		if (bonusActive[Bonus::OffensiveShield]) {
 			deactivateBonus(Bonus::OffensiveShield);
 		}
 		bonusShieldDef = 5;
 		this->player->setupBonusShieldDef();
+		break;
+	case Bonus::HealthKit:
+		if(player->getHealth() < player->getHealthMax())
+			player->setHealth(player->getHealth() + bonusKit);
 		break;
 	case Bonus::OffensiveShield:
 		if (bonusActive[Bonus::Shield]) {
@@ -161,7 +159,7 @@ void Game::activateBonus(Bonus::AllBonus bonusType)
 		this->player->setupBonusShieldOff();
 		break;
 	case Bonus::Speed:
-		player->setSpeed(player->getSpeed() + bonusSpeed);
+		fireRate = 10;
 		break;
 	}
 }
@@ -178,13 +176,14 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 		break;
 	case Bonus::Shield:
 		this->player->resetSprite();
-		player->setHealth(player->getHealth() + 1);
+		canHaveDamaged = false;
 		break;
 	case Bonus::OffensiveShield:
 		this->player->resetSprite();
+		canHaveDamaged = false;
 		break;
 	case Bonus::Speed:
-		player->resetSpeed();
+		fireRate = 15;
 		break;
 	}
 }
@@ -195,13 +194,19 @@ const bool Game::windowIsOpen()
 }
 void Game::resetBonus()
 {
-	
+	fill(bonusActive.begin(), bonusActive.end(), false);
+
+	player->resetSprite();
+	player->resetSpeed();
+	fireRate = 15;
+	bonusShotCount = 0;
+	bonusShieldDef = 5;
+	canHaveDamaged = true;
 }
 void Game::resetGame()
 {
 	player->reset();
-	player->resetSprite();
-	player->resetSpeed();
+	resetBonus();
 	ennemies.clear();
 	boss->reset();
 	projectilesPlayer.clear();
@@ -635,14 +640,14 @@ void Game::spawnBonus()
 	}
 
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[randBonus2], bonusZones[1]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[randBonus3], bonusZones[2]);
 }
 /////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
 
 void Game::initPlayer() // création du J
 {
-	this->player = new Player();
+	this->player = new Player(15);
 }
 
 void Game::initBoss()
@@ -673,7 +678,9 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	if (scoreBonus >= spawnBonusPhase) {
 		vagueActif = false;
 		spawnBonus();
+		deactivateBonus(Bonus::Speed);
 		scoreBonus = 0;
+
 	}
 
 	if (scoreBoss < spawnBoss && vagueActif) {
@@ -886,7 +893,9 @@ void Game::checkCollisions()
 	}
 	for (auto& projectile : projectilesEnnemy) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
+
 			if (bonusActive[Bonus::Shield]) {
+				canHaveDamaged = false;
 				if (bonusShieldDef > 0) {
 					bonusShieldDef--;
 					cout << bonusShieldDef << endl;
@@ -895,14 +904,10 @@ void Game::checkCollisions()
 					deactivateBonus(Bonus::Shield);
 				}
 			}
-
 			else if (bonusActive[Bonus::OffensiveShield]) {
 				deactivateBonus(Bonus::OffensiveShield);
 			}
-			else if (bonusActive[Bonus::Speed]) {
-				deactivateBonus(Bonus::Speed);
-			}
-			else {
+			if (canHaveDamaged) {
 				player->damage(1);
 			}
 			projectile->markAsOutOfScreen();
@@ -912,25 +917,19 @@ void Game::checkCollisions()
 	for (auto& ennemy : ennemies) {
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
-			 if (bonusActive[Bonus::OffensiveShield]) {
-	
-			 }
-			 else if (bonusActive[Bonus::Shield]) {
-					deactivateBonus(Bonus::Shield);
-			 }
-			 else  if (bonusActive[Bonus::Speed]) {
-				 deactivateBonus(Bonus::Speed);
-			 }
-			else {
-				 if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
-					 killStreak = 0;
-
-					 player->damage(1);
-				 }
-
-				 tpsTouch.restart();
+			if (checkCollisionsBonus(player, ennemy)) {
+				break;
 			}
-			
+			if (canHaveDamaged) {
+				cout << canHaveDamaged << endl;
+				if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
+					killStreak = 0;
+					cout << "Degats" << endl;
+					player->damage(1);
+					tpsTouch.restart();
+				}
+			}
+			canHaveDamaged = true;
 		}
 	}
 
@@ -1007,6 +1006,18 @@ void Game::checkCollisions()
 	);
 }
 
+bool Game::checkCollisionsBonus(Player* player, Ennemy* ennemy)
+{
+	if (bonusActive[Bonus::Shield]) {
+		deactivateBonus(Bonus::Shield);
+		return true;
+	}
+	if (bonusActive[Bonus::OffensiveShield]) {
+		return true;
+	}
+	return false;
+}
+
 ////////////////////////////////degats//////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::shoot()
@@ -1046,6 +1057,10 @@ void Game::shoot()
 			createProjectilesPlayerDiag(TopplayerX, TopplayerY, 10.f, -10.f);
 			createProjectilesPlayerDiag(LowplayerX, LowplayerY, 10.f, 10.f);
 
+		}
+		else if (bonusActive[Bonus::Speed]) {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			activateBonus(Bonus::Speed);
 		}
 		else {
 			fireRate = 15;

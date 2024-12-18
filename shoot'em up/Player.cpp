@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player()   //création joueur
+Player::Player(int rate) : fireRate(rate)   //création joueur
 {
 	this->initHealthBar();
 	this->initSprite();
@@ -121,11 +121,17 @@ void Player::setHealth(int newHp)
 	else {
 		hp = newHp;
 	}
+	this->udpateHealthBar();
 }
 
 void Player::setSpeed(float newSpeed)
 {
 	speed = newSpeed;
+}
+
+void Player::setRate(int newRate)
+{
+	fireRate = newRate;
 }
 
 float Player::getSpeed() const
@@ -135,11 +141,15 @@ float Player::getSpeed() const
 
 int Player::getHealth() const
 {
-	return hp;
+	return this->hp;
 }
 int Player::getHealthMax() const
 {
-	return maxHp;
+	return this->maxHp;
+}
+int Player::getShootRate() const
+{
+	return fireRate;
 }
 ///////////////////////////collision////////////////////////////////////////////////
 

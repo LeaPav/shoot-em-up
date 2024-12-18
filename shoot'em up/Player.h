@@ -15,11 +15,12 @@ private:
 	void initHealthBar();
 
 	int hp;
+	int fireRate;
 	int maxHp;
 
 	float speed = 12.f;
 public:
-	Player();
+	Player(int rate = 15);
 
 	void movement(int dx, int dy) override;
 	
@@ -38,9 +39,11 @@ public:
 
 	void setHealth(int newHp);
 	void setSpeed(float newSpeed);
+	void setRate(int newRate);
 	float getSpeed() const;
 	int getHealth() const;
 	int getHealthMax() const;
+	int getShootRate() const;
 	void reset();
 
 	void resetSprite();

@@ -116,6 +116,8 @@ private:
 	int bonusShieldOff = 5;
 	float bonusSpeed = 5.f;
 
+	bool canHaveDamaged = true;
+
 public:
 	Game();
 	~Game();
@@ -127,6 +129,7 @@ public:
 	void ennemyUpdate();
 	void projectileRender();
 	void checkCollisions();
+	bool checkCollisionsBonus(Player* player, Ennemy* ennemy);
 	void shoot();
 	void shootEnnemy();
 	void shootingBoss();
