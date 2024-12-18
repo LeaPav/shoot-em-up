@@ -34,6 +34,14 @@ private:
 	Text returnButton;
 	Text returnMenuOptionsButton;
 
+	// button difficulté
+	RectangleShape normalRect;
+	RectangleShape hardRect;
+	RectangleShape hardCoreRect;
+
+	Text normalButton;
+	Text hardButton;
+	Text hardCoreButton;
 	// buton paramètres
 
 	// button menu pause;
@@ -56,17 +64,20 @@ private:
 	void initButton();
 	void initOptionsButton();
 	void initCommandsButton();
+	void initDifficultyButton();
 public:
 	Menu();
 
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
+	int handleInputDifficulty(RenderWindow& window, const Event& event);
 	int handleInputPauseMenu(RenderWindow& window, const Event& event);
 
 	void render(RenderWindow& window);
 	void renderOptions(RenderWindow& window);
 	void renderEditor(RenderWindow& window);
 	void renderCommands(RenderWindow& window);
+	void renderDifficulty(RenderWindow& window);
 	void renderPauseMenu(RenderWindow& window);
 	void renderSettingsPauseMenu(RenderWindow& window);
 	void setBackground(const string& backgroundImage);

@@ -7,6 +7,7 @@ Menu::Menu() : indexButtonSelected(0)
 	initButton();
 	initOptionsButton();
 	initCommandsButton();
+	initDifficultyButton();
 }
 
 /////////////////////////////////////////maj du Game Over/////////////////////////////////////
@@ -98,7 +99,7 @@ void Menu::initOptionsButton()
 	settingsButtonRect.setPosition(705.f, 442.f);
 
 	settingsButton.setFont(this->fontMainMenu);
-	settingsButton.setString("Paramètres");
+	settingsButton.setString("Sons");
 	settingsButton.setCharacterSize(40);
 	settingsButton.setPosition(820.f, 460.f);
 
@@ -169,6 +170,37 @@ void Menu::initCommandsButton() //bouton retour
 
 }
 
+void Menu::initDifficultyButton()
+{
+	normalRect.setSize(Vector2f(510.f, 95.f));
+	normalRect.setFillColor(Color(165, 191, 208));
+	normalRect.setPosition(705.f, 290.f);
+
+	normalButton.setFont(this->fontMainMenu);
+	normalButton.setString("Normal");
+	normalButton.setCharacterSize(40);
+	normalButton.setPosition(830.f, 305.f);
+
+	hardRect.setSize(Vector2f(510.f, 95.f));
+	hardRect.setFillColor(Color(165, 191, 208));
+	hardRect.setPosition(705.f, 442.f);
+
+	hardButton.setFont(this->fontMainMenu);
+	hardButton.setString("Hard");
+	hardButton.setCharacterSize(40);
+	hardButton.setPosition(820.f, 460.f);
+
+
+	hardCoreRect.setSize(Vector2f(510.f, 95.f));
+	hardCoreRect.setFillColor(Color(165, 191, 208));
+	hardCoreRect.setPosition(705.f, 585.f);
+
+	hardCoreButton.setFont(this->fontMainMenu);
+	hardCoreButton.setString("Hard Core");
+	hardCoreButton.setCharacterSize(40);
+	hardCoreButton.setPosition(840.f, 605.f);
+}
+
 ///////////////////////////////////////clique souris//////////////////////////////////////////
 
 int Menu::handleInputMainMenu(RenderWindow& window, const Event& event) //changement des etat du jeu 
@@ -224,6 +256,33 @@ int Menu::handleInputMenuOptions(RenderWindow& window, const Event& event) //cha
 				return 2;
 			}
 			if (difficultyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
+		}
+	}
+	return 0;
+}
+
+int Menu::handleInputDifficulty(RenderWindow& window, const Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (normalRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (hardRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (hardCoreRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
 				return 3;
 			}
 			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
@@ -307,6 +366,21 @@ void Menu::renderCommands(RenderWindow& window) // menu commande
 
 	window.draw(returnButtonRect);
 	window.draw(returnButton);
+}
+
+void Menu::renderDifficulty(RenderWindow& window)
+{
+	window.draw(optionsBackground);
+	window.draw(normalRect);
+	window.draw(hardRect);
+	window.draw(hardCoreRect);
+	window.draw(returnButtonRect);
+
+	window.draw(normalButton);
+	window.draw(hardButton);
+	window.draw(hardCoreButton);
+	window.draw(this->returnButton);
+
 }
 
 void Menu::renderPauseMenu(RenderWindow& window) //menu pause
@@ -398,6 +472,30 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	else {
 		returnButtonRect.setFillColor(Color(165, 191, 208));
 		returnButton.setFillColor(Color::White);
+	}
+	if (normalRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		normalRect.setFillColor(Color(222, 231, 237));
+		normalButton.setFillColor(Color(165, 191, 208));
+	}
+	else {
+		normalRect.setFillColor(Color(165, 191, 208));
+		normalButton.setFillColor(Color::White);
+	}
+	if (hardRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		hardRect.setFillColor(Color(222, 231, 237));
+		hardButton.setFillColor(Color(165, 191, 208));
+	}
+	else {
+		hardRect.setFillColor(Color(165, 191, 208));
+		hardButton.setFillColor(Color::White);
+	}
+	if (hardCoreRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		hardCoreRect.setFillColor(Color(222, 231, 237));
+		hardCoreButton.setFillColor(Color(165, 191, 208));
+	}
+	else {
+		hardCoreRect.setFillColor(Color(165, 191, 208));
+		hardCoreButton.setFillColor(Color::White);
 	}
 	if (resumeButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
 		resumeButton.setFillColor(Color(251, 239, 165));

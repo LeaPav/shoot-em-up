@@ -17,6 +17,8 @@ public:
 		OPTIONS,
 		COMMANDS,
 		EDITOR,
+		LEVEL,
+		DIFFICULTY,
 		GAMEOVER,
 		WIN,
 		PAUSE,

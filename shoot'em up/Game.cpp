@@ -379,6 +379,10 @@ void Game::handleMenu() //les etats du jeu
 		this->window->draw(textScore);
 		this->renderWin();
 	}
+	if (currentState == GameState::DIFFICULTY) {
+		mainMenu.handleMouseHover(*window);
+		mainMenu.renderDifficulty(*window);
+	}
 }
 
 void Game::handleMenuState(Event& event) // gere les etat du jeu
@@ -386,7 +390,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 	if (currentState == GameState::MENU) {
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
-		
+
 		switch (action) {
 		case 1: currentState = GameState::PLAYING;
 			break;
@@ -463,6 +467,8 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		switch (optionsAction) {
 		case 1: currentState = GameState::COMMANDS;
 			break;
+		case 3: currentState = GameState::DIFFICULTY;
+			break;
 		case 4: currentState = GameState::MENU;
 			break;
 		}
@@ -472,6 +478,14 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		int actionCommands = mainMenu.handleInputMenuOptions(*window, event);
 
 		switch (actionCommands) {
+		case 4: currentState = GameState::OPTIONS;
+			break;
+		}
+	}
+	if (currentState == GameState::DIFFICULTY) {
+		mainMenu.handleMouseHover(*window);
+		int difficultyAction = mainMenu.handleInputMenuOptions(*window, event);
+		switch (difficultyAction) {
 		case 4: currentState = GameState::OPTIONS;
 			break;
 		}
