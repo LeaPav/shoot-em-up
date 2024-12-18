@@ -34,8 +34,6 @@ void Game::update()
 			this->window->close();
 		if (Keyboard::isKeyPressed(Keyboard::J)) {
 			this->window->close();
-
-
 		}
 		if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
 			if (currentState == GameState::PLAYING) {
@@ -181,7 +179,6 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 		break;
 	case Bonus::Speed:
 		player->resetSpeed();
-		cout << "speed reset" << endl;
 		break;
 	}
 }
@@ -896,6 +893,9 @@ void Game::checkCollisions()
 			else if (bonusActive[Bonus::OffensiveShield]) {
 				deactivateBonus(Bonus::OffensiveShield);
 			}
+			else if (bonusActive[Bonus::Speed]) {
+				deactivateBonus(Bonus::Speed);
+			}
 			else {
 				player->damage(1);
 			}
@@ -911,6 +911,9 @@ void Game::checkCollisions()
 			 }
 			 else if (bonusActive[Bonus::Shield]) {
 					deactivateBonus(Bonus::Shield);
+			 }
+			 else if (bonusActive[Bonus::Speed]) {
+				 deactivateBonus(Bonus::Speed);
 			 }
 			else {
 				 if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
