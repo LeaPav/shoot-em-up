@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(50), vagueActif(true), spawnBonusPhase(5)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(20)
 {
 	this->initSprite();
 	this->initTexture();
@@ -148,10 +148,16 @@ void Game::activateBonus(Bonus::AllBonus bonusType)
 			player->setHealth(player->getHealth() + bonusKit);
 		break;
 	case Bonus::Shield:
+		if (bonusActive[Bonus::OffensiveShield]) {
+			deactivateBonus(Bonus::OffensiveShield);
+		}
 		bonusShieldDef = 5;
 		this->player->setupBonusShieldDef();
 		break;
 	case Bonus::OffensiveShield:
+		if (bonusActive[Bonus::Shield]) {
+			deactivateBonus(Bonus::Shield);
+		}
 		this->player->setupBonusShieldOff();
 		break;
 	case Bonus::Speed:
@@ -628,7 +634,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::Speed), bonusTexture[(Bonus::Speed)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
 }
@@ -912,7 +918,7 @@ void Game::checkCollisions()
 			 else if (bonusActive[Bonus::Shield]) {
 					deactivateBonus(Bonus::Shield);
 			 }
-			 else if (bonusActive[Bonus::Speed]) {
+			 else  if (bonusActive[Bonus::Speed]) {
 				 deactivateBonus(Bonus::Speed);
 			 }
 			else {
