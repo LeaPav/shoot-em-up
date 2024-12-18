@@ -85,6 +85,11 @@ void Player::resetSprite()
 	sprite.setTexture(vaisseau);
 }
 
+float Player::resetSpeed()
+{
+	return speed = 12.f;
+}
+
 void Player::setupBonusShieldDef()
 {
 	this->sprite.setTexture(vaisseauBouclierDef);
@@ -116,6 +121,16 @@ void Player::setHealth(int newHp)
 	else {
 		hp = newHp;
 	}
+}
+
+void Player::setSpeed(float newSpeed)
+{
+	speed = newSpeed;
+}
+
+float Player::getSpeed() const
+{
+	return speed;
 }
 
 int Player::getHealth() const
@@ -161,19 +176,18 @@ void Player::movement(int dx, int dy)   //set up pour mouvement
 
 void Player::playerMovement()
 {
-	float vit = 12;
 	playerCollisions();
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
-		sprite.move(vit-4.f, 0.f);
+		sprite.move(speed-4.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Q)) {
-		sprite.move(-vit, 0.f);
+		sprite.move(-speed, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		sprite.move(0.f, -vit);
+		sprite.move(0.f, -speed);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		sprite.move(0.f, vit);
+		sprite.move(0.f, speed);
 	}
 	
 }

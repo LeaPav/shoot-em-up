@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(5), vagueActif(true), spawnBonusPhase(5)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(50), vagueActif(true), spawnBonusPhase(5)
 {
 	this->initSprite();
 	this->initTexture();
@@ -117,10 +117,8 @@ void Game::updateBonusZones()
 {
 	for (auto& zoneBonus : bonus) {
 		if (zoneBonus.getBounds().intersects(player->getGlobalBounds())) {
-			Bonus::AllBonus bonusType = zoneBonus.getBonus();
-			deactivateBonus(Bonus::Shield);
-			deactivateBonus(Bonus::OffensiveShield);
 			fill(bonusActive.begin(), bonusActive.end(), false);
+			Bonus::AllBonus bonusType = zoneBonus.getBonus();
 			activateBonus(bonusType);
 			bonus.clear();
 			vagueActif = true;
@@ -150,12 +148,16 @@ void Game::activateBonus(Bonus::AllBonus bonusType)
 	case Bonus::HealthKit:
 		if(player->getHealth() < player->getHealthMax())
 			player->setHealth(player->getHealth() + bonusKit);
+		break;
 	case Bonus::Shield:
 		bonusShieldDef = 5;
 		this->player->setupBonusShieldDef();
 		break;
 	case Bonus::OffensiveShield:
 		this->player->setupBonusShieldOff();
+		break;
+	case Bonus::Speed:
+		player->setSpeed(player->getSpeed() + bonusSpeed);
 		break;
 	}
 }
@@ -172,9 +174,14 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 		break;
 	case Bonus::Shield:
 		this->player->resetSprite();
+		player->setHealth(player->getHealth() + 1);
 		break;
 	case Bonus::OffensiveShield:
 		this->player->resetSprite();
+		break;
+	case Bonus::Speed:
+		player->resetSpeed();
+		cout << "speed reset" << endl;
 		break;
 	}
 }
@@ -191,6 +198,7 @@ void Game::resetGame()
 {
 	player->reset();
 	player->resetSprite();
+	player->resetSpeed();
 	ennemies.clear();
 	boss->reset();
 	projectilesPlayer.clear();
@@ -623,7 +631,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::Shield), bonusTexture[(Bonus::Shield)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::Speed), bonusTexture[(Bonus::Speed)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[(randBonus2)], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[(randBonus3)], bonusZones[2]);
 }
@@ -866,7 +874,6 @@ void Game::checkCollisions()
 					textScore.setString("Score: " + to_string(score));
 					
 					ennemiesToRemove.push_back(ennemy);
-					cout << "Score boss: " << scoreBoss << endl;
 				}
 			}
 		}
@@ -903,14 +910,16 @@ void Game::checkCollisions()
 	
 			 }
 			 else if (bonusActive[Bonus::Shield]) {
-				// player->setHealth(player->getHealth() + 1);
-				// deactivateBonus(Bonus::Shield);
+					deactivateBonus(Bonus::Shield);
 			 }
 			else {
-				//
-					player->damage(1);
-				//}
-				//tpsTouch.restart();
+				 if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
+					 killStreak = 0;
+
+					 player->damage(1);
+				 }
+
+				 tpsTouch.restart();
 			}
 			
 		}

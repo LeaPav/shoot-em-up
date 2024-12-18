@@ -16,6 +16,8 @@ private:
 
 	int hp;
 	int maxHp;
+
+	float speed = 12.f;
 public:
 	Player();
 
@@ -35,11 +37,14 @@ public:
 	FloatRect getGlobalBounds() const;
 
 	void setHealth(int newHp);
+	void setSpeed(float newSpeed);
+	float getSpeed() const;
 	int getHealth() const;
 	int getHealthMax() const;
 	void reset();
 
 	void resetSprite();
+	float resetSpeed();
 	void setupBonusShieldDef();
 	void setupBonusShieldOff();
 

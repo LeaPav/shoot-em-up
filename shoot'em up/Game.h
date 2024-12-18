@@ -114,6 +114,7 @@ private:
 	int bonusShotCount = 0;
 	int bonusShieldDef = 5;
 	int bonusShieldOff = 5;
+	float bonusSpeed = 5.f;
 
 public:
 	Game();
