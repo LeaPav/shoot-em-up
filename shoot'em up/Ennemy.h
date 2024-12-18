@@ -38,12 +38,14 @@ public:
 	void movement(int dx, int dy) override;
 
 	void setPosition(const float x, const float y);
+	void setRate(int newCooldown);
 	void update();
 	void render(RenderTarget& target);
 	void damage(int damages);
 	int getHp() const;
 	int getApparence() const;
 	bool getPassif() const;
+	int getShootRate() const;
 	const Vector2f getPosition() const;
 	bool isDead() ;
 	bool isOutOfScreen;

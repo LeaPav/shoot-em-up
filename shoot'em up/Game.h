@@ -38,6 +38,7 @@ private:
 	void initScore();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
+	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
 	void createProjectilesEnnemy(float x, float y);
 	void createProjectilesBoss(float x, float y);
 
@@ -74,6 +75,9 @@ private:
 	vector<Projectile*> projectilesEnnemy;
 	vector<Projectile*> projectilesBoss;
 
+	//joueur
+	int fireRate = 15;
+
 	int score;
 	int scoreBonus;
 	int scoreBoss;
@@ -95,11 +99,24 @@ private:
 	bool bossSpawn;
 
 	//Bonus
+
 	vector<Bonus> bonus;
 	vector<Vector2f> bonusZones;
-	Texture bonusTexture[6];
-
+	vector<bool> bonusActive;
+	Texture bonusTexture[9];
+	const int totalBonus = 9;
+	bool vagueActif;
+	int spawnBonusPhase;
+	int bonusKit = 2;
 	void initBonus();
+	void initZones();
+	void initBonusState();
+	int bonusShotCount = 0;
+	int bonusShieldDef = 5;
+	int bonusShieldOff = 5;
+	float bonusSpeed = 5.f;
+
+	bool canHaveDamaged = true;
 
 public:
 	Game();
@@ -112,6 +129,7 @@ public:
 	void ennemyUpdate();
 	void projectileRender();
 	void checkCollisions();
+	bool checkCollisionsBonus(Player* player, Ennemy* ennemy);
 	void shoot();
 	void shootEnnemy();
 	void shootingBoss();
@@ -137,9 +155,16 @@ public:
 
 	void resetGame();
 	
-
 	Clock tpsTouch;
-	
+  
+	//bonus
+
+	void spawnBonus();
+	void renderBonusZones();
+	void updateBonusZones();
+	void resetBonus();
+	void activateBonus(Bonus::AllBonus bonusType);
+	void deactivateBonus(Bonus::AllBonus bonusType);
 
 };
 

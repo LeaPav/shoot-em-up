@@ -102,7 +102,6 @@ void Win::resetCooldown()
 void Win::setScore(int score,int killStreak)
 {
     score = score + 555 + (50 * killStreak);
-    
     scoreText.setString("Score : " + to_string(score));
     FloatRect scoreTextBounds = scoreText.getLocalBounds();
     float x = (1920 / 2.f) - (scoreTextBounds.width / 2.f) - scoreTextBounds.left;

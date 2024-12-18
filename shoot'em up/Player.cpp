@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player()   //création joueur
+Player::Player(int rate) : fireRate(rate)   //création joueur
 {
 	this->initHealthBar();
 	this->initSprite();
@@ -18,6 +18,12 @@ void Player::initSprite()     //chargement du corps du joueur
 
 	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
 		cout << "ERREUR";
+	}
+	if (!this->vaisseauBouclierDef.loadFromFile("assets/joueur/jouer_proteger.png")) {
+		cout << "Erreur";
+	}
+	if (!this->vaisseauBouclierOff.loadFromFile("assets/joueur/jouer_proteger_pique.png")) {
+		cout << "Erreur";
 	}
 
 }
@@ -74,9 +80,25 @@ void Player::reset()
 	sprite.setPosition(10, 540);
 }
 
+void Player::resetSprite()
+{
+	sprite.setTexture(vaisseau);
+}
 
+float Player::resetSpeed()
+{
+	return speed = 12.f;
+}
 
+void Player::setupBonusShieldDef()
+{
+	this->sprite.setTexture(vaisseauBouclierDef);
+}
 
+void Player::setupBonusShieldOff()
+{
+	this->sprite.setTexture(vaisseauBouclierOff);
+}
 
 /////////////////////geter/////////////////////////////////////////////////////
 
@@ -91,9 +113,43 @@ FloatRect Player::getGlobalBounds() const
 
 }
 
+void Player::setHealth(int newHp)
+{
+	if (newHp > maxHp) {
+		hp = maxHp;
+	}
+	else {
+		hp = newHp;
+	}
+	this->udpateHealthBar();
+}
+
+void Player::setSpeed(float newSpeed)
+{
+	speed = newSpeed;
+}
+
+void Player::setRate(int newRate)
+{
+	fireRate = newRate;
+}
+
+float Player::getSpeed() const
+{
+	return speed;
+}
+
 int Player::getHealth() const
 {
-	return hp;
+	return this->hp;
+}
+int Player::getHealthMax() const
+{
+	return this->maxHp;
+}
+int Player::getShootRate() const
+{
+	return fireRate;
 }
 ///////////////////////////collision////////////////////////////////////////////////
 
@@ -132,16 +188,16 @@ void Player::playerMovement()
 {
 	playerCollisions();
 	if (Keyboard::isKeyPressed(Keyboard::D)) {
-		sprite.move(8.f, 0.f);
+		sprite.move(speed-4.f, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Q)) {
-		sprite.move(-12.f, 0.f);
+		sprite.move(-speed, 0.f);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Z)) {
-		sprite.move(0.f, -12.f);
+		sprite.move(0.f, -speed);
 	}
 	if (Keyboard::isKeyPressed(Keyboard::S)) {
-		sprite.move(0.f, 12.f);
+		sprite.move(0.f, speed);
 	}
 	
 }

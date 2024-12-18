@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss (100)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(20)
 {
 	this->initSprite();
 	this->initTexture();
@@ -8,6 +8,10 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss 
 	this->initPlayer();
 	this->initBoss();
 	this->initScore();
+	this->initBonus();
+	this->initBonusState();
+	this->initZones();
+
 }
 
 Game::~Game()
@@ -30,8 +34,6 @@ void Game::update()
 			this->window->close();
 		if (Keyboard::isKeyPressed(Keyboard::J)) {
 			this->window->close();
-
-
 		}
 		if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
 			if (currentState == GameState::PLAYING) {
@@ -63,6 +65,7 @@ void Game::update()
 
 void Game::playerUpdate()
 {
+
 	this->player->playerUpdate();
 	this->player->udpateHealthBar();
 }
@@ -87,7 +90,11 @@ void Game::ennemyUpdate()
 
 	static int timer = 0; //utilisatin de static pour pas qu'il se remette à 0 à chaque appel de la fonction
 	const int spawnInterval = 60;
-
+	if (bonusActive[Bonus::SlowEnnemyProjectiles]) {
+		for (auto& ennemy : ennemies) {
+			ennemy->setRate(ennemy->getShootRate() + 5);
+		}
+	}
 	timer++;
 	if (timer >= spawnInterval) {
 		this->createEnnemy();
@@ -104,25 +111,119 @@ void Game::updateBoss()
 		this->shootingBoss();
 	}
 }
+void Game::updateBonusZones()
+{
+	for (auto& zoneBonus : bonus) {
+		if (zoneBonus.getBounds().intersects(player->getGlobalBounds())) {
+			fill(bonusActive.begin(), bonusActive.end(), false);
+			Bonus::AllBonus bonusType = zoneBonus.getBonus();
+			activateBonus(bonusType);
+			bonus.clear();
+			vagueActif = true;
+		}
+	}
+}
+
+void Game::activateBonus(Bonus::AllBonus bonusType)
+{
+	if (bonusActive[bonusType]) return;
+
+	bonusActive[bonusType] = true;
+
+	switch (bonusType) {
+	case Bonus::DoubleShooting:
+		fireRate = 15;
+		break;
+	case Bonus::TripleShooting:
+		fireRate = 15;
+		break;
+	case Bonus::TripleShootingDiag:
+		fireRate = 15;
+		break;
+	case Bonus::Laser:
+		fireRate = 1;
+		break;
+	case Bonus::Shield:
+		if (bonusActive[Bonus::OffensiveShield]) {
+			deactivateBonus(Bonus::OffensiveShield);
+		}
+		bonusShieldDef = 5;
+		this->player->setupBonusShieldDef();
+		break;
+	case Bonus::HealthKit:
+		if(player->getHealth() < player->getHealthMax())
+			player->setHealth(player->getHealth() + bonusKit);
+		break;
+	case Bonus::OffensiveShield:
+		if (bonusActive[Bonus::Shield]) {
+			deactivateBonus(Bonus::Shield);
+		}
+		this->player->setupBonusShieldOff();
+		break;
+	case Bonus::Speed:
+		fireRate = 10;
+		break;
+	}
+}
+
+void Game::deactivateBonus(Bonus::AllBonus bonusType)
+{
+	if (!bonusActive[bonusType]) return;
+
+	bonusActive[bonusType] = false;
+	switch (bonusType) {
+	case Bonus::Laser:
+		bonusShotCount = 0;
+		fireRate = 15;
+		break;
+	case Bonus::Shield:
+		this->player->resetSprite();
+		canHaveDamaged = false;
+		break;
+	case Bonus::OffensiveShield:
+		this->player->resetSprite();
+		canHaveDamaged = false;
+		break;
+	case Bonus::Speed:
+		fireRate = 15;
+		break;
+	}
+}
 
 const bool Game::windowIsOpen()
 {
 	return this->window->isOpen();
 }
+void Game::resetBonus()
+{
+	fill(bonusActive.begin(), bonusActive.end(), false);
 
+	player->resetSprite();
+	player->resetSpeed();
+	fireRate = 15;
+	bonusShotCount = 0;
+	bonusShieldDef = 5;
+	canHaveDamaged = true;
+}
 void Game::resetGame()
 {
 	player->reset();
+	resetBonus();
 	ennemies.clear();
 	boss->reset();
 	projectilesPlayer.clear();
 	projectilesEnnemy.clear();
 	projectilesBoss.clear();
+	bonus.clear();
 	score = 0;
 	scoreBonus = 0;
 	scoreBoss = 0;
 	killStreak = 0;
-	
+	vagueActif = true;
+	fireRate = 15;
+
+	fill(bonusActive.begin(), bonusActive.end(), false);
+
 	textScore.setString("Score : " + to_string(score));
 }
 
@@ -181,7 +282,9 @@ void Game::renderNiveau1()
 
 void Game::entityRender()
 {
+	
 	this->player->render(*this->window);
+	
 	this->player->renderHealthBar(*this->window);
 
 	for (auto& ennemy : ennemies) {
@@ -211,6 +314,14 @@ void Game::renderBoss()
 	}
 }
 
+
+void Game::renderBonusZones()
+{
+	for (auto& zone : bonus) {
+		zone.render(*this->window);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////etat du jeu////////////////////////////////////////////////////////////////
 
 void Game::handleMenu() //les etats du jeu
@@ -224,6 +335,7 @@ void Game::handleMenu() //les etats du jeu
 		this->entityRender();
 		this->renderBoss();
 		this->projectileRender();
+		this->renderBonusZones();
 		this->window->draw(textScore);
 	}
 	if (currentState == GameState::PAUSE) {
@@ -293,6 +405,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 		this->ennemyUpdate();
 		this->playerUpdate();
+		this->updateBonusZones();
 		this->projectileUpdate();
 		this->checkCollisions();
 		this->shoot();
@@ -484,11 +597,60 @@ void Game::initScore() //création score
 	textScore.setString("Score: " + to_string(score));
 }
 
+////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
+
+void Game::initBonus()
+{
+	bonusTexture[Bonus::DoubleShooting].loadFromFile("assets/bonus/bonus_2_projo.png");
+	bonusTexture[Bonus::TripleShooting].loadFromFile("assets/bonus/bonus_3_tir.png");
+	bonusTexture[Bonus::TripleShootingDiag].loadFromFile("assets/bonus/bonus_3_diag.png");
+	bonusTexture[Bonus::Laser].loadFromFile("assets/bonus/bonus_gros_projo.png");
+	bonusTexture[Bonus::Shield].loadFromFile("assets/bonus/bonus_protection.png");
+	bonusTexture[Bonus::HealthKit].loadFromFile("assets/bonus/bonus_soin.png");
+	bonusTexture[Bonus::SlowEnnemyProjectiles].loadFromFile("assets/bonus/bonus_anti-speed.png");
+	bonusTexture[Bonus::OffensiveShield].loadFromFile("assets/bonus/bonus_protection_renvoie.png");
+	bonusTexture[Bonus::Speed].loadFromFile("assets/bonus/bonus_speed.png");
+}
+void Game::initZones()
+{
+	bonusZones.push_back(Vector2f(1000.f, 200.f));
+	bonusZones.push_back(Vector2f(1000.f, 500.f));
+	bonusZones.push_back(Vector2f(1000.f, 800.f));
+	
+}
+
+void Game::initBonusState()
+{
+	bonusActive.resize(totalBonus, false);
+}
+
+void Game::spawnBonus()
+{
+	ennemies.clear();
+	projectilesEnnemy.clear();
+	srand(time(0));
+	bonusZones.clear();
+
+	int randBonus1 = rand() % 9;
+	int randBonus2 = rand() % 9;
+	int randBonus3 = rand() % 9;
+
+	while (randBonus1 == randBonus2) {
+		randBonus2 = rand() % 9;
+	}
+	while (randBonus1 == randBonus3 || randBonus2 == randBonus3) {
+		randBonus3 = rand() % 9;
+	}
+
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[randBonus2], bonusZones[1]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[randBonus3], bonusZones[2]);
+}
 /////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
 
 void Game::initPlayer() // création du J
 {
-	this->player = new Player();
+	this->player = new Player(15);
 }
 
 void Game::initBoss()
@@ -504,8 +666,27 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	bool peacefull = false;
 	int pv = 1;
 	
+	/*
+	if(scoreBonus>=20){
+	bool vagueActif false
+	phase bonus();
+	scoreBonus=0;
+	}
+	else if(score>=200){
+	phase de boss()
+	}
+
+	*/
 	
-	if (scoreBoss < spawnBoss) {
+	if (scoreBonus >= spawnBonusPhase) {
+		vagueActif = false;
+		spawnBonus();
+		deactivateBonus(Bonus::Speed);
+		scoreBonus = 0;
+
+	}
+
+	if (scoreBoss < spawnBoss && vagueActif) {
 
 		if (random == 0) {   //pyramide par 3 tir
 
@@ -661,7 +842,15 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 void Game::createProjectilesPlayer(float x, float y)
 {
+
 	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f, Projectile::ProjectileType::PLAYER);
+	projectilesPlayer.push_back(newProjectile);
+
+}
+
+void Game::createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag)
+{
+	Projectile* newProjectile = new Projectile(x, y, xDiag,yDiag, Projectile::ProjectileType::PLAYER);
 	projectilesPlayer.push_back(newProjectile);
 }
 
@@ -690,31 +879,43 @@ void Game::checkCollisions()
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
 
-				
-
 				if (ennemy->isDead()) {
 
-
+					scoreBonus++;
 					killStreak++;
-					
 					int multiplicateur = 1 + (1*killStreak);
 					score = score + multiplicateur;
 					scoreBoss++;
-					scoreBonus++;
+					
 					textScore.setString("Score: " + to_string(score));
 					
 					ennemiesToRemove.push_back(ennemy);
-					cout << "Score boss: " << scoreBoss << endl;
 				}
 			}
 		}
 	}
-
+	if (player->getGlobalBounds().intersects(boss->getGlobalBounds())) {
+		player->damage(100);
+	}
 	for (auto& projectile : projectilesEnnemy) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
-			player->damage(1);
-			killStreak = 0;
-			
+
+			if (bonusActive[Bonus::Shield]) {
+				canHaveDamaged = false;
+				if (bonusShieldDef > 0) {
+					bonusShieldDef--;
+					cout << bonusShieldDef << endl;
+				}
+				if (bonusShieldDef == 0) {
+					deactivateBonus(Bonus::Shield);
+				}
+			}
+			else if (bonusActive[Bonus::OffensiveShield]) {
+				deactivateBonus(Bonus::OffensiveShield);
+			}
+			if (canHaveDamaged) {
+				player->damage(1);
+			}
 			projectile->markAsOutOfScreen();
 		}
 	}
@@ -723,21 +924,22 @@ void Game::checkCollisions()
 		
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
-
-			
-			
-			if(tpsTouch.getElapsedTime().asMilliseconds() > 201) {
-				killStreak = 0;
-				
-				player->damage(1);
+			if (checkCollisionsBonus(player, ennemy)) {
+				break;
 			}
-
-
-			tpsTouch.restart();
+			if (canHaveDamaged) {
+				cout << canHaveDamaged << endl;
+				if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
+					killStreak = 0;
+					cout << "Degats" << endl;
+					player->damage(1);
+					tpsTouch.restart();
+				}
+			}
+			canHaveDamaged = true;
 		}
 		
 	}
-
 
 	for (auto& projectile : projectilesBoss) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
@@ -793,10 +995,8 @@ void Game::checkCollisions()
 		projectilesEnnemy.end()
 	);
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
-		
-			
+
 			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
-				
 		    	e->explosion();
 
 			}
@@ -813,17 +1013,66 @@ void Game::checkCollisions()
 	);
 }
 
+bool Game::checkCollisionsBonus(Player* player, Ennemy* ennemy)
+{
+	if (bonusActive[Bonus::Shield]) {
+		deactivateBonus(Bonus::Shield);
+		return true;
+	}
+	if (bonusActive[Bonus::OffensiveShield]) {
+		return true;
+	}
+	return false;
+}
+
 ////////////////////////////////degats//////////////////////////////////////////////////////////////////////////////////////////
 
 void Game::shoot()
 {
 	static int cooldownShoot = 0;
-	const int fireRate = 15;
+
 
 	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
-		float playerX = this->player->getPosition().x + 80.f;
-		float playerY = this->player->getPosition().y + 40.f;
-		createProjectilesPlayer(playerX, playerY);
+		float TopplayerX = this->player->getPosition().x + 73.f;
+		float TopplayerY = this->player->getPosition().y + 5.f;
+
+		float MidplayerX = this->player->getPosition().x + 80.f;
+		float MidplayerY = this->player->getPosition().y + 40.f;
+
+		float LowplayerX = this->player->getPosition().x + 73.f;
+		float LowplayerY = this->player->getPosition().y + 75.f;
+
+		if (bonusActive[Bonus::TripleShooting]) {
+			createProjectilesPlayer(TopplayerX, TopplayerY);
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			createProjectilesPlayer(LowplayerX, LowplayerY);
+		}
+		else if (bonusActive[Bonus::DoubleShooting]) {
+			createProjectilesPlayer(TopplayerX, TopplayerY);
+			createProjectilesPlayer(LowplayerX, LowplayerY);
+		}
+		else if (bonusActive[Bonus::Laser]) {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			bonusShotCount++;
+			if (bonusShotCount >= 500) {
+				deactivateBonus(Bonus::Laser);
+				bonusShotCount = 0;
+			}
+		}
+		else if (bonusActive[Bonus::TripleShootingDiag]) {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			createProjectilesPlayerDiag(TopplayerX, TopplayerY, 10.f, -10.f);
+			createProjectilesPlayerDiag(LowplayerX, LowplayerY, 10.f, 10.f);
+
+		}
+		else if (bonusActive[Bonus::Speed]) {
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+			activateBonus(Bonus::Speed);
+		}
+		else {
+			fireRate = 15;
+			createProjectilesPlayer(MidplayerX, MidplayerY);
+		}
 		cooldownShoot = fireRate;
 	}
 	if (cooldownShoot > 0) {
@@ -837,9 +1086,11 @@ void Game::shootEnnemy()
 		ennemy->update();
 		ennemy->updateShootCooldown();
 		if (ennemy->canShoot() && !ennemy->getPassif()) {
+	
 			float ennemyX = ennemy->getPosition().x - 37.f;
 			float ennemyY = ennemy->getPosition().y + 37.f;
 			createProjectilesEnnemy(ennemyX, ennemyY);
+
 			ennemy->resetShootCooldown();
 		}
 	}
@@ -877,4 +1128,5 @@ void Game::shootingBoss()
 		boss->restartShootClock();
 	}
 }
+
 

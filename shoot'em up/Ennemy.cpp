@@ -68,6 +68,11 @@ bool Ennemy::getPassif() const
 	return canShootVerif;
 }
 
+int Ennemy::getShootRate() const
+{
+	return fireRate;
+}
+
 const Vector2f Ennemy::getPosition() const
 {
 	return this->sprite.getPosition();
@@ -145,6 +150,11 @@ void Ennemy::movement(int dx, int dy)
 void Ennemy::setPosition(const float x, const float y)
 {
 	sprite.setPosition(x, y);
+}
+
+void Ennemy::setRate(int newRate)
+{
+	fireRate = newRate;
 }
 
 

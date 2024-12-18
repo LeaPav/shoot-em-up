@@ -52,9 +52,11 @@ void Boss::initTexture()
 {
     sprite.setTexture(boss);
     sprite.setPosition(2500.f, 100.f);
-
+ 
     spriteRobot1.setTexture(robot1);
     spriteRobot2.setTexture(robot2);
+    spriteRobot1.setPosition(2500.f, 100.f);
+    spriteRobot2.setPosition(2500.f, 100.f);
 }
 
 void Boss::initName() { //création score
@@ -121,13 +123,13 @@ void Boss::update()
         velocity.y *= 2;
     }
     if (hp <= 0) {
-        sprite.setPosition(0, -500);
+        sprite.setPosition(2500.f, -500);
     }
     if (robotHp1 <= 0) {
-        spriteRobot1.setPosition(0, -500);
+        spriteRobot1.setPosition(2500.f, -500);
     }
     if (robotHp2 <= 0) {
-        spriteRobot2.setPosition(0, -500);
+        spriteRobot2.setPosition(2500.f, -500);
     }
 }
 
