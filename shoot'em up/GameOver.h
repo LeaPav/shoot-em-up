@@ -4,6 +4,7 @@ class GameOver
 {
 private:
 	Font fontOver;
+	Text scoreText;
 	Text gameOverText;
 	Text retryButton;
 	Text mainMenuButton;
@@ -21,5 +22,6 @@ public:
 
 	bool isCooldownActive();
 	void resetCooldown();
+	void setScore(int score);
 };
 

@@ -18,6 +18,7 @@ int GameOver::initFont() //la police
 
 void GameOver::render(RenderWindow& window)
 {
+	window.draw(scoreText);
 	window.draw(gameOverText);
 	window.draw(retryButton);
 	window.draw(mainMenuButton);
@@ -52,6 +53,10 @@ void GameOver::initButton() // tout les bouton du menu
 	float xMain = (1920 / 2.f) - (mainMenuButtonBounds.width / 2.f) - mainMenuButtonBounds.left;
 	mainMenuButton.setPosition(xMain, 600);
 	mainMenuButton.setFillColor(Color::White);
+
+	scoreText.setFont(fontOver);
+	scoreText.setCharacterSize(40);
+	scoreText.setFillColor(Color::White);
 }
 
 
@@ -104,4 +109,13 @@ bool GameOver::isCooldownActive()
 void GameOver::resetCooldown()
 {
 	mouseCooldownClock.restart();
+}
+
+void GameOver::setScore(int score)
+{
+
+	scoreText.setString("Score : " + to_string(score));
+	FloatRect scoreTextBounds = scoreText.getLocalBounds();
+	float x = (1920 / 2.f) - (scoreTextBounds.width / 2.f) - scoreTextBounds.left;
+	scoreText.setPosition(x, 350);
 }

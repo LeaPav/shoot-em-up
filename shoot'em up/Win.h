@@ -23,6 +23,6 @@ public:
 
 	bool isCooldownActive();
 	void resetCooldown();
-	void setScore(int score);
+	void setScore(int score, int killStreak);
 };
 

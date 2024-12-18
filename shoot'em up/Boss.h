@@ -6,10 +6,11 @@ class Boss : public Entity
 {
 private:
 	Sprite sprite, spriteRobot1, spriteRobot2;
-	Texture boss, bossPhase2, bossPhaseInterHaut, bossPhaseInterBas, bossPresqueMort;
+	Texture boss, bossPhase2, bossPhaseInterHaut, bossPhaseInterBas, bossPresqueMort, bossMort;
 	Texture robot1, robot2;
 	int hp;
 	int maxHp;
+	int lifeBoss;
 	bool isActive;
 	bool firstMove;
 	Vector2f velocity;
@@ -33,7 +34,7 @@ private:
 	RectangleShape backgroundHealthBar;
 
 public:
-	Boss(float x = 3.5f, float y = 2.f);
+	Boss(int lifeBoss = 100,float x = 3.5f, float y = 2.f);
 	void takeDamage(int damage);
 	void movement(int dx, int dy) override;
 	const Vector2f getPosition() const;
@@ -48,6 +49,7 @@ public:
 	void initHealthBar();
 	void udpateHealthBar();
 	void renderHealthBar(RenderTarget& target);
+	void initName();
 	void reset();
 	
 	bool shouldShoot() const;
@@ -69,5 +71,10 @@ public:
 	
 	bool isRobot1Dead();
 	bool isRobot2Dead();
+
+	Text nameBoss;
+	Font font;
+
+	float hpMax = hp;
 }; 
 

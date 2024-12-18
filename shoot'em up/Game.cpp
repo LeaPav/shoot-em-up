@@ -53,6 +53,8 @@ void Game::update()
 
 	}
 	if (boss->isBossDead()) {
+		
+		
 		currentState = GameState::WIN;
 	}
 	handleMenuState(event);
@@ -253,6 +255,7 @@ void Game::renderGameOver()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	gameOver.render(*window);
+	gameOver.setScore(score);
 }
 
 void Game::renderWin()
@@ -261,7 +264,7 @@ void Game::renderWin()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	win.render(*window);
-	win.setScore(score);
+	win.setScore(score,killStreak);
 }
 
 
@@ -658,7 +661,7 @@ void Game::initBoss()
 void Game::createEnnemy() //créateur des ennemies + vagues
 {
 	int distance = 2020;
-	int random = rand() % 5;
+	int random = rand() % 4;
 
 	bool peacefull = false;
 	int pv = 1;
@@ -685,7 +688,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 	if (scoreBoss < spawnBoss && vagueActif) {
 
-		if (random == 1) {   //pyramide par 3 tir
+		if (random == 0) {   //pyramide par 3 tir
 
 			MovementType randomType = static_cast<MovementType>(rand() % 2);
 
@@ -716,7 +719,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		else if (random == 2) { //mur par 3 passif
+		if (random == 1) { //mur par 3 passif
 
 			MovementType randomType = static_cast<MovementType>(rand() % 4);
 
@@ -741,7 +744,9 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
 			}
-			else if (random == 3 && scoreBoss >= 40) { // pyramide par 5 tir
+			ennemies.push_back(newEnnemy3);
+		}
+		if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
 
 				int largeur = rand() % this->videoMode.height;
 
@@ -782,10 +787,10 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 
 
-			}
-			else if (random == 4 && scoreBoss >= 20) { //mur par 5
+		}
+		if (random == 3 && scoreBoss >= 20) { //mur par 5
 
-				MovementType randomType = static_cast<MovementType>(rand() % 2);
+				MovementType randomType = static_cast<MovementType>(rand() % 4);
 
 				if (scoreBoss <= 30) {
 					randomType = STRAIGHT;
@@ -826,8 +831,9 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				if (newEnnemy5->destroy()) {
 					delete newEnnemy5;
 				}
-			}
+				ennemies.push_back(newEnnemy5);
 		}
+		
 	}
 }
 
@@ -915,6 +921,7 @@ void Game::checkCollisions()
 	}
 	
 	for (auto& ennemy : ennemies) {
+		
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
 			if (checkCollisionsBonus(player, ennemy)) {
@@ -931,6 +938,7 @@ void Game::checkCollisions()
 			}
 			canHaveDamaged = true;
 		}
+		
 	}
 
 	for (auto& projectile : projectilesBoss) {
@@ -987,9 +995,8 @@ void Game::checkCollisions()
 		projectilesEnnemy.end()
 	);
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
-		
-			
-			if (e->tpsdead.getElapsedTime().asMilliseconds() < 200) {
+
+			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
 		    	e->explosion();
 
 			}
@@ -1099,7 +1106,7 @@ void Game::shootingBoss()
 		float boss2ProjoX = boss->getPosition().x;
 		float boss2ProjoY = boss->getPosition().y + 200.f;
 
-		if (boss->getPhase() == 1 || boss->getPhase() == 3) {
+		
 			if (shootBoss == 0) {
 				this->createProjectilesBoss(boss1ProjoX, boss1ProjoY);
 				shootBoss++;
@@ -1108,7 +1115,7 @@ void Game::shootingBoss()
 				this->createProjectilesBoss(boss2ProjoX, boss2ProjoY);
 				shootBoss--;
 			}
-		}
+		
 		if (boss->getPhase() == 2) {
 			float robot1X = boss->getRobot1Position().x;
 			float robot1Y = boss->getRobot1Position().y + 50.f;

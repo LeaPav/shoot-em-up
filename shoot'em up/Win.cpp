@@ -11,6 +11,7 @@ Win::Win()
 int Win::initFont()
 {
     if (!fontWin.loadFromFile("assets/font/fontpause.ttf"));
+    return -1;
 }
 
 void Win::initBouton()
@@ -98,9 +99,9 @@ void Win::resetCooldown()
     mouseCooldownClock.restart();
 }
 
-void Win::setScore(int score)
+void Win::setScore(int score,int killStreak)
 {
-
+    score = score + 555 + (50 * killStreak);
     scoreText.setString("Score : " + to_string(score));
     FloatRect scoreTextBounds = scoreText.getLocalBounds();
     float x = (1920 / 2.f) - (scoreTextBounds.width / 2.f) - scoreTextBounds.left;

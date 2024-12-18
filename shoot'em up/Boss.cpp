@@ -1,11 +1,12 @@
 #include "Boss.h"
 
-Boss::Boss(float x, float y) : hp(100), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
+Boss::Boss(int lifeBoss, float x, float y) : hp(lifeBoss), isActive(false), shootSpeed(1.f), velocity(Vector2f(-3.5f, 2.f)), phase(1), robotHp1(3), robotHp2(3), speedX(x), speedY(y),
 firstMove(true)
 {
     this->initSprite();
     this->initTexture();
     this->initHealthBar();
+    this->initName();
 
 }
 
@@ -32,6 +33,12 @@ void Boss::initSprite()
     if (!this->bossPresqueMort.loadFromFile("assets/boss/Boss_presque_mort.png")) {
         cout << "Erreur";
     }
+
+    if (!this->bossMort.loadFromFile("assets/boss/Boss BOOM.png")) {
+        cout << "Erreur";
+    }
+
+
     if (!this->robot1.loadFromFile("assets/boss/droide_du_haut.png")) {
         cout << "Erreur";
     }
@@ -52,12 +59,25 @@ void Boss::initTexture()
     spriteRobot2.setPosition(2500.f, 100.f);
 }
 
+void Boss::initName() { //création score
+
+    
+    if (!font.loadFromFile("assets/font/fontpause.ttf")) {
+        cout << "ERREUR";
+    }
+    nameBoss.setFont(font);
+    nameBoss.setPosition(1100, 980);
+    nameBoss.setCharacterSize(50);
+    nameBoss.setFillColor(Color::White);
+    nameBoss.setString("Twoide");
+}
+
 
 //////////////////////////////////actualisation////////////////////////////////////////////////
  
 void Boss::render(RenderTarget& target)
 {
-    if (hp > 0) {
+    if (hp >= 0) {
         target.draw(this->sprite);
    }
   
@@ -82,7 +102,9 @@ void Boss::render(RenderTarget& target)
     if (phase == 3 && hp > 0) {
         sprite.setTexture(bossPresqueMort);
     }
-
+    if (hp <= 0) {
+        sprite.setTexture(bossMort);
+    }
 }
 
 
@@ -91,7 +113,7 @@ void Boss::update()
 {
     movement(x, y);
 
-    if (hp <= 50 && phase == 1) {
+    if (hp <= hpMax / 2 && phase == 1) {
         phase = 2;
     }
     if (robotHp1 <= 0 && robotHp2 <= 0 && phase == 2) {
@@ -118,7 +140,7 @@ void Boss::reset()
     firstMove = true;
     this->sprite.setTexture(boss);
     this->sprite.setPosition(2500.f, 100.f);
-    hp = 100;
+    hp = hpMax;
     robotHp1 = 3;
     robotHp2 = 3;
 
@@ -294,7 +316,7 @@ bool Boss::verifSpawnBoss() const
 
 void Boss::initHealthBar()   // santé et barre de vie
 {
-    this->maxHp = 100;
+    this->maxHp = hpMax;
     this->hp = this->maxHp;
     this->healthBar.setSize(Vector2f(800.f, 20.f));
     this->healthBar.setFillColor(Color(255, 0, 0));
@@ -313,8 +335,13 @@ void Boss::renderHealthBar(RenderTarget& target)
 {
     this->backgroundHealthBar.setPosition(1100.f, 1050.f);
     this->healthBar.setPosition(1100.f, 1050.f);
+  
 
+    target.draw(this->nameBoss);
     target.draw(this->backgroundHealthBar);
     target.draw(this->healthBar);
 
 }
+
+
+

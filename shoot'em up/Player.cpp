@@ -49,7 +49,7 @@ void Player::playerUpdate()
 
 void Player::initHealthBar()   // santé et barre de vie
 {
-	this->maxHp = 3;
+	this->maxHp = 5;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));

@@ -154,10 +154,11 @@ public:
 	//score
 
 	void resetGame();
-
-	Clock tpsTouch;
-	//bonus
 	
+	Clock tpsTouch;
+  
+	//bonus
+
 	void spawnBonus();
 	void renderBonusZones();
 	void updateBonusZones();

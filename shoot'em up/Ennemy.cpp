@@ -105,25 +105,31 @@ void Ennemy::movement(int dx, int dy)
 
 	switch (movementType) {
 	case STRAIGHT:
-		sprite.move(-10.f, 0.f);
+		sprite.move(-speed, 0.f);
 		break;
 	case STRAIGHT_FAST:
-		sprite.move(-30.f, 0.f);
+		sprite.move(-speed-20.f, 0.f);
 		break;
 	case DIAGONAL:
-		if (sprite.getPosition().x <= 500) {
-			sprite.move(-0.f, 10.f);
+		if (sprite.getPosition().x > 100 && diag == true) {
+			sprite.move(-speed, -0.f);
 		}
-		else {
-			sprite.move(-10.f, 0.f);
+		if (sprite.getPosition().x == 100) {
+			diag = false;
+		}
+		if(diag == false){
+			sprite.move(speed, -speed/4.f);
 		}
 		break;
 	case DIAGONAL_INVERSE:
-		if (sprite.getPosition().x <= 500) {
-			sprite.move(-0.f, -10.f);
+		if (sprite.getPosition().x > 100 && diagInvers==true) {
+			sprite.move(-speed, -0.f);
 		}
-		else {
-			sprite.move(-10.f, 0.f);
+		if (sprite.getPosition().x == 100) {
+			diagInvers = false;
+		}
+		if(diagInvers==false) {
+			sprite.move(speed, speed / 4.f);
 		}
 		break;
 	}
