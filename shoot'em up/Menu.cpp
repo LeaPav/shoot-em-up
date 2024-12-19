@@ -83,54 +83,7 @@ void Menu::initSpriteEnnemies()
 	spriteEnnemy2.setTexture(ennemy2);
 	spriteEnnemy2.setPosition(Vector2f(120.f, 480.f));
 
-	ennemy1Groupe1.setTexture(ennemy1);
-	ennemy1Groupe1.setPosition(Vector2f(1200.f, 325.f));
-
-	ennemy2Groupe1.setTexture(ennemy1);
-	ennemy2Groupe1.setPosition(Vector2f(1275.f, 250.f));
-
-	ennemy3Groupe1.setTexture(ennemy1);
-	ennemy3Groupe1.setPosition(Vector2f(1275.f, 400.f));
-
-	ennemy1Groupe2.setTexture(ennemy2);
-	ennemy1Groupe2.setPosition(Vector2f(1750.f, 10.f));
-
-	ennemy2Groupe2.setTexture(ennemy2);
-	ennemy2Groupe2.setPosition(Vector2f(1750.f, 85.f));
-
-	ennemy3Groupe2.setTexture(ennemy2);
-	ennemy3Groupe2.setPosition(Vector2f(1750.f, 160.f));
-
-	ennemy4Groupe2.setTexture(ennemy2);
-	ennemy4Groupe2.setPosition(Vector2f(1750.f, 450.f));
-
-	ennemy5Groupe2.setTexture(ennemy2);
-	ennemy5Groupe2.setPosition(Vector2f(1750.f, 525.f));
-
-	ennemy6Groupe2.setTexture(ennemy2);
-	ennemy6Groupe2.setPosition(Vector2f(1750.f, 600.f));
-
-	ennemy7Groupe2.setTexture(ennemy2);
-	ennemy7Groupe2.setPosition(Vector2f(1750.f, 675.f));
-
-	ennemy8Groupe2.setTexture(ennemy2);
-	ennemy8Groupe2.setPosition(Vector2f(1750.f, 750.f));
-
-	ennemy4Groupe1.setTexture(ennemy1);
-	ennemy4Groupe1.setPosition(Vector2f(1200.f, 800.f));
-
-	ennemy5Groupe1.setTexture(ennemy1);
-	ennemy5Groupe1.setPosition(Vector2f(1275.f, 715.f));
-
-	ennemy6Groupe1.setTexture(ennemy1);
-	ennemy6Groupe1.setPosition(Vector2f(1275.f, 875.f));
-
-	ennemy7Groupe1.setTexture(ennemy1);
-	ennemy7Groupe1.setPosition(Vector2f(1350.f, 650.f));
-
-	ennemy8Groupe1.setTexture(ennemy1);
-	ennemy8Groupe1.setPosition(Vector2f(1350.f, 950.f));
-
+	
 }
 
 void Menu::initSpriteBoss()
@@ -805,23 +758,6 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 	window.draw(spritePlayer);
 	window.draw(spriteEnnemy1);
 	window.draw(spriteEnnemy2);
-	window.draw(ennemy1Groupe2);
-	window.draw(ennemy2Groupe2);
-	window.draw(ennemy3Groupe2);
-	window.draw(ennemy4Groupe2);
-	window.draw(ennemy5Groupe2);
-	window.draw(ennemy6Groupe2);
-	window.draw(ennemy7Groupe2);
-	window.draw(ennemy8Groupe2);
-
-	window.draw(ennemy1Groupe1);
-	window.draw(ennemy2Groupe1);
-	window.draw(ennemy3Groupe1);
-	window.draw(ennemy4Groupe1);
-	window.draw(ennemy5Groupe1);
-	window.draw(ennemy6Groupe1);
-	window.draw(ennemy7Groupe1);
-	window.draw(ennemy8Groupe1);
 	
 	window.draw(spriteBoss);
 	window.draw(returnButtonRect);
