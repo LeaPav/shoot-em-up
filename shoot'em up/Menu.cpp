@@ -12,6 +12,7 @@ Menu::Menu() : indexButtonSelected(0)
 	initEditorButton();
 	initFont();
 	initButton();
+	initSoundsButton();
 	initOptionsButton();
 	initCommandsButton();
 	initDifficultyButton();
@@ -25,6 +26,12 @@ void Menu::updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif
 	TextRenderLifeEnemy1.setString(to_string(newPvAggressif));
 	TextRenderLifeEnemy2.setString(to_string(newPvPassif));
 	renderBossHp.setString(to_string(boss->getMaxHp()));
+}
+
+void Menu::updateSettingsTexts(int bruitage, int musique)
+{
+	renderMusic.setString(to_string(musique));
+	renderSon.setString(to_string(bruitage));
 }
 
 /////////////////////////////////////////maj du Game Over/////////////////////////////////////
@@ -483,6 +490,44 @@ void Menu::initLevelButton()
 	level3.setPosition(1450.f, 675.f);
 }
 
+void Menu::initSoundsButton()
+{
+
+	MonterMusic.setSize(Vector2f(25.f, 25.f));
+	MonterMusic.setPosition(1100.f, 450.f);
+	MonterMusic.setTexture(&playerButtonRight);
+
+	BaisserMusic.setSize(Vector2f(25.f, 25.f));
+	BaisserMusic.setPosition(800.f, 450.f);
+	BaisserMusic.setTexture(&playerButtonLeft);
+
+	MonterSon.setSize(Vector2f(25.f, 25.f));
+	MonterSon.setPosition(1100.f, 650.f);
+	MonterSon.setTexture(&playerButtonRight);
+
+	BaisserSon.setSize(Vector2f(25.f, 25.f));
+	BaisserSon.setPosition(800.f, 650.f);
+	BaisserSon.setTexture(&playerButtonLeft);
+
+	music.setFont(this->fontMainMenu);
+	music.setString("Musique");
+	music.setCharacterSize(30);
+	music.setPosition(890.f, 380.f);
+
+	son.setFont(this->fontMainMenu);
+	son.setString("Effets Sonores");
+	son.setCharacterSize(30);
+	son.setPosition(820.f, 580.f);
+
+	renderMusic.setFont(this->fontMainMenu);
+	renderMusic.setCharacterSize(30);
+	renderMusic.setPosition(940.f, 450.f);
+
+	renderSon.setFont(this->fontMainMenu);
+	renderSon.setCharacterSize(30);
+	renderSon.setPosition(940.f, 650.f);
+}
+
 ///////////////////////////////////////clique souris//////////////////////////////////////////
 
 int Menu::handleInputMainMenu(RenderWindow& window, const Event& event) //changement des etat du jeu 
@@ -699,6 +744,22 @@ int Menu::handleInputSettingsMenu(RenderWindow& window, const Event& event)
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
 			Vector2i mousePos = Mouse::getPosition(window);
+			if (MonterMusic.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (BaisserMusic.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (MonterSon.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
+			if (BaisserSon.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
 			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
 				return 6;
@@ -865,11 +926,28 @@ void Menu::renderSettingsMenu(RenderWindow& window)
 	window.draw(returnButtonRect);
 	window.draw(returnButton);
 
+	window.draw(MonterSon);
+	window.draw(MonterMusic);
+	window.draw(BaisserSon);
+	window.draw(BaisserMusic);
+	window.draw(music);
+	window.draw(son);
+	window.draw(renderMusic);
+	window.draw(renderSon);
+
 }
 
 void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramètre menu pause
 {
+	window.draw(MonterSon);
+	window.draw(MonterMusic);
+	window.draw(BaisserSon);
+	window.draw(BaisserMusic);
+	window.draw(music);
+	window.draw(son);
 
+	window.draw(renderMusic);
+	window.draw(renderSon);
 }
 
 
@@ -1080,6 +1158,30 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	}
 	else {
 		bossHpMin.setFillColor(Color::White);
+	}
+	if (MonterMusic.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		MonterMusic.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		MonterMusic.setFillColor(Color::White);
+	}
+	if (BaisserMusic.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		BaisserMusic.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		BaisserMusic.setFillColor(Color::White);
+	}
+	if (MonterSon.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		MonterSon.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		MonterSon.setFillColor(Color::White);
+	}
+	if (BaisserSon.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		BaisserSon.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		BaisserSon.setFillColor(Color::White);
 	}
 }
 

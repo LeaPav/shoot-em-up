@@ -76,6 +76,7 @@ private:
 	void initCommandsButton();
 	void initDifficultyButton();
 	void initLevelButton();
+	void initSoundsButton();
 
 	// rectangle choix niveau;
 
@@ -115,9 +116,16 @@ private:
 	Text level3;
 	Player player1;
 
+	//bouton pour le son
+	RectangleShape MonterMusic, MonterSon;
+	RectangleShape BaisserMusic, BaisserSon;
+	Text music, son;
+	Text renderMusic, renderSon;
+
 public:
 	Menu();
 	void updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed, Boss* boss);
+	void updateSettingsTexts(int bruitage, int musique);
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
 	int handleInputDifficulty(RenderWindow& window, const Event& event);

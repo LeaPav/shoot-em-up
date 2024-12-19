@@ -326,6 +326,51 @@ void Game::deactivatePhaseBoss()
 	}
 }
 
+void Game::monterSon(int newBruitage)
+{
+	bruitage += newBruitage;
+
+	boomSound.setVolume(bruitage);
+	looseGameSound.setVolume(bruitage);
+	projoTirerSound.setVolume(bruitage);
+	joueurToucherSound.setVolume(bruitage);
+	
+}
+
+void Game::monterMusique(int newMusic)
+{
+
+	musique += newMusic;
+	menu.setVolume(musique);
+	lvl1.setVolume(musique);
+	bosslvl1.setVolume(musique);
+	victoire.setVolume(musique);
+
+}
+
+void Game::baisserSon(int newBruitage)
+{
+	if (bruitage >= 0) {
+		bruitage -= newBruitage;
+	}
+	boomSound.setVolume(bruitage);
+	looseGameSound.setVolume(bruitage);
+	projoTirerSound.setVolume(bruitage);
+	joueurToucherSound.setVolume(bruitage);
+}
+
+void Game::baisserMusique(int newMusic)
+{
+	if (musique >= 0) {
+		musique -= newMusic;
+	}
+	menu.setVolume(musique);
+	lvl1.setVolume(musique);
+	bosslvl1.setVolume(musique);
+	victoire.setVolume(musique);
+
+}
+
 const bool Game::windowIsOpen()
 {
 	return this->window->isOpen();
@@ -602,7 +647,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			lvl1.stop();
 			lvl1.pause();
 		}
-		if (bosslvl1.getStatus() != bosslvl1.Playing) {
+		if (bosslvl1.getStatus() == bosslvl1.Playing) {
 			bosslvl1.stop();
 			bosslvl1.pause();
 		}
@@ -804,9 +849,44 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 	}
 	if (currentState == GameState::SETTINGS) {
+		mainMenu.updateSettingsTexts(bruitage, musique);
+
 		mainMenu.handleMouseHover(*window);
 		int settingsAction = mainMenu.handleInputSettingsMenu(*window, event);
 		switch (settingsAction) {
+		case 1:
+			monterMusique(1);
+			break;
+		case 2:
+			baisserMusique(1);
+			break;
+		case 3:
+			monterSon(1);
+			break;
+		case 4: 
+			baisserSon(1);
+			break;
+		case 6: currentState = GameState::OPTIONS;
+			break;
+		}
+	}
+	if (currentState == GameState::PAUSESETTINGS) {
+		mainMenu.updateSettingsTexts(bruitage, musique);
+		mainMenu.handleMouseHover(*window);
+		int settingsAction = mainMenu.handleInputSettingsMenu(*window, event);
+		switch (settingsAction) {
+		case 1:
+			monterMusique(1);
+			break;
+		case 2:
+			baisserMusique(1);
+			break;
+		case 3:
+			monterSon(1);
+			break;
+		case 4:
+			baisserSon(1);
+			break;
 		case 6: currentState = GameState::OPTIONS;
 			break;
 		}

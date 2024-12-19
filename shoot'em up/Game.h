@@ -234,5 +234,10 @@ public:
 	int musique = 10;
 	int curentlyboom = 0;
 
+	void monterSon(int newBruitage);
+	void monterMusique(int newMusic);
+
+	void baisserSon(int newBruitage);
+	void baisserMusique(int newMusic);
 };
 
