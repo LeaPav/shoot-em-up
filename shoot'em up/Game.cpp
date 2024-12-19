@@ -350,7 +350,7 @@ void Game::monterMusique(int newMusic)
 
 void Game::baisserSon(int newBruitage)
 {
-	if (bruitage >= 0) {
+	if (bruitage > 0) {
 		bruitage -= newBruitage;
 	}
 	boomSound.setVolume(bruitage);
@@ -361,7 +361,7 @@ void Game::baisserSon(int newBruitage)
 
 void Game::baisserMusique(int newMusic)
 {
-	if (musique >= 0) {
+	if (musique > 0) {
 		musique -= newMusic;
 	}
 	menu.setVolume(musique);
