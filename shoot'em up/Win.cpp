@@ -99,8 +99,12 @@ void Win::resetCooldown()
     mouseCooldownClock.restart();
 }
 
-void Win::setScore(int score,int killStreak)
+void Win::setScore(int score,int killStreak, Sound boomBossSound)
 {
+    if (boomBossSound.getStatus() != boomBossSound.Playing) {
+        boomBossSound.setPlayingOffset(seconds(0));
+        boomBossSound.play();
+    }
     score = score + 555 + (50 * killStreak);
     scoreText.setString("Score : " + to_string(score));
     FloatRect scoreTextBounds = scoreText.getLocalBounds();

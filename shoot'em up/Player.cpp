@@ -12,9 +12,7 @@ Player::Player(int rate) : fireRate(rate)   //création joueur
 void Player::initSprite()     //chargement du corps du joueur
 {
 
-	/*recPlayer.setSize(Vector2f(100.f, 100.f));
-	recPlayer.setFillColor(Color::Red);
-	recPlayer.setPosition(10,10);*/
+	
 
 	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
 		cout << "ERREUR";

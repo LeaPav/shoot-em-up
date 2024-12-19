@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(10), vagueActif(true), spawnBonusPhase(30)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(30)
 {
 	this->initSprite();
 	this->initTexture();
@@ -287,7 +287,7 @@ void Game::renderWin()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	win.render(*window);
-	win.setScore(score,killStreak);
+	win.setScore(score,killStreak,boomBossSound);
 }
 
 
@@ -1013,6 +1013,7 @@ void Game::checkCollisions()
 			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds()) && ennemy->verifSpawnEnnemy()) {	
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
+				curentlyboom = 0;
 
 				if (ennemy->isDead()) {
 
@@ -1023,6 +1024,12 @@ void Game::checkCollisions()
 					scoreBoss++;
 					
 					textScore.setString("Score: " + to_string(score));
+
+					if (boomSound.getStatus() != boomSound.Playing ) {
+						boomSound.setPlayingOffset(seconds(0.5));
+						boomSound.play();
+						
+					}
 					
 					ennemiesToRemove.push_back(ennemy);
 				}
@@ -1049,6 +1056,10 @@ void Game::checkCollisions()
 				deactivateBonus(Bonus::OffensiveShield);
 			}
 			if (canHaveDamaged) {
+				if (joueurToucherSound.getStatus() != joueurToucherSound.Playing) {
+					joueurToucherSound.setPlayingOffset(seconds(0));
+					joueurToucherSound.play();
+				}
 				player->damage(1);
 			}
 			projectile->markAsOutOfScreen();
@@ -1058,6 +1069,10 @@ void Game::checkCollisions()
 	for (auto& ennemy : ennemies) {
 		
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
+			if (joueurToucherSound.getStatus() != joueurToucherSound.Playing) {
+				joueurToucherSound.setPlayingOffset(seconds(0));
+				joueurToucherSound.play();
+			}
 			ennemy->damage(10);
 			if (checkCollisionsBonus(player, ennemy)) {
 				break;
@@ -1132,8 +1147,11 @@ void Game::checkCollisions()
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 
 			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
+
+				
 		    	e->explosion();
 
+				
 			}
 		
 		else {
@@ -1175,6 +1193,7 @@ void Game::shoot()
 
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && cooldownShoot <= 0) {
+		projoTirerSound.play();
 		float TopplayerX = this->player->getPosition().x + 73.f;
 		float TopplayerY = this->player->getPosition().y + 5.f;
 
@@ -1237,6 +1256,7 @@ void Game::shootEnnemy()
 		}
 	}
 }
+
 
 void Game::shootingBoss()
 {

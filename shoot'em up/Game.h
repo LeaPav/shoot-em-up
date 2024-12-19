@@ -196,5 +196,7 @@ public:
 	Music lvl1;
 	Music bosslvl1;
 	Music victoire;
+
+	int curentlyboom = 0;
 };
 
