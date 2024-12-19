@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(5)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(30)
 {
 	this->initSprite();
 	this->initTexture();
