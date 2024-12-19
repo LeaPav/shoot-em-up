@@ -114,7 +114,7 @@ void Game::updateBoss()
 {
 	if (this->boss->canSpawn(scoreBoss, spawnBoss)) {
 		
-
+		lore = false;
 	    if (bosslvl1.getStatus() != bosslvl1.Playing) {
 				bosslvl1.play();
 		}
@@ -602,6 +602,10 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			lvl1.stop();
 			lvl1.pause();
 		}
+		if (bosslvl1.getStatus() != bosslvl1.Playing) {
+			bosslvl1.stop();
+			bosslvl1.pause();
+		}
 		if (looseGameSound.getStatus() == looseGameSound.Playing) {
 			looseGameSound.stop();
 			looseGameSound.pause();
@@ -614,6 +618,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			menu.play();
 			menu.setPlayingOffset(sf::seconds(60));
 		}
+		
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
 
@@ -955,6 +960,12 @@ void Game::initSound() {  //bruitage
 	looseGameSound.setBuffer(looseGame);
 	projoTirerSound.setBuffer(projoTirer);
 	joueurToucherSound.setBuffer(joueurToucher);
+	
+
+	boomSound.setVolume(bruitage);
+	looseGameSound.setVolume(bruitage);
+	projoTirerSound.setVolume(bruitage);
+	joueurToucherSound.setVolume(bruitage);
 }
 
 
@@ -968,6 +979,12 @@ void Game::initMusic() { //musique
 		cout << "erreur boss lvl1";
 	if (!victoire.openFromFile("assets/Son/Musique/Victory.mp3"))
 		cout << "erreur victoire";
+
+	menu.setVolume(musique);
+	lvl1.setVolume(musique);
+	bosslvl1.setVolume(musique);
+	victoire.setVolume(musique);
+
 }
 
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
@@ -1054,9 +1071,22 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 	if (scoreBoss < spawnBoss && vagueActif && lore == false) {
 
+		bool grp1 = true;
+		bool grp2 = true;
+		bool grp3 = true;
+		bool grp4 = true;
 
+		if (random == 3 && grp4 == false) {
+			random = random - 1;
+		}
 
+		if (random == 2 && grp3 == false) {
+			random = random - 1;
+		}
 
+		if (random == 1 && grp3 == true) {
+			random = random - 1;
+		}
 
 		while (random == 3 && scoreBoss < 20) {
 			random = rand() % 3;
@@ -1066,7 +1096,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 		}
 		
 
-		if (random == 0) {   //pyramide par 3 tir
+		if (random == 0 && grp1 == true) {   //pyramide par 3 tir
 
 			MovementType randomType = static_cast<MovementType>(rand() % 2);
 
@@ -1097,7 +1127,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		if (random == 1) { //mur par 3 passif
+		if (random == 1 && grp2 == true) { //mur par 3 passif
 
 			MovementType randomType = static_cast<MovementType>(rand() % 4);
 
@@ -1124,7 +1154,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
+		if (random == 2 && scoreBoss >= 40 && grp3 == true || random == 2 && grp1 ==false && grp2==false) { // pyramide par 5 tir
 
 				int largeur = rand() % this->videoMode.height;
 
@@ -1166,7 +1196,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 
 		}
-		if (random == 3 && scoreBoss >= 20) { //mur par 5
+		if (random == 3 && scoreBoss >= 20 && grp4 == true || random == 3 && grp1 == false && grp2 == false) { //mur par 5
 
 				MovementType randomType = static_cast<MovementType>(rand() % 4);
 
@@ -1461,7 +1491,7 @@ void Game::shoot()
 		projoTirerSound.play();
 		float TopplayerX = this->player->getPosition().x + 73.f;
 		float TopplayerY = this->player->getPosition().y + 5.f;
-
+		
 		float MidplayerX = this->player->getPosition().x + 80.f;
 		float MidplayerY = this->player->getPosition().y + 40.f;
 

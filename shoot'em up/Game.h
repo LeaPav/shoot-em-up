@@ -230,6 +230,8 @@ public:
 	Music bosslvl1;
 	Music victoire;
 
+	int bruitage = 10;
+	int musique = 10;
 	int curentlyboom = 0;
 
 };

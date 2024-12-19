@@ -418,7 +418,7 @@ void Menu::initDifficultyButton()
 	easyButtonRect.setPosition(705.f, 290.f);
 
 	easyButton.setFont(this->fontMainMenu);
-	easyButton.setString("Débutant");
+	easyButton.setString("Debutant");
 	easyButton.setCharacterSize(40);
 	easyButton.setPosition(830.f, 305.f);
 
