@@ -80,6 +80,10 @@ private:
 	//joueur
 	int fireRate = 15;
 
+	//Ennemi
+	int pv = 2;
+	int newPv = 2;
+
 	int score;
 	int scoreBonus;
 	int scoreBoss;
@@ -167,6 +171,12 @@ public:
 	void resetBonus();
 	void activateBonus(Bonus::AllBonus bonusType);
 	void deactivateBonus(Bonus::AllBonus bonusType);
+
+	//Difficulté
+
+	void easyLevel();
+	void intermediaireLevel();
+	void hardLevel();
 
 };
 

@@ -35,11 +35,11 @@ private:
 	Text returnMenuOptionsButton;
 
 	// button difficulté
-	RectangleShape normalRect;
-	RectangleShape hardRect;
+	RectangleShape easyButtonRect;
+	RectangleShape normalButtonRect;
 	RectangleShape hardCoreRect;
 
-	Text normalButton;
+	Text easyButton;
 	Text hardButton;
 	Text hardCoreButton;
 	// buton paramètres

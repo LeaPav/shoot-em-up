@@ -190,6 +190,27 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 	}
 }
 
+void Game::easyLevel()
+{
+	player->setMaxHealth(5);
+	pv = 1;
+	newPv = pv;
+}
+
+void Game::intermediaireLevel()
+{
+	player->setMaxHealth(3);
+	pv = 2;
+	newPv = pv;
+}
+
+void Game::hardLevel()
+{
+	player->setMaxHealth(1);
+	pv = 3;
+	newPv = pv;
+}
+
 const bool Game::windowIsOpen()
 {
 	return this->window->isOpen();
@@ -484,8 +505,20 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 	}
 	if (currentState == GameState::DIFFICULTY) {
 		mainMenu.handleMouseHover(*window);
-		int difficultyAction = mainMenu.handleInputMenuOptions(*window, event);
+		int difficultyAction = mainMenu.handleInputDifficulty(*window, event);
 		switch (difficultyAction) {
+		case 1: 
+			easyLevel();
+			currentState = GameState::OPTIONS;
+			break;
+		case 2:
+			intermediaireLevel();
+			currentState = GameState::OPTIONS;
+			break;
+		case 3:
+			hardLevel();
+			currentState = GameState::OPTIONS;
+			break;
 		case 4: currentState = GameState::OPTIONS;
 			break;
 		}
@@ -678,7 +711,6 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	int random = rand() % 4;
 
 	bool peacefull = false;
-	int pv = 1;
 	
 	/*
 	if(scoreBonus>=20){
@@ -712,21 +744,21 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				peacefull = true;
 			}
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif, texture
+			Ennemy* newEnnemy1 = new Ennemy(randomType, newPv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif, texture
 			newEnnemy1->setPosition(distance, largeur);
 			if (newEnnemy1->destroy()) {
 				delete newEnnemy1;
 			}
 			ennemies.push_back(newEnnemy1);
 
-			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy2 = new Ennemy(randomType, newPv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 			newEnnemy2->setPosition(distance + 75, largeur + 75);
 			if (newEnnemy2->destroy()) {
 				delete newEnnemy2;
 			}
 			ennemies.push_back(newEnnemy2);
 
-			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy3 = new Ennemy(randomType, newPv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 			newEnnemy3->setPosition(distance + 75, largeur - 75);
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
@@ -739,21 +771,21 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 			int largeur = rand() % this->videoMode.height;
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy1 = new Ennemy(randomType, newPv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 			newEnnemy1->setPosition(distance, largeur);
 			if (newEnnemy1->destroy()) {
 				delete newEnnemy1;
 			}
 			ennemies.push_back(newEnnemy1);
 
-			Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy2 = new Ennemy(randomType, newPv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 			newEnnemy2->setPosition(distance, largeur + 80);
 			if (newEnnemy2->destroy()) {
 				delete newEnnemy2;
 			}
 			ennemies.push_back(newEnnemy2);
 
-			Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy3 = new Ennemy(randomType, newPv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 			newEnnemy3->setPosition(distance, largeur - 80);
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
@@ -942,7 +974,6 @@ void Game::checkCollisions()
 				break;
 			}
 			if (canHaveDamaged) {
-				cout << canHaveDamaged << endl;
 				if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
 					killStreak = 0;
 					cout << "Degats" << endl;
@@ -952,14 +983,31 @@ void Game::checkCollisions()
 			}
 			canHaveDamaged = true;
 		}
-		
 	}
 
 	for (auto& projectile : projectilesBoss) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {
-			player->damage(2);
+			canHaveDamaged = true;
+			if (bonusActive[Bonus::Shield]) {
+				canHaveDamaged = false;
+				if (bonusShieldDef > 0) {
+					bonusShieldDef--;
+					cout << bonusShieldDef << endl;
+				}
+				if (bonusShieldDef == 0) {
+					deactivateBonus(Bonus::Shield);
+				}
+			}
+			else if (bonusActive[Bonus::OffensiveShield]) {
+				deactivateBonus(Bonus::OffensiveShield);
+			}
+
+			if (canHaveDamaged) {
+				player->damage(2);
+			}
 			projectile->markAsOutOfScreen();
 		}
+		canHaveDamaged = true;
 	}
 
 	for (auto& projectile : projectilesPlayer) {

@@ -49,7 +49,6 @@ void Player::playerUpdate()
 
 void Player::initHealthBar()   // santé et barre de vie
 {
-	this->maxHp = 5;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));
@@ -122,6 +121,12 @@ void Player::setHealth(int newHp)
 		hp = newHp;
 	}
 	this->udpateHealthBar();
+}
+
+void Player::setMaxHealth(int newMaxHp)
+{
+	maxHp = newMaxHp;
+	hp = maxHp;
 }
 
 void Player::setSpeed(float newSpeed)

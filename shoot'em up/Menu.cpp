@@ -172,21 +172,21 @@ void Menu::initCommandsButton() //bouton retour
 
 void Menu::initDifficultyButton()
 {
-	normalRect.setSize(Vector2f(510.f, 95.f));
-	normalRect.setFillColor(Color(165, 191, 208));
-	normalRect.setPosition(705.f, 290.f);
+	easyButtonRect.setSize(Vector2f(510.f, 95.f));
+	easyButtonRect.setFillColor(Color(165, 191, 208));
+	easyButtonRect.setPosition(705.f, 290.f);
 
-	normalButton.setFont(this->fontMainMenu);
-	normalButton.setString("Normal");
-	normalButton.setCharacterSize(40);
-	normalButton.setPosition(830.f, 305.f);
+	easyButton.setFont(this->fontMainMenu);
+	easyButton.setString("Débutant");
+	easyButton.setCharacterSize(40);
+	easyButton.setPosition(830.f, 305.f);
 
-	hardRect.setSize(Vector2f(510.f, 95.f));
-	hardRect.setFillColor(Color(165, 191, 208));
-	hardRect.setPosition(705.f, 442.f);
+	normalButtonRect.setSize(Vector2f(510.f, 95.f));
+	normalButtonRect.setFillColor(Color(165, 191, 208));
+	normalButtonRect.setPosition(705.f, 442.f);
 
 	hardButton.setFont(this->fontMainMenu);
-	hardButton.setString("Hard");
+	hardButton.setString("Intermediaire");
 	hardButton.setCharacterSize(40);
 	hardButton.setPosition(820.f, 460.f);
 
@@ -196,7 +196,7 @@ void Menu::initDifficultyButton()
 	hardCoreRect.setPosition(705.f, 585.f);
 
 	hardCoreButton.setFont(this->fontMainMenu);
-	hardCoreButton.setString("Hard Core");
+	hardCoreButton.setString("Joueur Pro");
 	hardCoreButton.setCharacterSize(40);
 	hardCoreButton.setPosition(840.f, 605.f);
 }
@@ -273,11 +273,11 @@ int Menu::handleInputDifficulty(RenderWindow& window, const Event& event)
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
 			Vector2i mousePos = Mouse::getPosition(window);
-			if (normalRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			if (easyButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
 				return 1;
 			}
-			if (hardRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			if (normalButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
 				return 2;
 			}
@@ -371,12 +371,12 @@ void Menu::renderCommands(RenderWindow& window) // menu commande
 void Menu::renderDifficulty(RenderWindow& window)
 {
 	window.draw(optionsBackground);
-	window.draw(normalRect);
-	window.draw(hardRect);
+	window.draw(easyButtonRect);
+	window.draw(normalButtonRect);
 	window.draw(hardCoreRect);
 	window.draw(returnButtonRect);
 
-	window.draw(normalButton);
+	window.draw(easyButton);
 	window.draw(hardButton);
 	window.draw(hardCoreButton);
 	window.draw(this->returnButton);
@@ -473,20 +473,20 @@ void Menu::handleMouseHover(const RenderWindow& window)
 		returnButtonRect.setFillColor(Color(165, 191, 208));
 		returnButton.setFillColor(Color::White);
 	}
-	if (normalRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-		normalRect.setFillColor(Color(222, 231, 237));
-		normalButton.setFillColor(Color(165, 191, 208));
+	if (easyButtonRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		easyButtonRect.setFillColor(Color(222, 231, 237));
+		easyButton.setFillColor(Color(165, 191, 208));
 	}
 	else {
-		normalRect.setFillColor(Color(165, 191, 208));
-		normalButton.setFillColor(Color::White);
+		easyButtonRect.setFillColor(Color(165, 191, 208));
+		easyButton.setFillColor(Color::White);
 	}
-	if (hardRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-		hardRect.setFillColor(Color(222, 231, 237));
+	if (normalButtonRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		normalButtonRect.setFillColor(Color(222, 231, 237));
 		hardButton.setFillColor(Color(165, 191, 208));
 	}
 	else {
-		hardRect.setFillColor(Color(165, 191, 208));
+		normalButtonRect.setFillColor(Color(165, 191, 208));
 		hardButton.setFillColor(Color::White);
 	}
 	if (hardCoreRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
