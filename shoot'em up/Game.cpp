@@ -1151,22 +1151,6 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 	if (scoreBoss < spawnBoss && vagueActif && lore == false) {
 
-		bool grp1 = true;
-		bool grp2 = true;
-		bool grp3 = true;
-		bool grp4 = true;
-
-		if (random == 3 && grp4 == false) {
-			random = random - 1;
-		}
-
-		if (random == 2 && grp3 == false) {
-			random = random - 1;
-		}
-
-		if (random == 1 && grp3 == true) {
-			random = random - 1;
-		}
 
 		while (random == 3 && scoreBoss < 20) {
 			random = rand() % 3;
@@ -1176,7 +1160,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 		}
 		
 
-		if (random == 0 && grp1 == true) {   //pyramide par 3 tir
+		if (random == 0) {   //pyramide par 3 tir
 
 			MovementType randomType = static_cast<MovementType>(rand() % 2);
 
@@ -1207,7 +1191,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		if (random == 1 && grp2 == true) { //mur par 3 passif
+		if (random == 1) { //mur par 3 passif
 
 			MovementType randomType = static_cast<MovementType>(rand() % 4);
 
@@ -1234,7 +1218,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 			}
 			ennemies.push_back(newEnnemy3);
 		}
-		if (random == 2 && scoreBoss >= 40 && grp3 == true || random == 2 && grp1 ==false && grp2==false) { // pyramide par 5 tir
+		if (random == 2 && scoreBoss >= 40) { // pyramide par 5 tir
 
 				int largeur = rand() % this->videoMode.height;
 
@@ -1276,7 +1260,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 
 		}
-		if (random == 3 && scoreBoss >= 20 && grp4 == true || random == 3 && grp1 == false && grp2 == false) { //mur par 5
+		if (random == 3 && scoreBoss >= 20) { //mur par 5
 
 				MovementType randomType = static_cast<MovementType>(rand() % 4);
 
