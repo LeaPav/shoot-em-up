@@ -769,7 +769,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		case 10:
 			changeSpeedEnnemyMin(1);
 			break;
-		case 11: 
+		case 11:
 			activatePhaseBoss();
 			break;
 		case 12:
@@ -777,7 +777,9 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			break;
 		case 13:
 			currentState = GameState::MENU;
-        break;
+			break;
+		}
+	}
 	if (currentState == GameState::SETTINGS) {
 		mainMenu.handleMouseHover(*window);
 		int settingsAction = mainMenu.handleInputSettingsMenu(*window, event);
