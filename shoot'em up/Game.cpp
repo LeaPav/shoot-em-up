@@ -13,6 +13,7 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(
 	this->initBonusState();
 	this->initZones();
 	this->initSound();
+	this->initMusic();
 
 
 }
@@ -645,8 +646,14 @@ void Game::initSound() {
 
 void Game::initMusic() {
 
-	if (!menu.openFromFile("music.ogg"))
-		cout << "erreur";
+	if (!menu.openFromFile("assets/Son/Musique/son menu.mp3"))
+		cout << "erreur menu";
+	if (!lvl1.openFromFile("assets/Son/Musique/Level1Sing.mp3"))
+		cout << "erreur lvl1";
+	if (!bosslvl1.openFromFile("assets/Son/Musique/BoosFight.mp3"))
+		cout << "erreur boss lvl1";
+	if (!menu.openFromFile("assets/Son/Musique/Victory.mp3"))
+		cout << "erreur victoire";
 }
 
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
