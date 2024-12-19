@@ -240,7 +240,7 @@ void Menu::initOptionsButton()
 	difficultyButtonRect.setPosition(705.f, 585.f);
 
 	difficultyButton.setFont(this->fontMainMenu);
-	difficultyButton.setString("Difficulté");
+	difficultyButton.setString("Difficulte");
 	difficultyButton.setCharacterSize(40);
 	difficultyButton.setPosition(840.f, 605.f);
 
@@ -267,7 +267,7 @@ void Menu::initOptionsButton()
 
 	settingsPauseButton.setFont(fontPauseMenu);
 	settingsPauseButton.setCharacterSize(28);
-	settingsPauseButton.setString("Paramètres");
+	settingsPauseButton.setString("Parametres");
 
 	FloatRect settingsButtonBounds = settingsPauseButton.getLocalBounds();
 	float xSettings = (1920 / 2.f) - (settingsButtonBounds.width / 2.f) - settingsButtonBounds.left;
@@ -405,7 +405,7 @@ void Menu::initDifficultyButton()
 	easyButtonRect.setPosition(705.f, 290.f);
 
 	easyButton.setFont(this->fontMainMenu);
-	easyButton.setString("Débutant");
+	easyButton.setString("Debutant");
 	easyButton.setCharacterSize(40);
 	easyButton.setPosition(830.f, 305.f);
 

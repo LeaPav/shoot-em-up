@@ -227,6 +227,8 @@ public:
 	Music bosslvl1;
 	Music victoire;
 
+	int bruitage = 50;
+	int musique = 50;
 	int curentlyboom = 0;
 
 };

@@ -590,6 +590,10 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			lvl1.stop();
 			lvl1.pause();
 		}
+		if (bosslvl1.getStatus() != bosslvl1.Playing) {
+			bosslvl1.stop();
+			bosslvl1.pause();
+		}
 		if (looseGameSound.getStatus() == looseGameSound.Playing) {
 			looseGameSound.stop();
 			looseGameSound.pause();
@@ -602,6 +606,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			menu.play();
 			menu.setPlayingOffset(sf::seconds(60));
 		}
+		
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
 
@@ -937,6 +942,12 @@ void Game::initSound() {  //bruitage
 	looseGameSound.setBuffer(looseGame);
 	projoTirerSound.setBuffer(projoTirer);
 	joueurToucherSound.setBuffer(joueurToucher);
+	
+
+	boomSound.setVolume(bruitage);
+	looseGameSound.setVolume(bruitage);
+	projoTirerSound.setVolume(bruitage);
+	joueurToucherSound.setVolume(bruitage);
 }
 
 
@@ -950,6 +961,12 @@ void Game::initMusic() { //musique
 		cout << "erreur boss lvl1";
 	if (!victoire.openFromFile("assets/Son/Musique/Victory.mp3"))
 		cout << "erreur victoire";
+
+	menu.setVolume(musique);
+	lvl1.setVolume(musique);
+	bosslvl1.setVolume(musique);
+	victoire.setVolume(musique);
+
 }
 
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
@@ -1443,7 +1460,7 @@ void Game::shoot()
 		projoTirerSound.play();
 		float TopplayerX = this->player->getPosition().x + 73.f;
 		float TopplayerY = this->player->getPosition().y + 5.f;
-
+		
 		float MidplayerX = this->player->getPosition().x + 80.f;
 		float MidplayerY = this->player->getPosition().y + 40.f;
 
