@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int rate) : fireRate(rate)   //création joueur
+Player::Player(int rate) : fireRate(rate)   //crÃ©ation joueur
 {
 	this->initHealthBar();
 	this->initSprite();
@@ -12,8 +12,6 @@ Player::Player(int rate) : fireRate(rate)   //création joueur
 void Player::initSprite()     //chargement du corps du joueur
 {
 
-	
-
 	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
 		cout << "ERREUR";
 	}
@@ -23,7 +21,6 @@ void Player::initSprite()     //chargement du corps du joueur
 	if (!this->vaisseauBouclierOff.loadFromFile("assets/joueur/jouer_proteger_pique.png")) {
 		cout << "Erreur";
 	}
-
 }
 
 void Player::initTexture()   //pose la texture sur le sprite et set up la position
@@ -45,9 +42,8 @@ void Player::playerUpdate()
 
 ///////////////////////////////life///////////////////////////////////////////////
 
-void Player::initHealthBar()   // santé et barre de vie
+void Player::initHealthBar()   // santÃ© et barre de vie
 {
-	this->maxHp = 500;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));
@@ -122,9 +118,17 @@ void Player::setHealth(int newHp)
 	this->udpateHealthBar();
 }
 
+void Player::setMaxHealth(int newMaxHp)
+{
+	maxHp = newMaxHp;
+	hp = maxHp;
+}
+
 void Player::setSpeed(float newSpeed)
 {
-	speed = newSpeed;
+	if (speed > 5) {
+		speed = newSpeed;
+	}
 }
 
 void Player::setRate(int newRate)

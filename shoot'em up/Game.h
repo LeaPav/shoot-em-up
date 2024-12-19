@@ -17,6 +17,8 @@ public:
 		OPTIONS,
 		COMMANDS,
 		EDITOR,
+		LEVEL,
+		DIFFICULTY,
 		GAMEOVER,
 		WIN,
 		PAUSE,
@@ -84,6 +86,11 @@ private:
 	//joueur
 	int fireRate = 15;
 
+	//Ennemi
+	int pv = 2;
+	int newPvPassif = 2;
+	int newPvAggressif = 2;
+
 	int score;
 	int scoreBonus;
 	int scoreBoss;
@@ -113,8 +120,7 @@ private:
 	const int totalBonus = 9;
 	bool vagueActif;
 	int spawnBonusPhase;
-	int bonusKit = 2;
-	
+	int bonusKit = 100;
 	void initBonus();
 	void initZones();
 	void initBonusState();
@@ -165,6 +171,7 @@ public:
 	void resetGame();
 	
 	Clock tpsTouch;
+	Clock timeCheckCollision;
   
 	//bonus
 
@@ -176,7 +183,29 @@ public:
 	void resetBonus();
 	void activateBonus(Bonus::AllBonus bonusType);
 	void deactivateBonus(Bonus::AllBonus bonusType);
+	//Difficulté
 
+	void easyLevel();
+	void intermediaireLevel();
+	void hardLevel();
+
+	// Editeur
+	void changeHealthPlayerPlus(int hp);
+	void changeHealthPlayerMin(int hp);
+
+	void changeSpeedPlayerPlus(int speed);
+	void changeSpeedPlayerMin(int speed);
+
+	void changeHealthEnnemy1Plus(int hp);
+	void changeHealthEnnemy1Min(int hp);
+
+	void changeHealthEnnemy2Plus(int hp);
+	void changeSpeedEnnemyPlus(int speed);
+	void changeSpeedEnnemyMin(int speed);
+	void changeHealthEnnemy2Min(int hp);
+
+	void activatePhaseBoss();
+	void deactivatePhaseBoss();
 	//lore
 	Text textLore;
 	bool lore = true;
@@ -199,5 +228,6 @@ public:
 	Music victoire;
 
 	int curentlyboom = 0;
+
 };
 

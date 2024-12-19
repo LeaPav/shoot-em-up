@@ -16,7 +16,7 @@ private:
 
 	int hp;
 	int fireRate;
-	int maxHp;
+	int maxHp = 3;
 
 	float speed = 12.f;
 public:
@@ -38,6 +38,7 @@ public:
 	FloatRect getGlobalBounds() const;
 
 	void setHealth(int newHp);
+	void setMaxHealth(int newMaxHp);
 	void setSpeed(float newSpeed);
 	void setRate(int newRate);
 	float getSpeed() const;
