@@ -132,6 +132,22 @@ void Boss::update()
     }
 }
 
+void Boss::setHp(int newHp)
+{
+    if (newHp > maxHp) {
+        hp = maxHp;
+    }
+    else {
+        hp = newHp;
+    }
+}
+
+void Boss::setMaxhp(int newMaxHp)
+{
+    maxHp = newMaxHp;
+    hp = maxHp;
+}
+
 void Boss::reset()
 {
     phase = 1;
@@ -157,6 +173,11 @@ const Vector2f Boss::getPosition() const
 int Boss::getHp()
 {
     return hp;
+}
+
+int Boss::getMaxHp() const
+{
+    return maxHp;
 }
 
 FloatRect Boss::getGlobalBounds() const

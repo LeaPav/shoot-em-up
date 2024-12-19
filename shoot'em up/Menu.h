@@ -2,7 +2,7 @@
 #include <string>
 #include "stdafx.h"
 #include "Player.h"
-#include "Ennemy.h"
+#include "Boss.h"
 
 class Menu
 {
@@ -94,6 +94,9 @@ private:
 	RectangleShape ennemyHealthMin1, ennemyHealthMin2, ennemyHealthMin3;
 
 	RectangleShape activateBossRect;
+	RectangleShape bossHpPlus;
+	RectangleShape bossHpMin;
+	Text renderBossHp;
 	Text activateBossButton;
 	bool bossActivate = false;
 	Text lifePlayer, TextRenderLifePlayer;
@@ -114,7 +117,7 @@ private:
 
 public:
 	Menu();
-	void updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed);
+	void updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed, Boss* boss);
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
 	int handleInputDifficulty(RenderWindow& window, const Event& event);

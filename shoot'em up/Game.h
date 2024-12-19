@@ -199,6 +199,9 @@ public:
 	void changeHealthEnnemy1Plus(int hp);
 	void changeHealthEnnemy1Min(int hp);
 
+	void changeHealthBossPlus(int hp);
+	void changeHealthBoss1Min(int hp);
+
 	void changeHealthEnnemy2Plus(int hp);
 	void changeSpeedEnnemyPlus(int speed);
 	void changeSpeedEnnemyMin(int speed);

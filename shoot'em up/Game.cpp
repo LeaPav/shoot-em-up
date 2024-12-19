@@ -270,6 +270,18 @@ void Game::changeHealthEnnemy1Min(int hp)
 	}
 }
 
+void Game::changeHealthBossPlus(int hp)
+{
+	int newHp = boss->getMaxHp() + hp;
+	boss->setMaxhp(newHp);
+}
+
+void Game::changeHealthBoss1Min(int hp)
+{
+	int newHp = boss->getMaxHp() - hp;
+	boss->setMaxhp(newHp);
+}
+
 void Game::changeHealthEnnemy2Plus(int hp)
 {
 	newPvPassif += hp;
@@ -734,7 +746,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 	}
 	if (currentState == GameState::EDITOR) {
-		mainMenu.updateEditorTexts(player, newPvAggressif, newPvPassif, player->getSpeed());
+		mainMenu.updateEditorTexts(player, newPvAggressif, newPvPassif, player->getSpeed(), boss);
 
 		mainMenu.handleMouseHover(*window);
 		int editorAction = mainMenu.handleInputEditor(*window, event);
@@ -776,6 +788,12 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			deactivatePhaseBoss();
 			break;
 		case 13:
+			changeHealthBossPlus(1);
+			break;
+		case 14:
+			changeHealthBoss1Min(1);
+			break;
+		case 15:
 			currentState = GameState::MENU;
 			break;
 		}
