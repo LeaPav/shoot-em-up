@@ -209,7 +209,7 @@ void Boss::movement(int x, int y)
     }
     else {
         sprite.move(velocity);
-        if (sprite.getPosition().x < 1000 || sprite.getPosition().x  > 1600) {
+        if (sprite.getPosition().x < 600 || sprite.getPosition().x  > 1600) {
             velocity.x = -velocity.x;
         }
         if (sprite.getPosition().y < 0 || sprite.getPosition().y  > 860) {

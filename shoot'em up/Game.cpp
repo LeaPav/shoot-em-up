@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(20)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(30)
 {
 	this->initSprite();
 	this->initTexture();
@@ -119,6 +119,10 @@ void Game::updateBonusZones()
 			fill(bonusActive.begin(), bonusActive.end(), false);
 			Bonus::AllBonus bonusType = zoneBonus.getBonus();
 			activateBonus(bonusType);
+			bonus.clear();
+			vagueActif = true;
+		}
+		if (bonusTime.getElapsedTime().asMilliseconds() > 5000) {
 			bonus.clear();
 			vagueActif = true;
 		}
@@ -668,6 +672,9 @@ void Game::spawnBonus()
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[randBonus2], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[randBonus3], bonusZones[2]);
+	
+	bonusTime.restart();
+	
 }
 /////////////////////////////////////////////////maj du game entity/////////////////////////////////////////////////////
 
@@ -689,17 +696,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	bool peacefull = false;
 	int pv = 1;
 	
-	/*
-	if(scoreBonus>=20){
-	bool vagueActif false
-	phase bonus();
-	scoreBonus=0;
-	}
-	else if(score>=200){
-	phase de boss()
-	}
-
-	*/
+	
 	
 	if (scoreBonus >= spawnBonusPhase) {
 		vagueActif = false;
@@ -709,7 +706,17 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 	}
 
+	
+
 	if (scoreBoss < spawnBoss && vagueActif && lore == false) {
+
+		while (random == 3 && scoreBoss < 20) {
+			random = rand() % 3;
+		}
+		while (random == 2 && scoreBoss < 40) {
+			random = rand() % 2;
+		}
+		
 
 		if (random == 0) {   //pyramide par 3 tir
 
@@ -1043,6 +1050,13 @@ bool Game::checkCollisionsBonus(Player* player, Ennemy* ennemy)
 		return true;
 	}
 	if (bonusActive[Bonus::OffensiveShield]) {
+
+		scoreBonus++;
+		killStreak++;
+		int multiplicateur = 1 + (1 * killStreak);
+		score = score + multiplicateur;
+		scoreBoss++;
+
 		return true;
 	}
 	return false;
@@ -1055,7 +1069,7 @@ void Game::shoot()
 	static int cooldownShoot = 0;
 
 
-	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
+	if (Keyboard::isKeyPressed(Keyboard::Space) && cooldownShoot <= 0) {
 		float TopplayerX = this->player->getPosition().x + 73.f;
 		float TopplayerY = this->player->getPosition().y + 5.f;
 

@@ -160,6 +160,8 @@ public:
   
 	//bonus
 
+	Clock bonusTime;
+
 	void spawnBonus();
 	void renderBonusZones();
 	void updateBonusZones();
