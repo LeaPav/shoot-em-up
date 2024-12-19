@@ -122,7 +122,7 @@ void Game::updateBonusZones()
 			bonus.clear();
 			vagueActif = true;
 		}
-		if (bonusTime.getElapsedTime().asMilliseconds() > 5000) {
+		if (bonusTime.getElapsedTime().asMilliseconds() > 10000) {
 			bonus.clear();
 			vagueActif = true;
 		}
