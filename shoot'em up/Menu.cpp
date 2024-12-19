@@ -3,11 +3,13 @@
 Menu::Menu() : indexButtonSelected(0)
 {
 	initBackground();
+	initLevel();
 	initFont();
 	initButton();
 	initOptionsButton();
 	initCommandsButton();
 	initDifficultyButton();
+	initLevelButton();
 }
 
 /////////////////////////////////////////maj du Game Over/////////////////////////////////////
@@ -34,6 +36,21 @@ int Menu::initBackground() //chargement image
 	background.setTexture(backgroundTexture);
 	optionsBackground.setTexture(optionsTexture);
 }
+
+int Menu::initLevel()
+{
+	/*if (!textureLevel1.loadFromFile("assets/choix level/500_250_niveau_1.png")); {
+		return -1;
+	}*/
+
+	if (!textureLevel2.loadFromFile("assets/choix level/500_250_niveau_2.jpg")); {
+		return -1;
+	}
+	//spriteLevel1.setTexture(textureLevel1);
+	spriteLevel2.setTexture(textureLevel2);
+}
+
+
 
 //////////////////////////////////////////////////bouton//////////////////////////////////////////
 
@@ -99,7 +116,7 @@ void Menu::initOptionsButton()
 	settingsButtonRect.setPosition(705.f, 442.f);
 
 	settingsButton.setFont(this->fontMainMenu);
-	settingsButton.setString("Sons");
+	settingsButton.setString("Son");
 	settingsButton.setCharacterSize(40);
 	settingsButton.setPosition(820.f, 460.f);
 
@@ -201,6 +218,33 @@ void Menu::initDifficultyButton()
 	hardCoreButton.setPosition(840.f, 605.f);
 }
 
+void Menu::initLevelButton()
+{
+	level1Rect.setSize(Vector2f(500.f, 250.f));
+	level1Rect.setPosition(Vector2f(50.f, 400.f));
+
+	level1.setFont(this->fontMainMenu);
+	level1.setString("Niveau 1");
+	level1.setCharacterSize(35);
+	level1.setPosition(200.f, 675.f);
+
+	//level2Rect.setSize(Vector2f(500.f, 250.f));
+	spriteLevel2.setPosition(Vector2f(700.f, 400.f));
+
+	level2.setFont(this->fontMainMenu);
+	level2.setString("Niveau 2");
+	level2.setCharacterSize(35);
+	level2.setPosition(850.f, 675.f);
+
+	level3Rect.setSize(Vector2f(500.f, 250.f));
+	level3Rect.setPosition(Vector2f(1350.f, 400.f));
+
+	level3.setFont(this->fontMainMenu);
+	level3.setString("Niveau 3");
+	level3.setCharacterSize(35);
+	level3.setPosition(1500.f, 675.f);
+}
+
 ///////////////////////////////////////clique souris//////////////////////////////////////////
 
 int Menu::handleInputMainMenu(RenderWindow& window, const Event& event) //changement des etat du jeu 
@@ -288,6 +332,28 @@ int Menu::handleInputDifficulty(RenderWindow& window, const Event& event)
 			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
 				return 4;
+			}
+		}
+	}
+	return 0;
+}
+
+int Menu::handleInputLevel(RenderWindow& window, const Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (level1Rect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (level2Rect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (level3Rect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
 			}
 		}
 	}
@@ -391,6 +457,19 @@ void Menu::renderPauseMenu(RenderWindow& window) //menu pause
 	window.draw(returnToMainMenuButton);
 }
 
+void Menu::renderLevel(RenderWindow& window)
+{
+	window.draw(optionsBackground);
+	window.draw(level1Rect);
+	window.draw(level1);
+
+	window.draw(spriteLevel2);
+	window.draw(level2);
+
+	window.draw(level3Rect);
+	window.draw(level3);
+}
+
 void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramètre menu pause
 {
 
@@ -489,6 +568,12 @@ void Menu::handleMouseHover(const RenderWindow& window)
 		normalButtonRect.setFillColor(Color(165, 191, 208));
 		hardButton.setFillColor(Color::White);
 	}
+	/*if (level1Rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		level1Rect.setFillColor(Color(179, 179, 179));
+	}
+	else {
+		level1Rect.setFillColor(Color::White);
+	}*/
 	if (hardCoreRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
 		hardCoreRect.setFillColor(Color(222, 231, 237));
 		hardCoreButton.setFillColor(Color(165, 191, 208));
@@ -515,6 +600,7 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	else {
 		returnToMainMenuButton.setFillColor(Color::White);
 	}
+
 }
 
 

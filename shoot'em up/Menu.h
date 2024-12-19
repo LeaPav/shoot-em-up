@@ -4,8 +4,6 @@
 
 class Menu
 {
-public:
-
 private:
 	
 	// button mainMenu
@@ -50,8 +48,7 @@ private:
 	Text returnToMainMenuButton;
 	Text pause;
 
-	Sprite background;
-	Sprite optionsBackground;
+	Sprite background, optionsBackground;
 	Texture backgroundTexture;
 	Texture optionsTexture;
 	int indexButtonSelected;
@@ -65,12 +62,30 @@ private:
 	void initOptionsButton();
 	void initCommandsButton();
 	void initDifficultyButton();
+	void initLevelButton();
+
+	// rectangle choix niveau;
+
+	Sprite spriteLevel1, spriteLevel2, spriteLevel3;
+	Texture textureLevel1, textureLevel2, textureLevel3;
+
+	RectangleShape level1Rect;
+	RectangleShape level2Rect;
+	RectangleShape level3Rect;
+
+	int initLevel();
+	
+	Text level1;
+	Text level2;
+	Text level3;
+
 public:
 	Menu();
 
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
 	int handleInputDifficulty(RenderWindow& window, const Event& event);
+	int handleInputLevel(RenderWindow& window, const Event& event);
 	int handleInputPauseMenu(RenderWindow& window, const Event& event);
 
 	void render(RenderWindow& window);
@@ -79,6 +94,7 @@ public:
 	void renderCommands(RenderWindow& window);
 	void renderDifficulty(RenderWindow& window);
 	void renderPauseMenu(RenderWindow& window);
+	void renderLevel(RenderWindow& window);
 	void renderSettingsPauseMenu(RenderWindow& window);
 	void setBackground(const string& backgroundImage);
 	void handleMouseHover(const RenderWindow& window);

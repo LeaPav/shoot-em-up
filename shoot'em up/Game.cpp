@@ -192,6 +192,7 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 
 void Game::easyLevel()
 {
+	//canHaveDamaged = true;
 	player->setMaxHealth(5);
 	pv = 1;
 	newPv = pv;
@@ -199,6 +200,7 @@ void Game::easyLevel()
 
 void Game::intermediaireLevel()
 {
+	//canHaveDamaged = true;
 	player->setMaxHealth(3);
 	pv = 2;
 	newPv = pv;
@@ -206,6 +208,7 @@ void Game::intermediaireLevel()
 
 void Game::hardLevel()
 {
+	//canHaveDamaged = true;
 	player->setMaxHealth(1);
 	pv = 3;
 	newPv = pv;
@@ -404,6 +407,10 @@ void Game::handleMenu() //les etats du jeu
 		mainMenu.handleMouseHover(*window);
 		mainMenu.renderDifficulty(*window);
 	}
+	if (currentState == GameState::LEVEL) {
+		mainMenu.handleMouseHover(*window);
+		mainMenu.renderLevel(*window);
+	}
 }
 
 void Game::handleMenuState(Event& event) // gere les etat du jeu
@@ -413,7 +420,7 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		int action = mainMenu.handleInputMainMenu(*window, event);
 
 		switch (action) {
-		case 1: currentState = GameState::PLAYING;
+		case 1: currentState = GameState::LEVEL;
 			break;
 		case 2: currentState = GameState::OPTIONS;
 			break;
@@ -520,6 +527,15 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			currentState = GameState::OPTIONS;
 			break;
 		case 4: currentState = GameState::OPTIONS;
+			break;
+		}
+	}
+	if (currentState == GameState::LEVEL) {
+		mainMenu.handleMouseHover(*window);
+		int levelAction = mainMenu.handleInputLevel(*window, event);
+		switch(levelAction) {
+		case 1:
+			currentState = GameState::PLAYING;
 			break;
 		}
 	}
@@ -967,7 +983,6 @@ void Game::checkCollisions()
 	}
 	
 	for (auto& ennemy : ennemies) {
-		
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
 			if (checkCollisionsBonus(player, ennemy)) {
@@ -984,6 +999,7 @@ void Game::checkCollisions()
 			canHaveDamaged = true;
 		}
 	}
+
 
 	for (auto& projectile : projectilesBoss) {
 		if (player->getGlobalBounds().intersects(projectile->getGlobalBounds())) {

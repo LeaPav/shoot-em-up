@@ -12,10 +12,6 @@ Player::Player(int rate) : fireRate(rate)   //création joueur
 void Player::initSprite()     //chargement du corps du joueur
 {
 
-	/*recPlayer.setSize(Vector2f(100.f, 100.f));
-	recPlayer.setFillColor(Color::Red);
-	recPlayer.setPosition(10,10);*/
-
 	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
 		cout << "ERREUR";
 	}
@@ -25,7 +21,6 @@ void Player::initSprite()     //chargement du corps du joueur
 	if (!this->vaisseauBouclierOff.loadFromFile("assets/joueur/jouer_proteger_pique.png")) {
 		cout << "Erreur";
 	}
-
 }
 
 void Player::initTexture()   //pose la texture sur le sprite et set up la position
