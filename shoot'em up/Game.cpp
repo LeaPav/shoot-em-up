@@ -621,7 +621,9 @@ void Game::initLore()
 		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.");
 }
 
+void Game::initSong() {
 
+}
 
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
 

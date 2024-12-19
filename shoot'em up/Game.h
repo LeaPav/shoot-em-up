@@ -38,6 +38,7 @@ private:
 	void initWindow();
 	void initScore();
 	void initLore();
+	void initSong();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
 	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
