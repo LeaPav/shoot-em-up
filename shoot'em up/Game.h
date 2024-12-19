@@ -36,6 +36,7 @@ private:
 	void initTexture();
 	void initWindow();
 	void initScore();
+	void initLore();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
 	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
@@ -166,5 +167,8 @@ public:
 	void activateBonus(Bonus::AllBonus bonusType);
 	void deactivateBonus(Bonus::AllBonus bonusType);
 
+	//lore
+	Text textLore;
+	bool lore = true;
 };
 

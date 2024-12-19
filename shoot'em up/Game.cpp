@@ -8,6 +8,7 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(
 	this->initPlayer();
 	this->initBoss();
 	this->initScore();
+	this->initLore();
 	this->initBonus();
 	this->initBonusState();
 	this->initZones();
@@ -204,6 +205,7 @@ void Game::resetBonus()
 	bonusShotCount = 0;
 	bonusShieldDef = 5;
 	canHaveDamaged = true;
+	
 }
 void Game::resetGame()
 {
@@ -221,6 +223,7 @@ void Game::resetGame()
 	killStreak = 0;
 	vagueActif = true;
 	fireRate = 15;
+	lore = true;
 
 	fill(bonusActive.begin(), bonusActive.end(), false);
 
@@ -270,6 +273,7 @@ void Game::renderWin()
 
 void Game::renderNiveau1()
 {
+	
 	this->window->draw(basSens1);
 	this->window->draw(basSens2);
 	this->window->draw(basInvers1);
@@ -278,6 +282,9 @@ void Game::renderNiveau1()
 	this->window->draw(hautSens2);
 	this->window->draw(hautInvers1);
 	this->window->draw(hautInvers2);
+	if (lore == true) {
+		this->window->draw(textLore);
+	}
 }
 
 void Game::entityRender()
@@ -597,6 +604,22 @@ void Game::initScore() //création score
 	textScore.setString("Score: " + to_string(score));
 }
 
+void Game::initLore() 
+{
+	
+		if (!font.loadFromFile("assets/font/menu.ttf")) {
+			cout << "ERREUR";
+		}
+		textLore.setFont(font);
+		textLore.setPosition(250, 100);
+		textLore.setCharacterSize(25);
+		textLore.setFillColor(Color::Black);
+		textLore.setString(u8"En tant que bénévoles de la fédération des défenseurs de l’espace\net pourfendeurs de pirates de l'espace, éliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planète afin de trouver le commandant des pirates de l'espace\n\n\nAprès tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune manière de vivre. Certes, ils sont en proie au danger, mais peut-être qu'ils trouvent leur volonté\nde vivre dans cette méchanceté gratuite qui leur procure leur bonheur au détriment\nd'autrui. Mais qui sommes-nous pour les blâmer après les multiples erreurs qu'a pu commettre\nla Fédération des défenseurs de l’espace, peut-être bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette fédération et ont cherché leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prêts à entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal à sa racine\navant qu'il ne cause plus de dégâts à cette planète de vacances que vous aimez tant.");
+	
+}
+
+
+
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
 
 void Game::initBonus()
@@ -686,7 +709,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 	}
 
-	if (scoreBoss < spawnBoss && vagueActif) {
+	if (scoreBoss < spawnBoss && vagueActif && lore == false) {
 
 		if (random == 0) {   //pyramide par 3 tir
 
@@ -842,7 +865,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 void Game::createProjectilesPlayer(float x, float y)
 {
-
+	lore = false;
 	Projectile* newProjectile = new Projectile(x, y, 15.f, 0.f, Projectile::ProjectileType::PLAYER);
 	projectilesPlayer.push_back(newProjectile);
 

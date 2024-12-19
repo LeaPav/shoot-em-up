@@ -108,7 +108,7 @@ void Menu::initOptionsButton()
 	difficultyButtonRect.setPosition(705.f, 585.f);
 
 	difficultyButton.setFont(this->fontMainMenu);
-	difficultyButton.setString("Difficulté");
+	difficultyButton.setString("Difficulte");
 	difficultyButton.setCharacterSize(40);
 	difficultyButton.setPosition(840.f, 605.f);
 
