@@ -12,6 +12,8 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(
 	this->initBonus();
 	this->initBonusState();
 	this->initZones();
+	this->initSound();
+
 
 }
 
@@ -287,6 +289,10 @@ void Game::renderNiveau1()
 	this->window->draw(hautInvers1);
 	this->window->draw(hautInvers2);
 	if (lore == true) {
+		RectangleShape overlore(Vector2f(1625, 600));
+		overlore.setPosition(225, 75);
+		overlore.setFillColor(Color(0, 0, 0, 125));
+		this->window->draw(overlore);
 		this->window->draw(textLore);
 	}
 }
@@ -618,11 +624,29 @@ void Game::initLore()
 		textLore.setPosition(250, 100);
 		textLore.setCharacterSize(25);
 		textLore.setFillColor(Color::Black);
-		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.");
+		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.\n\n\n                                             appuyez sur espace pour commencer");
 }
 
-void Game::initSong() {
+void Game::initSound() {
 
+	if (!boom.loadFromFile("assets/Son/Bruitage/boom.mp3"))
+		cout << "erreur boom";
+	if (!boomBoss.loadFromFile("assets/Son/Bruitage/boom-Boss.mp3"))
+		cout << "erreur boom boss";
+	if (!looseGame.loadFromFile("assets/Son/Bruitage/loose_game.mp3"))
+		cout << "erreur loose game";
+	if (!projoTirer.loadFromFile("assets/Son/Bruitage/ProjoTirer.mp3"))
+		cout << "erreur projotirer";
+	if (!joueurToucher.loadFromFile("assets/Son/Bruitage/toucher_J.mp3"))
+		cout << "erreur trouvher j";
+
+}
+
+
+void Game::initMusic() {
+
+	if (!menu.openFromFile("music.ogg"))
+		cout << "erreur";
 }
 
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
@@ -699,7 +723,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	
 	
 	
-	if (scoreBonus >= spawnBonusPhase) {
+	if (scoreBonus >= spawnBonusPhase && lore == false) {
 		vagueActif = false;
 		spawnBonus();
 		deactivateBonus(Bonus::Speed);
@@ -710,6 +734,10 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	
 
 	if (scoreBoss < spawnBoss && vagueActif && lore == false) {
+
+
+
+
 
 		while (random == 3 && scoreBoss < 20) {
 			random = rand() % 3;

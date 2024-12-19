@@ -38,7 +38,8 @@ private:
 	void initWindow();
 	void initScore();
 	void initLore();
-	void initSong();
+	void initSound();
+	void initMusic();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
 	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
@@ -111,6 +112,7 @@ private:
 	bool vagueActif;
 	int spawnBonusPhase;
 	int bonusKit = 2;
+	
 	void initBonus();
 	void initZones();
 	void initBonusState();
@@ -174,5 +176,17 @@ public:
 	//lore
 	Text textLore;
 	bool lore = true;
+
+	//sound
+	SoundBuffer boom;
+	SoundBuffer boomBoss;
+	SoundBuffer looseGame;
+	SoundBuffer projoTirer;
+	SoundBuffer joueurToucher;
+
+	Music menu;
+	Music lvl1;
+	Music bosslvl1;
+	Music victoire;
 };
 
