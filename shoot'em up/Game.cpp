@@ -114,7 +114,7 @@ void Game::updateBoss()
 {
 	if (this->boss->canSpawn(scoreBoss, spawnBoss)) {
 		
-
+		lore = false;
 	    if (bosslvl1.getStatus() != bosslvl1.Playing) {
 				bosslvl1.play();
 		}
