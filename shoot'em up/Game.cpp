@@ -195,7 +195,8 @@ void Game::easyLevel()
 	//canHaveDamaged = true;
 	player->setMaxHealth(5);
 	pv = 1;
-	newPv = pv;
+	newPvPassif = pv;
+	newPvAggressif = pv;
 }
 
 void Game::intermediaireLevel()
@@ -203,7 +204,8 @@ void Game::intermediaireLevel()
 	//canHaveDamaged = true;
 	player->setMaxHealth(3);
 	pv = 2;
-	newPv = pv;
+	newPvPassif = pv;
+	newPvAggressif = pv;
 }
 
 void Game::hardLevel()
@@ -211,7 +213,73 @@ void Game::hardLevel()
 	//canHaveDamaged = true;
 	player->setMaxHealth(1);
 	pv = 3;
-	newPv = pv;
+	newPvPassif = pv;
+	newPvAggressif = pv;
+}
+
+void Game::changeHealthPlayerPlus(int hp)
+{
+	int newHp = player->getHealthMax() + hp;
+	player->setMaxHealth(newHp);
+}
+
+void Game::changeHealthPlayerMin(int hp)
+{
+	int newHp = player->getHealthMax() - hp;
+	player->setMaxHealth(newHp);
+
+}
+
+void Game::changeSpeedPlayerPlus(int speed)
+{
+	int newSpeed = player->getSpeed() + speed;
+	player->setSpeed(newSpeed);
+}
+
+void Game::changeSpeedPlayerMin(int speed)
+{
+	int newSpeed = player->getSpeed() - speed;
+	player->setSpeed(newSpeed);
+}
+
+void Game::changeHealthEnnemy1Plus(int hp)
+{
+	newPvAggressif += hp;
+}
+
+void Game::changeHealthEnnemy1Min(int hp)
+{
+	if (newPvAggressif > 1) {
+		newPvAggressif -= hp;
+	}
+}
+
+void Game::changeHealthEnnemy2Plus(int hp)
+{
+	newPvPassif += hp;
+}
+
+void Game::changeSpeedEnnemyPlus(int speed)
+{
+	for (auto& ennemy : ennemies) {
+		int newSpeed = ennemy->getSpeed() + speed;
+		ennemy->setSpeed(newSpeed);
+	}
+}
+
+void Game::changeSpeedEnnemyMin(int speed)
+{
+	for (auto& ennemy : ennemies) {
+		int newSpeed = ennemy->getSpeed() - speed;
+		ennemy->setSpeed(newSpeed);
+	}
+}
+
+void Game::changeHealthEnnemy2Min(int hp)
+{
+	if (newPvPassif > 1) {
+		newPvPassif -= hp;
+	}
 }
 
 const bool Game::windowIsOpen()
@@ -544,9 +612,39 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 	}
 	if (currentState == GameState::EDITOR) {
 		mainMenu.handleMouseHover(*window);
-		int editorAction = mainMenu.handleInputLevel(*window, event);
+		int editorAction = mainMenu.handleInputEditor(*window, event);
 		switch (editorAction) {
-		case 4: 
+		case 1:
+			changeHealthPlayerPlus(1);
+			break;
+		case 2:
+			changeHealthPlayerMin(1);
+			break;
+		case 3:
+			changeSpeedPlayerPlus(1);
+			break;
+		case 4:
+			changeSpeedPlayerMin(1);
+			break;
+		case 5:
+			changeHealthEnnemy1Plus(1);
+			break;
+		case 6:
+			changeHealthEnnemy1Min(1);
+			break;
+		case 7:
+			changeHealthEnnemy2Plus(1);
+			break;
+		case 8:
+			changeHealthEnnemy2Min(1);
+			break;
+		case 9:
+			changeSpeedEnnemyPlus(1);
+			break;
+		case 10:
+			changeSpeedEnnemyMin(1);
+			break;
+		case 11: 
 			currentState = GameState::MENU;
 			break;
 		}
@@ -772,21 +870,21 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 				peacefull = true;
 			}
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, newPv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif, texture
+			Ennemy* newEnnemy1 = new Ennemy(randomType, newPvAggressif, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif, texture
 			newEnnemy1->setPosition(distance, largeur);
 			if (newEnnemy1->destroy()) {
 				delete newEnnemy1;
 			}
 			ennemies.push_back(newEnnemy1);
 
-			Ennemy* newEnnemy2 = new Ennemy(randomType, newPv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy2 = new Ennemy(randomType, newPvAggressif, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 			newEnnemy2->setPosition(distance + 75, largeur + 75);
 			if (newEnnemy2->destroy()) {
 				delete newEnnemy2;
 			}
 			ennemies.push_back(newEnnemy2);
 
-			Ennemy* newEnnemy3 = new Ennemy(randomType, newPv, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy3 = new Ennemy(randomType, newPvAggressif, 10, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 			newEnnemy3->setPosition(distance + 75, largeur - 75);
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
@@ -799,21 +897,21 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 			int largeur = rand() % this->videoMode.height;
 
-			Ennemy* newEnnemy1 = new Ennemy(randomType, newPv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy1 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 			newEnnemy1->setPosition(distance, largeur);
 			if (newEnnemy1->destroy()) {
 				delete newEnnemy1;
 			}
 			ennemies.push_back(newEnnemy1);
 
-			Ennemy* newEnnemy2 = new Ennemy(randomType, newPv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy2 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 			newEnnemy2->setPosition(distance, largeur + 80);
 			if (newEnnemy2->destroy()) {
 				delete newEnnemy2;
 			}
 			ennemies.push_back(newEnnemy2);
 
-			Ennemy* newEnnemy3 = new Ennemy(randomType, newPv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+			Ennemy* newEnnemy3 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 			newEnnemy3->setPosition(distance, largeur - 80);
 			if (newEnnemy3->destroy()) {
 				delete newEnnemy3;
@@ -824,35 +922,35 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 				int largeur = rand() % this->videoMode.height;
 
-				Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy1 = new Ennemy(STRAIGHT, newPvAggressif, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 				newEnnemy1->setPosition(distance, largeur);
 				if (newEnnemy1->destroy()) {
 					delete newEnnemy1;
 				}
 				ennemies.push_back(newEnnemy1);
 
-				Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy2 = new Ennemy(STRAIGHT, newPvAggressif, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 				newEnnemy2->setPosition(distance + 75, largeur + 75);
 				if (newEnnemy2->destroy()) {
 					delete newEnnemy2;
 				}
 				ennemies.push_back(newEnnemy2);
 
-				Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy3 = new Ennemy(STRAIGHT, newPvAggressif, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 				newEnnemy3->setPosition(distance + 75, largeur - 75);
 				if (newEnnemy3->destroy()) {
 					delete newEnnemy3;
 				}
 				ennemies.push_back(newEnnemy3);
 
-				Ennemy* newEnnemy4 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy4 = new Ennemy(STRAIGHT, newPvAggressif, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 				newEnnemy4->setPosition(distance + 150, largeur + 150);
 				if (newEnnemy4->destroy()) {
 					delete newEnnemy4;
 				}
 				ennemies.push_back(newEnnemy4);
 
-				Ennemy* newEnnemy5 = new Ennemy(STRAIGHT, pv, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy5 = new Ennemy(STRAIGHT, newPvAggressif, 0, 90, peacefull); // mouvement, life, cooldown, firerate, passif
 				newEnnemy5->setPosition(distance + 150, largeur - 150);
 				if (newEnnemy5->destroy()) {
 					delete newEnnemy5;
@@ -872,35 +970,35 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 
 				int largeur = rand() % this->videoMode.height;
 
-				Ennemy* newEnnemy1 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy1 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 				newEnnemy1->setPosition(distance, largeur);
 				if (newEnnemy1->destroy()) {
 					delete newEnnemy1;
 				}
 				ennemies.push_back(newEnnemy1);
 
-				Ennemy* newEnnemy2 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy2 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 				newEnnemy2->setPosition(distance, largeur + 80);
 				if (newEnnemy2->destroy()) {
 					delete newEnnemy2;
 				}
 				ennemies.push_back(newEnnemy2);
 
-				Ennemy* newEnnemy3 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy3 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 				newEnnemy3->setPosition(distance, largeur - 80);
 				if (newEnnemy3->destroy()) {
 					delete newEnnemy3;
 				}
 				ennemies.push_back(newEnnemy3);
 
-				Ennemy* newEnnemy4 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy4 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 				newEnnemy4->setPosition(distance, largeur - 160);
 				if (newEnnemy4->destroy()) {
 					delete newEnnemy4;
 				}
 				ennemies.push_back(newEnnemy4);
 
-				Ennemy* newEnnemy5 = new Ennemy(randomType, pv, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
+				Ennemy* newEnnemy5 = new Ennemy(randomType, newPvPassif, 0, 90, true, 2); // mouvement, life, cooldown, firerate, passif
 				newEnnemy5->setPosition(distance, largeur + 160);
 				if (newEnnemy5->destroy()) {
 					delete newEnnemy5;

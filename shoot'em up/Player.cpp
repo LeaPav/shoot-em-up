@@ -126,7 +126,9 @@ void Player::setMaxHealth(int newMaxHp)
 
 void Player::setSpeed(float newSpeed)
 {
-	speed = newSpeed;
+	if (speed > 5) {
+		speed = newSpeed;
+	}
 }
 
 void Player::setRate(int newRate)

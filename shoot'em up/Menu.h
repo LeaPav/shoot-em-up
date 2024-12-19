@@ -50,8 +50,10 @@ private:
 
 	Sprite background, optionsBackground;
 	Sprite spritePlayer, spriteEnnemy1, spriteEnnemy2, spriteBoss;
-	Sprite ennemy1Groupe2, ennemy2Groupe2, ennemy3Groupe2;
-	Sprite ennemy1Groupe1, ennemy2Groupe1, ennemy3Groupe1;
+	Sprite ennemy1Groupe2, ennemy2Groupe2, ennemy3Groupe2, ennemy4Groupe2, 
+		ennemy5Groupe2, ennemy6Groupe2, ennemy7Groupe2, ennemy8Groupe2;
+	Sprite ennemy1Groupe1, ennemy2Groupe1, ennemy3Groupe1, ennemy4Groupe1, ennemy5Groupe1, 
+		ennemy6Groupe1, ennemy7Groupe1, ennemy8Groupe1;
 	Texture player, ennemy1, ennemy2, boss;
 	Texture backgroundTexture;
 	Texture optionsTexture;
@@ -65,6 +67,7 @@ private:
 	void initSpritePlayer();
 	void initSpriteEnnemies();
 	void initSpriteBoss();
+	void initTextureButton();
 	void initButton();
 	void initOptionsButton();
 	void initEditorButton();
@@ -80,7 +83,21 @@ private:
 	RectangleShape level1Rect;
 	RectangleShape level2Rect;
 	RectangleShape level3Rect;
+	
 
+	// Bouton editeur
+	RectangleShape playerHealthPlus1, playerHealthPlus2;
+	RectangleShape playerHealthMin1, playerHealthMin2;
+	RectangleShape ennemyHealthPlus1, ennemyHealthPlus2, ennemyHealthPlus3;
+	RectangleShape ennemyHealthMin1, ennemyHealthMin2, ennemyHealthMin3;
+	Text lifePlayer;
+	Text speedPlayer;
+
+	Text lifeEnnemy1;
+	Text lifeEnnemy2;
+	Text speedEnnemy;
+	
+	Texture playerButtonRight, playerButtonLeft;
 	int initLevel1();
 	int initLevel2();
 	

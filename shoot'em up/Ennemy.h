@@ -47,6 +47,8 @@ public:
 	bool getPassif() const;
 	int getShootRate() const;
 	const Vector2f getPosition() const;
+	void setSpeed(int newSpeed);
+	float getSpeed() const ;
 	bool isDead() ;
 	bool isOutOfScreen;
 	bool destroy();

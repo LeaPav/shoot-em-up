@@ -78,6 +78,18 @@ const Vector2f Ennemy::getPosition() const
 	return this->sprite.getPosition();
 }
 
+void Ennemy::setSpeed(int newSpeed)
+{
+	if (speed > 1) {
+		speed = newSpeed;
+	}
+}
+
+float Ennemy::getSpeed() const
+{
+	return speed;
+}
+
 FloatRect Ennemy::getGlobalBounds() const
 {
 	return this->sprite.getGlobalBounds();

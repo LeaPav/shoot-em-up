@@ -8,6 +8,8 @@ Menu::Menu() : indexButtonSelected(0)
 	initSpritePlayer();
 	initSpriteEnnemies();
 	initSpriteBoss();
+	initTextureButton();
+	initEditorButton();
 	initFont();
 	initButton();
 	initOptionsButton();
@@ -66,22 +68,53 @@ void Menu::initSpriteEnnemies()
 	spriteEnnemy2.setPosition(Vector2f(120.f, 480.f));
 
 	ennemy1Groupe1.setTexture(ennemy1);
-	ennemy1Groupe1.setPosition(Vector2f(1600.f, 325.f));
+	ennemy1Groupe1.setPosition(Vector2f(1200.f, 325.f));
 
 	ennemy2Groupe1.setTexture(ennemy1);
-	ennemy2Groupe1.setPosition(Vector2f(1675.f, 250.f));
+	ennemy2Groupe1.setPosition(Vector2f(1275.f, 250.f));
 
 	ennemy3Groupe1.setTexture(ennemy1);
-	ennemy3Groupe1.setPosition(Vector2f(1675.f, 400.f));
+	ennemy3Groupe1.setPosition(Vector2f(1275.f, 400.f));
 
 	ennemy1Groupe2.setTexture(ennemy2);
 	ennemy1Groupe2.setPosition(Vector2f(1750.f, 10.f));
 
 	ennemy2Groupe2.setTexture(ennemy2);
-	ennemy2Groupe2.setPosition(Vector2f(1750.f, 90.f));
+	ennemy2Groupe2.setPosition(Vector2f(1750.f, 85.f));
 
 	ennemy3Groupe2.setTexture(ennemy2);
-	ennemy3Groupe2.setPosition(Vector2f(1750.f, 170.f));
+	ennemy3Groupe2.setPosition(Vector2f(1750.f, 160.f));
+
+	ennemy4Groupe2.setTexture(ennemy2);
+	ennemy4Groupe2.setPosition(Vector2f(1750.f, 450.f));
+
+	ennemy5Groupe2.setTexture(ennemy2);
+	ennemy5Groupe2.setPosition(Vector2f(1750.f, 525.f));
+
+	ennemy6Groupe2.setTexture(ennemy2);
+	ennemy6Groupe2.setPosition(Vector2f(1750.f, 600.f));
+
+	ennemy7Groupe2.setTexture(ennemy2);
+	ennemy7Groupe2.setPosition(Vector2f(1750.f, 675.f));
+
+	ennemy8Groupe2.setTexture(ennemy2);
+	ennemy8Groupe2.setPosition(Vector2f(1750.f, 750.f));
+
+	ennemy4Groupe1.setTexture(ennemy1);
+	ennemy4Groupe1.setPosition(Vector2f(1200.f, 800.f));
+
+	ennemy5Groupe1.setTexture(ennemy1);
+	ennemy5Groupe1.setPosition(Vector2f(1275.f, 715.f));
+
+	ennemy6Groupe1.setTexture(ennemy1);
+	ennemy6Groupe1.setPosition(Vector2f(1275.f, 875.f));
+
+	ennemy7Groupe1.setTexture(ennemy1);
+	ennemy7Groupe1.setPosition(Vector2f(1350.f, 650.f));
+
+	ennemy8Groupe1.setTexture(ennemy1);
+	ennemy8Groupe1.setPosition(Vector2f(1350.f, 950.f));
+
 }
 
 void Menu::initSpriteBoss()
@@ -91,6 +124,18 @@ void Menu::initSpriteBoss()
 	}
 	spriteBoss.setTexture(boss);
 	spriteBoss.setPosition(Vector2f(100.f, 700.f));
+}
+
+void Menu::initTextureButton()
+{
+	if (!playerButtonRight.loadFromFile("assets/menu/fleche_droite.png")) {
+		cout << "Erreur";
+	}
+
+	if (!playerButtonLeft.loadFromFile("assets/menu/fleche_gauche.png")) {
+		cout << "Erreur";
+	}
+
 }
 
 int Menu::initLevel1()
@@ -240,7 +285,70 @@ void Menu::initOptionsButton()
 
 void Menu::initEditorButton()
 {
+	lifePlayer.setFont(this->fontMainMenu);
+	lifePlayer.setCharacterSize(22);
+	lifePlayer.setString("Vie");
+	lifePlayer.setPosition(300.f, 55.f);
 
+	speedPlayer.setFont(this->fontMainMenu);
+	speedPlayer.setCharacterSize(22);
+	speedPlayer.setString("Vitesse");
+	speedPlayer.setPosition(280.f, 145.f);
+
+	lifeEnnemy1.setFont(this->fontMainMenu);
+	lifeEnnemy1.setCharacterSize(22);
+	lifeEnnemy1.setString("Vie");
+	lifeEnnemy1.setPosition(300.f, 370.f);
+
+	speedEnnemy.setFont(this->fontMainMenu);
+	speedEnnemy.setCharacterSize(22);
+	speedEnnemy.setString("Vitesse");
+	speedEnnemy.setPosition(280.f, 430.f);
+
+	lifeEnnemy2.setFont(this->fontMainMenu);
+	lifeEnnemy2.setCharacterSize(22);
+	lifeEnnemy2.setString("Vie");
+	lifeEnnemy2.setPosition(300.f, 500.f);
+
+	playerHealthPlus1.setSize(Vector2f(25.f, 25.f));
+	playerHealthPlus1.setPosition(700.f, 60.f);
+	playerHealthPlus1.setTexture(&playerButtonRight);
+
+	playerHealthPlus2.setSize(Vector2f(25.f, 25.f));
+	playerHealthPlus2.setPosition(700.f, 150.f);
+	playerHealthPlus2.setTexture(&playerButtonRight);
+
+	playerHealthMin1.setSize(Vector2f(25.f, 25.f));
+	playerHealthMin1.setPosition(400.f, 60.f);
+	playerHealthMin1.setTexture(&playerButtonLeft);
+
+	playerHealthMin2.setSize(Vector2f(25.f, 25.f));
+	playerHealthMin2.setPosition(400.f, 150.f);
+	playerHealthMin2.setTexture(&playerButtonLeft);
+
+	ennemyHealthPlus1.setSize(Vector2f(25.f, 25.f));
+	ennemyHealthPlus1.setPosition(700.f, 365.f);
+	ennemyHealthPlus1.setTexture(&playerButtonRight);
+
+	ennemyHealthPlus2.setSize(Vector2f(25.f, 25.f));
+	ennemyHealthPlus2.setPosition(700.f, 500.f);
+	ennemyHealthPlus2.setTexture(&playerButtonRight);
+
+	ennemyHealthPlus3.setSize(Vector2f(25.f, 25.f));
+	ennemyHealthPlus3.setPosition(700.f, 430.f);
+	ennemyHealthPlus3.setTexture(&playerButtonRight);
+
+	ennemyHealthMin1.setSize(Vector2f(25.f, 25.f));
+	ennemyHealthMin1.setPosition(400.f, 365.f);
+	ennemyHealthMin1.setTexture(&playerButtonLeft);
+
+	ennemyHealthMin2.setSize(Vector2f(25.f, 25.f));
+	ennemyHealthMin2.setPosition(400.f, 500.f);
+	ennemyHealthMin2.setTexture(&playerButtonLeft);
+
+	ennemyHealthMin3.setSize(Vector2f(25.f, 25.f));
+	ennemyHealthMin3.setPosition(400.f, 430.f);
+	ennemyHealthMin3.setTexture(&playerButtonLeft);
 }
 
 
@@ -422,9 +530,49 @@ int Menu::handleInputEditor(RenderWindow& window, const Event& event)
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
 		if (!isCooldownActive()) {
 			Vector2i mousePos = Mouse::getPosition(window);
-			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			if (playerHealthPlus1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 1;
+			}
+			if (playerHealthMin1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 2;
+			}
+			if (playerHealthPlus2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 3;
+			}
+			if (playerHealthMin2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
 				return 4;
+			}
+			if (ennemyHealthPlus1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 5;
+			}
+			if (ennemyHealthMin1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 6;
+			}
+			if (ennemyHealthPlus2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 7;
+			}
+			if (ennemyHealthMin2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 8;
+			}
+			if (ennemyHealthPlus3.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 9;
+			}
+			if (ennemyHealthMin3.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 10;
+			}
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 11;
 			}
 		}
 	}
@@ -520,14 +668,44 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 	window.draw(ennemy1Groupe2);
 	window.draw(ennemy2Groupe2);
 	window.draw(ennemy3Groupe2);
+	window.draw(ennemy4Groupe2);
+	window.draw(ennemy5Groupe2);
+	window.draw(ennemy6Groupe2);
+	window.draw(ennemy7Groupe2);
+	window.draw(ennemy8Groupe2);
+
 	window.draw(ennemy1Groupe1);
 	window.draw(ennemy2Groupe1);
 	window.draw(ennemy3Groupe1);
+	window.draw(ennemy4Groupe1);
+	window.draw(ennemy5Groupe1);
+	window.draw(ennemy6Groupe1);
+	window.draw(ennemy7Groupe1);
+	window.draw(ennemy8Groupe1);
 	
 	window.draw(spriteBoss);
 	window.draw(returnButtonRect);
 	window.draw(returnButton);
 
+	window.draw(playerHealthPlus1);
+	window.draw(playerHealthMin1);
+
+	window.draw(playerHealthPlus2);
+	window.draw(playerHealthMin2);
+
+	window.draw(ennemyHealthPlus1);
+	window.draw(ennemyHealthMin1);
+	window.draw(ennemyHealthPlus2);
+	window.draw(ennemyHealthMin2);
+	window.draw(ennemyHealthPlus3);
+	window.draw(ennemyHealthMin3);
+
+	//affichage du text
+	window.draw(lifePlayer);
+	window.draw(speedPlayer);
+	window.draw(speedEnnemy);
+	window.draw(lifeEnnemy1);
+	window.draw(lifeEnnemy2);
 }
 
 void Menu::renderCommands(RenderWindow& window) // menu commande
@@ -726,6 +904,66 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	}
 	else {
 		returnToMainMenuButton.setFillColor(Color::White);
+	}
+	if (playerHealthMin1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		playerHealthMin1.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		playerHealthMin1.setFillColor(Color::White);
+	}
+	if (playerHealthMin2.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		playerHealthMin2.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		playerHealthMin2.setFillColor(Color::White);
+	}
+	if (playerHealthPlus1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		playerHealthPlus1.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		playerHealthPlus1.setFillColor(Color::White);
+	}
+	if (playerHealthPlus2.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		playerHealthPlus2.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		playerHealthPlus2.setFillColor(Color::White);
+	}
+	if (ennemyHealthPlus1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		ennemyHealthPlus1.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		ennemyHealthPlus1.setFillColor(Color::White);
+	}
+	if (ennemyHealthPlus2.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		ennemyHealthPlus2.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		ennemyHealthPlus2.setFillColor(Color::White);
+	}
+	if (ennemyHealthPlus3.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		ennemyHealthPlus3.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		ennemyHealthPlus3.setFillColor(Color::White);
+	}
+	if (ennemyHealthMin1.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		ennemyHealthMin1.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		ennemyHealthMin1.setFillColor(Color::White);
+	}
+	if (ennemyHealthMin2.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		ennemyHealthMin2.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		ennemyHealthMin2.setFillColor(Color::White);
+	}
+	if (ennemyHealthMin3.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		ennemyHealthMin3.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		ennemyHealthMin3.setFillColor(Color::White);
 	}
 
 }
