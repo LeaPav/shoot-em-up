@@ -114,7 +114,7 @@ private:
 	const int totalBonus = 9;
 	bool vagueActif;
 	int spawnBonusPhase;
-	int bonusKit = 2;
+	int bonusKit = 100;
 	void initBonus();
 	void initZones();
 	void initBonusState();
@@ -195,5 +195,7 @@ public:
 	void changeSpeedEnnemyMin(int speed);
 	void changeHealthEnnemy2Min(int hp);
 
+	void activatePhaseBoss();
+	void deactivatePhaseBoss();
 };
 

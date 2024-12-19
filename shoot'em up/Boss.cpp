@@ -38,7 +38,6 @@ void Boss::initSprite()
         cout << "Erreur";
     }
 
-
     if (!this->robot1.loadFromFile("assets/boss/droide_du_haut.png")) {
         cout << "Erreur";
     }

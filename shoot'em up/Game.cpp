@@ -140,9 +140,6 @@ void Game::activateBonus(Bonus::AllBonus bonusType)
 	case Bonus::TripleShootingDiag:
 		fireRate = 15;
 		break;
-	case Bonus::Laser:
-		fireRate = 1;
-		break;
 	case Bonus::Shield:
 		if (bonusActive[Bonus::OffensiveShield]) {
 			deactivateBonus(Bonus::OffensiveShield);
@@ -172,10 +169,6 @@ void Game::deactivateBonus(Bonus::AllBonus bonusType)
 
 	bonusActive[bonusType] = false;
 	switch (bonusType) {
-	case Bonus::Laser:
-		bonusShotCount = 0;
-		fireRate = 15;
-		break;
 	case Bonus::Shield:
 		this->player->resetSprite();
 		canHaveDamaged = false;
@@ -279,6 +272,22 @@ void Game::changeHealthEnnemy2Min(int hp)
 {
 	if (newPvPassif > 1) {
 		newPvPassif -= hp;
+	}
+}
+
+void Game::activatePhaseBoss()
+{
+	if (vagueActif && scoreBoss < spawnBoss) {
+		scoreBoss = spawnBoss;
+		vagueActif = false;
+	}
+}
+
+void Game::deactivatePhaseBoss()
+{
+	if (!vagueActif) {
+		scoreBoss = 0;
+		vagueActif = true;
 	}
 }
 
@@ -611,6 +620,8 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		}
 	}
 	if (currentState == GameState::EDITOR) {
+		mainMenu.updateEditorTexts(player, newPvAggressif, newPvPassif, player->getSpeed());
+
 		mainMenu.handleMouseHover(*window);
 		int editorAction = mainMenu.handleInputEditor(*window, event);
 		switch (editorAction) {
@@ -645,6 +656,12 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			changeSpeedEnnemyMin(1);
 			break;
 		case 11: 
+			activatePhaseBoss();
+			break;
+		case 12:
+			deactivatePhaseBoss();
+			break;
+		case 13:
 			currentState = GameState::MENU;
 			break;
 		}
@@ -777,7 +794,6 @@ void Game::initBonus()
 	bonusTexture[Bonus::DoubleShooting].loadFromFile("assets/bonus/bonus_2_projo.png");
 	bonusTexture[Bonus::TripleShooting].loadFromFile("assets/bonus/bonus_3_tir.png");
 	bonusTexture[Bonus::TripleShootingDiag].loadFromFile("assets/bonus/bonus_3_diag.png");
-	bonusTexture[Bonus::Laser].loadFromFile("assets/bonus/bonus_gros_projo.png");
 	bonusTexture[Bonus::Shield].loadFromFile("assets/bonus/bonus_protection.png");
 	bonusTexture[Bonus::HealthKit].loadFromFile("assets/bonus/bonus_soin.png");
 	bonusTexture[Bonus::SlowEnnemyProjectiles].loadFromFile("assets/bonus/bonus_anti-speed.png");
@@ -804,15 +820,15 @@ void Game::spawnBonus()
 	srand(time(0));
 	bonusZones.clear();
 
-	int randBonus1 = rand() % 9;
-	int randBonus2 = rand() % 9;
-	int randBonus3 = rand() % 9;
+	int randBonus1 = rand() % 8;
+	int randBonus2 = rand() % 8;
+	int randBonus3 = rand() % 8;
 
 	while (randBonus1 == randBonus2) {
-		randBonus2 = rand() % 9;
+		randBonus2 = rand() % 8;
 	}
 	while (randBonus1 == randBonus3 || randBonus2 == randBonus3) {
-		randBonus3 = rand() % 9;
+		randBonus3 = rand() % 8;
 	}
 
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[randBonus1], bonusZones[0]);
@@ -1244,14 +1260,6 @@ void Game::shoot()
 		else if (bonusActive[Bonus::DoubleShooting]) {
 			createProjectilesPlayer(TopplayerX, TopplayerY);
 			createProjectilesPlayer(LowplayerX, LowplayerY);
-		}
-		else if (bonusActive[Bonus::Laser]) {
-			createProjectilesPlayer(MidplayerX, MidplayerY);
-			bonusShotCount++;
-			if (bonusShotCount >= 500) {
-				deactivateBonus(Bonus::Laser);
-				bonusShotCount = 0;
-			}
 		}
 		else if (bonusActive[Bonus::TripleShootingDiag]) {
 			createProjectilesPlayer(MidplayerX, MidplayerY);

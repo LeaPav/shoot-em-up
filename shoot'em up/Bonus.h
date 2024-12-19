@@ -7,7 +7,6 @@ public:
 		DoubleShooting,
 		TripleShooting,
 		TripleShootingDiag,
-		Laser,
 		Shield,
 		HealthKit,
 		SlowEnnemyProjectiles,

@@ -18,6 +18,15 @@ Menu::Menu() : indexButtonSelected(0)
 	initLevelButton();
 }
 
+void Menu::updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed)
+{
+	
+	TextRenderLifePlayer.setString(to_string(player->getHealthMax()));
+	TextRenderSpeedPlayer.setString(to_string(player->getSpeed()));
+	TextRenderLifeEnemy1.setString(to_string(newPvAggressif));
+	TextRenderLifeEnemy2.setString(to_string(newPvPassif));
+}
+
 /////////////////////////////////////////maj du Game Over/////////////////////////////////////
 
 int Menu::initFont() //chargement font
@@ -289,6 +298,35 @@ void Menu::initEditorButton()
 	lifePlayer.setCharacterSize(22);
 	lifePlayer.setString("Vie");
 	lifePlayer.setPosition(300.f, 55.f);
+
+	lifePlayer.setFont(this->fontMainMenu);
+	lifePlayer.setCharacterSize(22);
+	lifePlayer.setString("Vie");
+	lifePlayer.setPosition(300.f, 55.f);
+
+	TextRenderLifePlayer.setFont(this->fontMainMenu);
+	TextRenderLifePlayer.setCharacterSize(30);
+	TextRenderLifePlayer.setPosition(550.f, 55.f);
+
+	TextRenderSpeedPlayer.setFont(this->fontMainMenu);
+	TextRenderSpeedPlayer.setCharacterSize(30);
+	TextRenderSpeedPlayer.setPosition(470.f, 140.f);
+
+	activateBossRect.setSize(Vector2f(25.f, 25.f));
+	activateBossRect.setPosition(450, 700);
+
+	activateBossButton.setFont(this->fontMainMenu);
+	activateBossButton.setCharacterSize(22);
+	activateBossButton.setString("Activer la phase du boss");
+	activateBossButton.setPosition(500.f, 700.f);
+
+	TextRenderLifeEnemy1.setFont(this->fontMainMenu);
+	TextRenderLifeEnemy1.setCharacterSize(30);
+	TextRenderLifeEnemy1.setPosition(550.f, 360.f);
+
+	TextRenderLifeEnemy2.setFont(this->fontMainMenu);
+	TextRenderLifeEnemy2.setCharacterSize(30);
+	TextRenderLifeEnemy2.setPosition(550.f, 490.f);
 
 	speedPlayer.setFont(this->fontMainMenu);
 	speedPlayer.setCharacterSize(22);
@@ -570,9 +608,18 @@ int Menu::handleInputEditor(RenderWindow& window, const Event& event)
 				resetCooldown();
 				return 10;
 			}
+			if (activateBossRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				bossActivate = !bossActivate;
+				if (bossActivate) {
+					return 11;
+				}
+				else {
+					return 12;
+				}
+			}
 			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
-				return 11;
+				return 13;
 			}
 		}
 	}
@@ -661,6 +708,12 @@ void Menu::renderOptions(RenderWindow& window) // menu option
 
 void Menu::renderEditor(RenderWindow& window) // menu éditeur
 {
+	if (bossActivate) {
+		activateBossRect.setFillColor(Color::Green);
+	}
+	else {
+		activateBossRect.setFillColor(Color::Red);
+	}
 	window.draw(optionsBackground);
 	window.draw(spritePlayer);
 	window.draw(spriteEnnemy1);
@@ -702,6 +755,13 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 
 	//affichage du text
 	window.draw(lifePlayer);
+	window.draw(TextRenderLifePlayer);
+	window.draw(TextRenderSpeedPlayer);
+
+	window.draw(activateBossButton);
+	window.draw(activateBossRect);
+	window.draw(TextRenderLifeEnemy1);
+	window.draw(TextRenderLifeEnemy2);
 	window.draw(speedPlayer);
 	window.draw(speedEnnemy);
 	window.draw(lifeEnnemy1);

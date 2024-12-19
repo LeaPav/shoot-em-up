@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include "stdafx.h"
+#include "Player.h"
+#include "Ennemy.h"
 
 class Menu
 {
@@ -90,11 +92,15 @@ private:
 	RectangleShape playerHealthMin1, playerHealthMin2;
 	RectangleShape ennemyHealthPlus1, ennemyHealthPlus2, ennemyHealthPlus3;
 	RectangleShape ennemyHealthMin1, ennemyHealthMin2, ennemyHealthMin3;
-	Text lifePlayer;
-	Text speedPlayer;
 
-	Text lifeEnnemy1;
-	Text lifeEnnemy2;
+	RectangleShape activateBossRect;
+	Text activateBossButton;
+	bool bossActivate = false;
+	Text lifePlayer, TextRenderLifePlayer;
+	Text speedPlayer, TextRenderSpeedPlayer;
+
+	Text lifeEnnemy1, TextRenderLifeEnemy1;
+	Text lifeEnnemy2, TextRenderLifeEnemy2;
 	Text speedEnnemy;
 	
 	Texture playerButtonRight, playerButtonLeft;
@@ -104,10 +110,11 @@ private:
 	Text level1;
 	Text level2;
 	Text level3;
+	Player player1;
 
 public:
 	Menu();
-
+	void updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed);
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
 	int handleInputDifficulty(RenderWindow& window, const Event& event);
