@@ -12,9 +12,7 @@ Player::Player(int rate) : fireRate(rate)   //création joueur
 void Player::initSprite()     //chargement du corps du joueur
 {
 
-	/*recPlayer.setSize(Vector2f(100.f, 100.f));
-	recPlayer.setFillColor(Color::Red);
-	recPlayer.setPosition(10,10);*/
+	
 
 	if (!this->vaisseau.loadFromFile("assets/vaisseau_5.png")) {
 		cout << "ERREUR";
@@ -49,7 +47,7 @@ void Player::playerUpdate()
 
 void Player::initHealthBar()   // santé et barre de vie
 {
-	this->maxHp = 5;
+	this->maxHp = 500;
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));
 	this->healthBar.setFillColor(Color(102, 255, 102));

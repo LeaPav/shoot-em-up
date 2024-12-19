@@ -20,7 +20,9 @@ public:
 		GAMEOVER,
 		WIN,
 		PAUSE,
-		PLAYING
+		PLAYING,
+		SETTINGS,
+		PAUSESETTINGS
 	};
 private:
 	RenderWindow* window;
@@ -38,7 +40,8 @@ private:
 	void initWindow();
 	void initScore();
 	void initLore();
-	void initSong();
+	void initSound();
+	void initMusic();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
 	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
@@ -111,6 +114,7 @@ private:
 	bool vagueActif;
 	int spawnBonusPhase;
 	int bonusKit = 2;
+	
 	void initBonus();
 	void initZones();
 	void initBonusState();
@@ -141,10 +145,12 @@ public:
 	void handleMenuState(Event& event);
 	void handleMenu();
 	void renderMenuPause();
+	void renderSettingsPause();
 
 	//Game over
 	void renderGameOver();
 	void renderWin();
+	int curentlyLoose = 0;
 	//boss
 	void renderBoss();
 	void updateBoss();
@@ -174,5 +180,24 @@ public:
 	//lore
 	Text textLore;
 	bool lore = true;
+
+	//sound
+	SoundBuffer boom;
+	SoundBuffer looseGame;
+	SoundBuffer projoTirer;
+	SoundBuffer joueurToucher;
+
+	Sound boomSound;
+	Sound looseGameSound;
+	Sound projoTirerSound;
+	Sound joueurToucherSound;
+
+
+	Music menu;
+	Music lvl1;
+	Music bosslvl1;
+	Music victoire;
+
+	int curentlyboom = 0;
 };
 

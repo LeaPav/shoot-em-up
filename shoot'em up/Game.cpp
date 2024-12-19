@@ -12,6 +12,9 @@ Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(
 	this->initBonus();
 	this->initBonusState();
 	this->initZones();
+	this->initSound();
+	this->initMusic();
+
 
 }
 
@@ -44,6 +47,9 @@ void Game::update()
 			else if (currentState == GameState::PAUSE) {
 				isPaused = false;
 				currentState = GameState::PLAYING;
+			}
+			else if (currentState == GameState::PAUSESETTINGS) {
+				currentState = GameState::PAUSE;
 			}
 		}
 
@@ -107,6 +113,18 @@ void Game::ennemyUpdate()
 void Game::updateBoss()
 {
 	if (this->boss->canSpawn(scoreBoss, spawnBoss)) {
+		
+
+	    if (bosslvl1.getStatus() != bosslvl1.Playing) {
+				bosslvl1.play();
+		}
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+
+		}
+
+
 		this->boss->update();
 		this->boss->udpateHealthBar();
 		this->shootingBoss();
@@ -228,6 +246,7 @@ void Game::resetGame()
 	vagueActif = true;
 	fireRate = 15;
 	lore = true;
+	curentlyLoose = 0;
 
 	fill(bonusActive.begin(), bonusActive.end(), false);
 
@@ -256,6 +275,15 @@ void Game::renderMenuPause()
 
 }
 
+void Game::renderSettingsPause()
+{
+
+	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlay.setFillColor(Color(0, 0, 0, 125));
+	this->window->draw(overlay);
+	mainMenu.renderSettingsPauseMenu(*window);
+}
+
 void Game::renderGameOver()
 {
 	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
@@ -277,7 +305,14 @@ void Game::renderWin()
 
 void Game::renderNiveau1()
 {
-	
+	if (lvl1.getStatus() != lvl1.Playing && scoreBoss <= spawnBoss) {
+		lvl1.play();
+	}
+	if (menu.getStatus() == menu.Playing) {
+		menu.stop();
+		menu.pause();
+
+	}
 	this->window->draw(basSens1);
 	this->window->draw(basSens2);
 	this->window->draw(basInvers1);
@@ -287,6 +322,10 @@ void Game::renderNiveau1()
 	this->window->draw(hautInvers1);
 	this->window->draw(hautInvers2);
 	if (lore == true) {
+		RectangleShape overlore(Vector2f(1625, 600));
+		overlore.setPosition(225, 75);
+		overlore.setFillColor(Color(0, 0, 0, 125));
+		this->window->draw(overlore);
 		this->window->draw(textLore);
 	}
 }
@@ -371,6 +410,21 @@ void Game::handleMenu() //les etats du jeu
 		mainMenu.renderCommands(*window);
 	}
 	if (currentState == GameState::GAMEOVER) {
+		
+
+		if (looseGameSound.getStatus() != looseGameSound.Playing && curentlyLoose < 1) {
+			looseGameSound.play();
+			curentlyLoose += 1;
+		}
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+		}
+		if (bosslvl1.getStatus() == bosslvl1.Playing) {
+			bosslvl1.stop();
+			bosslvl1.pause();
+		}
+
 		gameOver.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
@@ -381,6 +435,19 @@ void Game::handleMenu() //les etats du jeu
 		this->renderGameOver();
 	}
 	if (currentState == GameState::WIN) {
+
+		if (victoire.getStatus() != victoire.Playing) {
+			victoire.play();
+		}
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+		}
+		if (bosslvl1.getStatus() == bosslvl1.Playing) {
+			bosslvl1.stop();
+			bosslvl1.pause();
+		}
+
 		win.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
@@ -390,11 +457,41 @@ void Game::handleMenu() //les etats du jeu
 		this->window->draw(textScore);
 		this->renderWin();
 	}
+	if (currentState == GameState::SETTINGS) {
+		mainMenu.handleMouseHover(*window);
+		mainMenu.renderSettingsMenu(*window);
+	}
+	if (currentState == GameState::PAUSESETTINGS) {
+		mainMenu.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->renderBoss();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderSettingsPause();
+	}
 }
 
 void Game::handleMenuState(Event& event) // gere les etat du jeu
 {
 	if (currentState == GameState::MENU) {
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+		}
+		if (looseGameSound.getStatus() == looseGameSound.Playing) {
+			looseGameSound.stop();
+			looseGameSound.pause();
+		}
+		if (victoire.getStatus() == victoire.Playing) {
+			victoire.stop();
+			victoire.pause();
+		}
+		if (menu.getStatus() != menu.Playing) {
+			menu.play();
+			menu.setPlayingOffset(sf::seconds(60));
+		}
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
 		
@@ -429,6 +526,8 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		switch (mouseAction) {
 		case 1:
 			currentState = GameState::PLAYING;
+			break;
+		case 2: currentState = GameState::PAUSESETTINGS;
 			break;
 		case 3: currentState = GameState::MENU;
 			resetGame();
@@ -474,6 +573,9 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		switch (optionsAction) {
 		case 1: currentState = GameState::COMMANDS;
 			break;
+		case 2: 
+			currentState = GameState::SETTINGS;
+			break;
 		case 4: currentState = GameState::MENU;
 			break;
 		}
@@ -484,6 +586,15 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 
 		switch (actionCommands) {
 		case 4: currentState = GameState::OPTIONS;
+			break;
+		}
+	}
+	if (currentState == GameState::SETTINGS) {
+		mainMenu.handleMouseHover(*window);
+		int settingsAction = mainMenu.handleInputSettingsMenu(*window, event);
+
+		switch (settingsAction) {
+		case 6: currentState = GameState::OPTIONS;
 			break;
 		}
 	}
@@ -618,11 +729,37 @@ void Game::initLore()
 		textLore.setPosition(250, 100);
 		textLore.setCharacterSize(25);
 		textLore.setFillColor(Color::Black);
-		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.");
+		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.\n\n\n                                             appuyez sur espace pour commencer");
 }
 
-void Game::initSong() {
+void Game::initSound() {  //bruitage
 
+	if (!boom.loadFromFile("assets/Son/Bruitage/boom.mp3"))
+		cout << "erreur boom";
+	if (!looseGame.loadFromFile("assets/Son/Bruitage/loose_game.mp3"))
+		cout << "erreur loose game";
+	if (!projoTirer.loadFromFile("assets/Son/Bruitage/ProjoTirer.mp3"))
+		cout << "erreur projotirer";
+	if (!joueurToucher.loadFromFile("assets/Son/Bruitage/toucher_J.mp3"))
+		cout << "erreur trouvher j";
+
+	boomSound.setBuffer(boom);
+	looseGameSound.setBuffer(looseGame);
+	projoTirerSound.setBuffer(projoTirer);
+	joueurToucherSound.setBuffer(joueurToucher);
+}
+
+
+void Game::initMusic() { //musique
+
+	if (!menu.openFromFile("assets/Son/Musique/son menu.mp3"))
+		cout << "erreur menu";
+	if (!lvl1.openFromFile("assets/Son/Musique/Level1Sing.mp3"))
+		cout << "erreur lvl1";
+	if (!bosslvl1.openFromFile("assets/Son/Musique/BoosFight.mp3"))
+		cout << "erreur boss lvl1";
+	if (!victoire.openFromFile("assets/Son/Musique/Victory.mp3"))
+		cout << "erreur victoire";
 }
 
 ////////////////////////////////////////////////Initialisation bonus////////////////////////////////////////////////////
@@ -699,7 +836,7 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	
 	
 	
-	if (scoreBonus >= spawnBonusPhase) {
+	if (scoreBonus >= spawnBonusPhase && lore == false) {
 		vagueActif = false;
 		spawnBonus();
 		deactivateBonus(Bonus::Speed);
@@ -710,6 +847,10 @@ void Game::createEnnemy() //créateur des ennemies + vagues
 	
 
 	if (scoreBoss < spawnBoss && vagueActif && lore == false) {
+
+
+
+
 
 		while (random == 3 && scoreBoss < 20) {
 			random = rand() % 3;
@@ -909,6 +1050,7 @@ void Game::checkCollisions()
 			if (projectile->getGlobalBounds().intersects(ennemy->getGlobalBounds()) && ennemy->verifSpawnEnnemy()) {	
 				ennemy->damage(1);
 				projectile->markAsOutOfScreen();
+				curentlyboom = 0;
 
 				if (ennemy->isDead()) {
 
@@ -919,6 +1061,12 @@ void Game::checkCollisions()
 					scoreBoss++;
 					
 					textScore.setString("Score: " + to_string(score));
+
+					if (boomSound.getStatus() != boomSound.Playing ) {
+						boomSound.setPlayingOffset(seconds(0.5));
+						boomSound.play();
+						
+					}
 					
 					ennemiesToRemove.push_back(ennemy);
 				}
@@ -945,6 +1093,10 @@ void Game::checkCollisions()
 				deactivateBonus(Bonus::OffensiveShield);
 			}
 			if (canHaveDamaged) {
+				if (joueurToucherSound.getStatus() != joueurToucherSound.Playing) {
+					joueurToucherSound.setPlayingOffset(seconds(0));
+					joueurToucherSound.play();
+				}
 				player->damage(1);
 			}
 			projectile->markAsOutOfScreen();
@@ -954,6 +1106,10 @@ void Game::checkCollisions()
 	for (auto& ennemy : ennemies) {
 		
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
+			if (joueurToucherSound.getStatus() != joueurToucherSound.Playing) {
+				joueurToucherSound.setPlayingOffset(seconds(0));
+				joueurToucherSound.play();
+			}
 			ennemy->damage(10);
 			if (checkCollisionsBonus(player, ennemy)) {
 				break;
@@ -1028,8 +1184,11 @@ void Game::checkCollisions()
 	ennemies.erase(remove_if(ennemies.begin(), ennemies.end(), [](Ennemy* e) {
 
 			if (e->tpsdead.getElapsedTime().asMilliseconds() < 100) {
+
+				
 		    	e->explosion();
 
+				
 			}
 		
 		else {
@@ -1071,6 +1230,7 @@ void Game::shoot()
 
 
 	if (Keyboard::isKeyPressed(Keyboard::Space) && cooldownShoot <= 0) {
+		projoTirerSound.play();
 		float TopplayerX = this->player->getPosition().x + 73.f;
 		float TopplayerY = this->player->getPosition().y + 5.f;
 
@@ -1133,6 +1293,7 @@ void Game::shootEnnemy()
 		}
 	}
 }
+
 
 void Game::shootingBoss()
 {
