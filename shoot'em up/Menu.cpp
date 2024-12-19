@@ -240,7 +240,7 @@ void Menu::initOptionsButton()
 	difficultyButtonRect.setPosition(705.f, 585.f);
 
 	difficultyButton.setFont(this->fontMainMenu);
-	difficultyButton.setString("Difficulté");
+	difficultyButton.setString("DifficultÃ©");
 	difficultyButton.setCharacterSize(40);
 	difficultyButton.setPosition(840.f, 605.f);
 
@@ -267,7 +267,7 @@ void Menu::initOptionsButton()
 
 	settingsPauseButton.setFont(fontPauseMenu);
 	settingsPauseButton.setCharacterSize(28);
-	settingsPauseButton.setString("Paramètres");
+	settingsPauseButton.setString("ParamÃ¨tres");
 
 	FloatRect settingsButtonBounds = settingsPauseButton.getLocalBounds();
 	float xSettings = (1920 / 2.f) - (settingsButtonBounds.width / 2.f) - settingsButtonBounds.left;
@@ -405,7 +405,7 @@ void Menu::initDifficultyButton()
 	easyButtonRect.setPosition(705.f, 290.f);
 
 	easyButton.setFont(this->fontMainMenu);
-	easyButton.setString("Débutant");
+	easyButton.setString("DÃ©butant");
 	easyButton.setCharacterSize(40);
 	easyButton.setPosition(830.f, 305.f);
 
@@ -496,7 +496,6 @@ int Menu::handleInputMainMenu(RenderWindow& window, const Event& event) //change
 			}
 		}
 		
-
 	}
 	return 0;
 }
@@ -674,6 +673,20 @@ int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event) //chang
 	return 0;
 }
 
+int Menu::handleInputSettingsMenu(RenderWindow& window, const Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 6;
+			}
+		}
+	}
+	return 0;
+}
+
 ///////////////////////////////////////////////affichage//////////////////////////////////////////////
 
 void Menu::render(RenderWindow& window) //menu principale
@@ -706,7 +719,7 @@ void Menu::renderOptions(RenderWindow& window) // menu option
 	window.draw(returnButton);
 }
 
-void Menu::renderEditor(RenderWindow& window) // menu éditeur
+void Menu::renderEditor(RenderWindow& window) // menu Ã©diteur
 {
 	if (bossActivate) {
 		activateBossRect.setFillColor(Color::Green);
@@ -818,12 +831,17 @@ void Menu::renderLevel(RenderWindow& window)
 
 	window.draw(level3Rect);
 	window.draw(level3);
+}
+
+void Menu::renderSettingsMenu(RenderWindow& window)
+{
+	window.draw(optionsBackground);
 	window.draw(returnButtonRect);
 	window.draw(returnButton);
 
 }
 
-void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramètre menu pause
+void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramÃ¨tre menu pause
 {
 
 }

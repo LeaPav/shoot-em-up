@@ -22,7 +22,9 @@ public:
 		GAMEOVER,
 		WIN,
 		PAUSE,
-		PLAYING
+		PLAYING,
+		SETTINGS,
+		PAUSESETTINGS
 	};
 private:
 	RenderWindow* window;
@@ -30,6 +32,7 @@ private:
 	Player* player;
 	Boss* boss;
 	Font font;
+	Font loresque;
 	Text textScore;
 	//fonctions
 	int initSprite();
@@ -38,6 +41,9 @@ private:
 	void initTexture();
 	void initWindow();
 	void initScore();
+	void initLore();
+	void initSound();
+	void initMusic();
 	void createEnnemy();
 	void createProjectilesPlayer(float x, float y);
 	void createProjectilesPlayerDiag(float x, float y, float xDiag, float yDiag);
@@ -145,10 +151,12 @@ public:
 	void handleMenuState(Event& event);
 	void handleMenu();
 	void renderMenuPause();
+	void renderSettingsPause();
 
 	//Game over
 	void renderGameOver();
 	void renderWin();
+	int curentlyLoose = 0;
 	//boss
 	void renderBoss();
 	void updateBoss();
@@ -167,13 +175,14 @@ public:
   
 	//bonus
 
+	Clock bonusTime;
+
 	void spawnBonus();
 	void renderBonusZones();
 	void updateBonusZones();
 	void resetBonus();
 	void activateBonus(Bonus::AllBonus bonusType);
 	void deactivateBonus(Bonus::AllBonus bonusType);
-
 	//Difficulté
 
 	void easyLevel();
@@ -197,5 +206,28 @@ public:
 
 	void activatePhaseBoss();
 	void deactivatePhaseBoss();
+	//lore
+	Text textLore;
+	bool lore = true;
+
+	//sound
+	SoundBuffer boom;
+	SoundBuffer looseGame;
+	SoundBuffer projoTirer;
+	SoundBuffer joueurToucher;
+
+	Sound boomSound;
+	Sound looseGameSound;
+	Sound projoTirerSound;
+	Sound joueurToucherSound;
+
+
+	Music menu;
+	Music lvl1;
+	Music bosslvl1;
+	Music victoire;
+
+	int curentlyboom = 0;
+
 };
 

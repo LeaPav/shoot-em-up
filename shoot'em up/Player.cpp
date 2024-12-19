@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int rate) : fireRate(rate)   //création joueur
+Player::Player(int rate) : fireRate(rate)   //crÃ©ation joueur
 {
 	this->initHealthBar();
 	this->initSprite();
@@ -42,7 +42,7 @@ void Player::playerUpdate()
 
 ///////////////////////////////life///////////////////////////////////////////////
 
-void Player::initHealthBar()   // santé et barre de vie
+void Player::initHealthBar()   // santÃ© et barre de vie
 {
 	this->hp = this->maxHp;
 	this->healthBar.setSize(Vector2f(200.f, 20.f));

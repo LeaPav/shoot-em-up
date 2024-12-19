@@ -146,6 +146,7 @@ void Ennemy::movement(int dx, int dy)
 		break;
 	}
 
+
 	FloatRect speedEnnemy = sprite.getGlobalBounds();
 	if (speedEnnemy.left + speedEnnemy.width <= 0) {
 		isOutOfScreen = true;
