@@ -611,15 +611,14 @@ void Game::initScore() //création score
 void Game::initLore() 
 {
 	
-		if (!font.loadFromFile("assets/font/menu.ttf")) {
+		if (!loresque.loadFromFile("assets/font/menu.ttf")) {
 			cout << "ERREUR";
 		}
-		textLore.setFont(font);
+		textLore.setFont(loresque);
 		textLore.setPosition(250, 100);
 		textLore.setCharacterSize(25);
 		textLore.setFillColor(Color::Black);
-		textLore.setString(u8"En tant que bénévoles de la fédération des défenseurs de l’espace\net pourfendeurs de pirates de l'espace, éliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planète afin de trouver le commandant des pirates de l'espace\n\n\nAprès tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune manière de vivre. Certes, ils sont en proie au danger, mais peut-être qu'ils trouvent leur volonté\nde vivre dans cette méchanceté gratuite qui leur procure leur bonheur au détriment\nd'autrui. Mais qui sommes-nous pour les blâmer après les multiples erreurs qu'a pu commettre\nla Fédération des défenseurs de l’espace, peut-être bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette fédération et ont cherché leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prêts à entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal à sa racine\navant qu'il ne cause plus de dégâts à cette planète de vacances que vous aimez tant.");
-	
+		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.");
 }
 
 

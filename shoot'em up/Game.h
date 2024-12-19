@@ -28,6 +28,7 @@ private:
 	Player* player;
 	Boss* boss;
 	Font font;
+	Font loresque;
 	Text textScore;
 	//fonctions
 	int initSprite();
