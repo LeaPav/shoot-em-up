@@ -233,50 +233,50 @@ void Game::hardLevel()
 	newPvAggressif = pv;
 }
 
-void Game::changeHealthPlayerPlus(int hp)
+void Game::changeHealthPlayerPlus(int hp) // change la vie du player dans l'editeur et rajoute un de vie 
 {
 	int newHp = player->getHealthMax() + hp;
 	player->setMaxHealth(newHp);
 }
 
-void Game::changeHealthPlayerMin(int hp)
+void Game::changeHealthPlayerMin(int hp) // change la vie du player dans l'editeur et enleve un de vie 
 {
 	int newHp = player->getHealthMax() - hp;
 	player->setMaxHealth(newHp);
 
 }
 
-void Game::changeSpeedPlayerPlus(int speed)
+void Game::changeSpeedPlayerPlus(int speed) // change la vitesse du player dans l'editeur et rajoute un de vitesse
 {
 	int newSpeed = player->getSpeed() + speed;
 	player->setSpeed(newSpeed);
 }
 
-void Game::changeSpeedPlayerMin(int speed)
+void Game::changeSpeedPlayerMin(int speed) // change la vitesse du player dans l'editeur et enlève un de vitesse
 {
 	int newSpeed = player->getSpeed() - speed;
 	player->setSpeed(newSpeed);
 }
 
-void Game::changeHealthEnnemy1Plus(int hp)
+void Game::changeHealthEnnemy1Plus(int hp) // change la vie du l'ennemi dans l'editeur et rajoute un de vie
 {
 	newPvAggressif += hp;
 }
 
-void Game::changeHealthEnnemy1Min(int hp)
+void Game::changeHealthEnnemy1Min(int hp) // change la vie du l'ennemi dans l'editeur et enleve un de vie
 {
 	if (newPvAggressif > 1) {
 		newPvAggressif -= hp;
 	}
 }
 
-void Game::changeHealthBossPlus(int hp)
+void Game::changeHealthBossPlus(int hp) // change la vie du boss dans l'editeur et rajoute un de vie
 {
 	int newHp = boss->getMaxHp() + hp;
 	boss->setMaxhp(newHp);
 }
 
-void Game::changeHealthBoss1Min(int hp)
+void Game::changeHealthBoss1Min(int hp) // change la vie du boss dans l'editeur et enleve un de vie
 {
 	int newHp = boss->getMaxHp() - hp;
 	boss->setMaxhp(newHp);
@@ -287,21 +287,6 @@ void Game::changeHealthEnnemy2Plus(int hp)
 	newPvPassif += hp;
 }
 
-void Game::changeSpeedEnnemyPlus(int speed)
-{
-	for (auto& ennemy : ennemies) {
-		int newSpeed = ennemy->getSpeed() + speed;
-		ennemy->setSpeed(newSpeed);
-	}
-}
-
-void Game::changeSpeedEnnemyMin(int speed)
-{
-	for (auto& ennemy : ennemies) {
-		int newSpeed = ennemy->getSpeed() - speed;
-		ennemy->setSpeed(newSpeed);
-	}
-}
 
 void Game::changeHealthEnnemy2Min(int hp)
 {
@@ -825,10 +810,10 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			changeHealthEnnemy2Min(1);
 			break;
 		case 9:
-			changeSpeedEnnemyPlus(1);
+			//changeSpeedEnnemyPlus(1);
 			break;
 		case 10:
-			changeSpeedEnnemyMin(1);
+			//changeSpeedEnnemyMin(1);
 			break;
 		case 11:
 			activatePhaseBoss();

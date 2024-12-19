@@ -70,11 +70,11 @@ void Menu::initSpritePlayer()
 
 void Menu::initSpriteEnnemies()
 {
-	if (!ennemy1.loadFromFile("assets/Ennemies/canon.png")) {
+	if (!ennemy1.loadFromFile("assets/editeur/canon_1.png")) {
 		cout << "Erreur";
 	}
 
-	if (!ennemy2.loadFromFile("assets/Ennemies/robot passif.png")) {
+	if (!ennemy2.loadFromFile("assets/editeur/robot_2.png")) {
 		cout << "Erreur";
 	}
 	spriteEnnemy1.setTexture(ennemy1);
@@ -135,7 +135,7 @@ void Menu::initSpriteEnnemies()
 
 void Menu::initSpriteBoss()
 {
-	if (!boss.loadFromFile("assets/boss/Boss_sans_shield.png")) {
+	if (!boss.loadFromFile("assets/editeur/Boss_sans_shield.png")) {
 		cout << "Erreur";
 	}
 	spriteBoss.setTexture(boss);

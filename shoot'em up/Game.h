@@ -203,8 +203,6 @@ public:
 	void changeHealthBoss1Min(int hp);
 
 	void changeHealthEnnemy2Plus(int hp);
-	void changeSpeedEnnemyPlus(int speed);
-	void changeSpeedEnnemyMin(int speed);
 	void changeHealthEnnemy2Min(int hp);
 
 	void activatePhaseBoss();
