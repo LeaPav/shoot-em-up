@@ -250,7 +250,6 @@ void Boss::takeDamage(int damage)
     if (this->isActive) {
         hp -= damage;
     }
-    cout << "Hp boss: " << hp << endl;
     if (hp <= 0) {
         isActive = false;
     }

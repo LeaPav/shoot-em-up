@@ -1401,7 +1401,6 @@ void Game::checkCollisions()
 			else if (canHaveDamaged) {
 				if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
 					killStreak = 0;
-					cout << "Degats" << endl;
 					player->damage(1);
 					tpsTouch.restart();
 				}
