@@ -281,7 +281,6 @@ bool Boss::isRobot2Active() const
 void Boss::damageRobot1(int damage)
 {
     robotHp1 -= damage;
-    cout << "Robot1 hp : " << robotHp1 << endl;
     if (robotHp1 <= 0) {
         robotHp1 = 0;
     }
@@ -290,7 +289,6 @@ void Boss::damageRobot1(int damage)
 void Boss::damageRobot2(int damage)
 {
     robotHp2 -= damage;
-    cout << "Robot2 hp : " << robotHp2 << endl;
     if (robotHp2 <= 0) {
         robotHp2 = 0;
     }
