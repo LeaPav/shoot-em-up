@@ -542,6 +542,15 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 			break;
 		}
 	}
+	if (currentState == GameState::EDITOR) {
+		mainMenu.handleMouseHover(*window);
+		int editorAction = mainMenu.handleInputLevel(*window, event);
+		switch (editorAction) {
+		case 4: 
+			currentState = GameState::MENU;
+			break;
+		}
+	}
 }
 /////////////////////////////////////////maj du Game fenetre (niveau in game) /////////////////////////////////////
 
@@ -1119,7 +1128,7 @@ void Game::shoot()
 	static int cooldownShoot = 0;
 
 
-	if (Keyboard::isKeyPressed(Keyboard::F) && cooldownShoot <= 0) {
+	if (Keyboard::isKeyPressed(Keyboard::Space) && cooldownShoot <= 0) {
 		float TopplayerX = this->player->getPosition().x + 73.f;
 		float TopplayerY = this->player->getPosition().y + 5.f;
 

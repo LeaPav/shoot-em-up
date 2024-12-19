@@ -5,6 +5,9 @@ Menu::Menu() : indexButtonSelected(0)
 	initBackground();
 	initLevel1();
 	initLevel2();
+	initSpritePlayer();
+	initSpriteEnnemies();
+	initSpriteBoss();
 	initFont();
 	initButton();
 	initOptionsButton();
@@ -36,6 +39,40 @@ int Menu::initBackground() //chargement image
 	}
 	background.setTexture(backgroundTexture);
 	optionsBackground.setTexture(optionsTexture);
+}
+
+void Menu::initSpritePlayer()
+{
+	if (!player.loadFromFile("assets/vaisseau_5.png")) {
+		cout << "Erreur";
+	}
+	spritePlayer.setTexture(player);
+	spritePlayer.setPosition(Vector2f(100.f, 70.f));
+}
+
+void Menu::initSpriteEnnemies()
+{
+	if (!ennemy1.loadFromFile("assets/Ennemies/canon.png")) {
+		cout << "Erreur";
+	}
+
+	if (!ennemy2.loadFromFile("assets/Ennemies/robot passif.png")) {
+		cout << "Erreur";
+	}
+	spriteEnnemy1.setTexture(ennemy1);
+	spriteEnnemy1.setPosition(Vector2f(120.f, 350.f));
+
+	spriteEnnemy2.setTexture(ennemy2);
+	spriteEnnemy2.setPosition(Vector2f(120.f, 480.f));
+}
+
+void Menu::initSpriteBoss()
+{
+	if (!boss.loadFromFile("assets/boss/Boss_sans_shield.png")) {
+		cout << "Erreur";
+	}
+	spriteBoss.setTexture(boss);
+	spriteBoss.setPosition(Vector2f(100.f, 700.f));
 }
 
 int Menu::initLevel1()
@@ -123,7 +160,7 @@ void Menu::initOptionsButton()
 	settingsButton.setFont(this->fontMainMenu);
 	settingsButton.setString("Son");
 	settingsButton.setCharacterSize(40);
-	settingsButton.setPosition(820.f, 460.f);
+	settingsButton.setPosition(900.f, 460.f);
 
 
 	difficultyButtonRect.setSize(Vector2f(510.f, 95.f));
@@ -183,6 +220,11 @@ void Menu::initOptionsButton()
 
 }
 
+void Menu::initEditorButton()
+{
+
+}
+
 
 void Menu::initCommandsButton() //bouton retour 
 {
@@ -225,6 +267,11 @@ void Menu::initDifficultyButton()
 
 void Menu::initLevelButton()
 {
+	dlcLevel2.setFont(this->fontMainMenu);
+	dlcLevel2.setString("1,99$");
+	dlcLevel2.setCharacterSize(35);
+	dlcLevel2.setPosition(Vector2f(890.f, 500.f));
+	
 	level1Rect.setSize(Vector2f(500.f, 250.f));
 	level1Rect.setPosition(Vector2f(50.f, 400.f));
 	level1Rect.setTexture(&textureLevel1);
@@ -352,6 +399,20 @@ int Menu::handleInputDifficulty(RenderWindow& window, const Event& event)
 	return 0;
 }
 
+int Menu::handleInputEditor(RenderWindow& window, const Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
+		}
+	}
+	return 0;
+}
+
 int Menu::handleInputLevel(RenderWindow& window, const Event& event)
 {
 	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
@@ -429,12 +490,19 @@ void Menu::renderOptions(RenderWindow& window) // menu option
 	window.draw(commandsButton);
 	window.draw(settingsButton);
 	window.draw(difficultyButton);
-	window.draw(this->returnButton);
+	window.draw(returnButton);
 }
 
 void Menu::renderEditor(RenderWindow& window) // menu éditeur
 {
 	window.draw(optionsBackground);
+	window.draw(spritePlayer);
+	window.draw(spriteEnnemy1);
+	window.draw(spriteEnnemy2);
+	window.draw(spriteBoss);
+	window.draw(returnButtonRect);
+	window.draw(returnButton);
+
 }
 
 void Menu::renderCommands(RenderWindow& window) // menu commande
@@ -444,8 +512,8 @@ void Menu::renderCommands(RenderWindow& window) // menu commande
 	text.setFont(fontMainMenu);
 	text.setCharacterSize(40);
 	text.setFillColor(Color::White);
-	text.setPosition(750, 200);
-	text.setString(" Z : Aller vers le haut. \n\n Q : Aller vers la gauche. \n\n S : Aller vers le bas. \n\n D : Aller vers la droite. \n\n F : Tirer. \n\n Echap : Quitter");
+	text.setPosition(700, 200);
+	text.setString(" Z : Aller vers le haut \n\n Q : Aller vers la gauche \n\n S : Aller vers le bas \n\n D : Aller vers la droite \n\n Espace : Tirer \n\n Echap : Quitter");
 	window.draw(text);
 
 	window.draw(returnButtonRect);
@@ -463,7 +531,7 @@ void Menu::renderDifficulty(RenderWindow& window)
 	window.draw(easyButton);
 	window.draw(hardButton);
 	window.draw(hardCoreButton);
-	window.draw(this->returnButton);
+	window.draw(returnButton);
 
 }
 
@@ -483,12 +551,12 @@ void Menu::renderLevel(RenderWindow& window)
 	
 	window.draw(level2Rect);
 	window.draw(level2);
+	window.draw(dlcLevel2);
 
 	window.draw(level3Rect);
 	window.draw(level3);
 	window.draw(returnButtonRect);
-	window.draw(this->returnButton);
-
+	window.draw(returnButton);
 
 }
 
@@ -600,7 +668,7 @@ void Menu::handleMouseHover(const RenderWindow& window)
 		level2Rect.setFillColor(Color(179, 179, 179));
 	}
 	else {
-		level2Rect.setFillColor(Color::White);
+		level2Rect.setFillColor(Color(99, 99, 99));
 	}
 	if (level3Rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
 		level3Rect.setFillColor(Color(51, 51, 51));

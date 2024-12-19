@@ -49,6 +49,8 @@ private:
 	Text pause;
 
 	Sprite background, optionsBackground;
+	Sprite spritePlayer, spriteEnnemy1, spriteEnnemy2, spriteBoss;
+	Texture player, ennemy1, ennemy2, boss;
 	Texture backgroundTexture;
 	Texture optionsTexture;
 	int indexButtonSelected;
@@ -57,18 +59,22 @@ private:
 	const Time mouseCooldown = milliseconds(150);
 
 	int initFont();
-	int initBackground();
+	int initBackground(); 
+	void initSpritePlayer();
+	void initSpriteEnnemies();
+	void initSpriteBoss();
 	void initButton();
 	void initOptionsButton();
+	void initEditorButton();
 	void initCommandsButton();
 	void initDifficultyButton();
 	void initLevelButton();
 
 	// rectangle choix niveau;
 
-	Sprite spriteLevel1, spriteLevel2, spriteLevel3;
-	Texture textureLevel1, textureLevel2, textureLevel3;
-
+	Sprite spriteLevel1, spriteLevel2;
+	Texture textureLevel1, textureLevel2;
+	Text dlcLevel2;
 	RectangleShape level1Rect;
 	RectangleShape level2Rect;
 	RectangleShape level3Rect;
@@ -86,6 +92,7 @@ public:
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
 	int handleInputDifficulty(RenderWindow& window, const Event& event);
+	int handleInputEditor(RenderWindow& window, const Event& event);
 	int handleInputLevel(RenderWindow& window, const Event& event);
 	int handleInputPauseMenu(RenderWindow& window, const Event& event);
 
