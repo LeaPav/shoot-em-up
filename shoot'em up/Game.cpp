@@ -717,7 +717,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::Shield), bonusTexture[(Bonus::Shield)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[randBonus1], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[randBonus2], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[randBonus3], bonusZones[2]);
 }

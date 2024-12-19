@@ -64,6 +64,24 @@ void Menu::initSpriteEnnemies()
 
 	spriteEnnemy2.setTexture(ennemy2);
 	spriteEnnemy2.setPosition(Vector2f(120.f, 480.f));
+
+	ennemy1Groupe1.setTexture(ennemy1);
+	ennemy1Groupe1.setPosition(Vector2f(1600.f, 325.f));
+
+	ennemy2Groupe1.setTexture(ennemy1);
+	ennemy2Groupe1.setPosition(Vector2f(1675.f, 250.f));
+
+	ennemy3Groupe1.setTexture(ennemy1);
+	ennemy3Groupe1.setPosition(Vector2f(1675.f, 400.f));
+
+	ennemy1Groupe2.setTexture(ennemy2);
+	ennemy1Groupe2.setPosition(Vector2f(1750.f, 10.f));
+
+	ennemy2Groupe2.setTexture(ennemy2);
+	ennemy2Groupe2.setPosition(Vector2f(1750.f, 90.f));
+
+	ennemy3Groupe2.setTexture(ennemy2);
+	ennemy3Groupe2.setPosition(Vector2f(1750.f, 170.f));
 }
 
 void Menu::initSpriteBoss()
@@ -499,6 +517,13 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 	window.draw(spritePlayer);
 	window.draw(spriteEnnemy1);
 	window.draw(spriteEnnemy2);
+	window.draw(ennemy1Groupe2);
+	window.draw(ennemy2Groupe2);
+	window.draw(ennemy3Groupe2);
+	window.draw(ennemy1Groupe1);
+	window.draw(ennemy2Groupe1);
+	window.draw(ennemy3Groupe1);
+	
 	window.draw(spriteBoss);
 	window.draw(returnButtonRect);
 	window.draw(returnButton);

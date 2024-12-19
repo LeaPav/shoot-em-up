@@ -50,6 +50,8 @@ private:
 
 	Sprite background, optionsBackground;
 	Sprite spritePlayer, spriteEnnemy1, spriteEnnemy2, spriteBoss;
+	Sprite ennemy1Groupe2, ennemy2Groupe2, ennemy3Groupe2;
+	Sprite ennemy1Groupe1, ennemy2Groupe1, ennemy3Groupe1;
 	Texture player, ennemy1, ennemy2, boss;
 	Texture backgroundTexture;
 	Texture optionsTexture;
