@@ -283,6 +283,11 @@ void Game::renderNiveau1()
 	if (lvl1.getStatus() != lvl1.Playing) {
 		lvl1.play();
 	}
+	if (menu.getStatus() == menu.Playing) {
+		menu.stop();
+		menu.pause();
+
+	}
 	this->window->draw(basSens1);
 	this->window->draw(basSens2);
 	this->window->draw(basInvers1);
@@ -404,6 +409,15 @@ void Game::handleMenu() //les etats du jeu
 void Game::handleMenuState(Event& event) // gere les etat du jeu
 {
 	if (currentState == GameState::MENU) {
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+
+		}
+		if (menu.getStatus() != menu.Playing) {
+			menu.play();
+			menu.setPlayingOffset(sf::seconds(60));
+		}
 		mainMenu.handleMouseHover(*window);
 		int action = mainMenu.handleInputMainMenu(*window, event);
 		
@@ -654,7 +668,7 @@ void Game::initMusic() {
 		cout << "erreur lvl1";
 	if (!bosslvl1.openFromFile("assets/Son/Musique/BoosFight.mp3"))
 		cout << "erreur boss lvl1";
-	if (!menu.openFromFile("assets/Son/Musique/Victory.mp3"))
+	if (!victoire.openFromFile("assets/Son/Musique/Victory.mp3"))
 		cout << "erreur victoire";
 }
 
