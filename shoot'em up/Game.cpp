@@ -280,7 +280,9 @@ void Game::renderWin()
 
 void Game::renderNiveau1()
 {
-	
+	if (lvl1.getStatus() != lvl1.Playing) {
+		lvl1.play();
+	}
 	this->window->draw(basSens1);
 	this->window->draw(basSens2);
 	this->window->draw(basInvers1);
