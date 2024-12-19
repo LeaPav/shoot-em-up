@@ -48,6 +48,9 @@ void Game::update()
 				isPaused = false;
 				currentState = GameState::PLAYING;
 			}
+			else if (currentState == GameState::PAUSESETTINGS) {
+				currentState = GameState::PAUSE;
+			}
 		}
 
 	}
@@ -272,6 +275,15 @@ void Game::renderMenuPause()
 
 }
 
+void Game::renderSettingsPause()
+{
+
+	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
+	overlay.setFillColor(Color(0, 0, 0, 125));
+	this->window->draw(overlay);
+	mainMenu.renderSettingsPauseMenu(*window);
+}
+
 void Game::renderGameOver()
 {
 	RectangleShape overlay(Vector2f(this->videoMode.width, this->videoMode.height));
@@ -445,6 +457,20 @@ void Game::handleMenu() //les etats du jeu
 		this->window->draw(textScore);
 		this->renderWin();
 	}
+	if (currentState == GameState::SETTINGS) {
+		mainMenu.handleMouseHover(*window);
+		mainMenu.renderSettingsMenu(*window);
+	}
+	if (currentState == GameState::PAUSESETTINGS) {
+		mainMenu.handleMouseHover(*window);
+		this->renderNiveau1();
+		this->window->draw(this->spriteMap);
+		this->entityRender();
+		this->renderBoss();
+		this->projectileRender();
+		this->window->draw(textScore);
+		this->renderSettingsPause();
+	}
 }
 
 void Game::handleMenuState(Event& event) // gere les etat du jeu
@@ -501,6 +527,8 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		case 1:
 			currentState = GameState::PLAYING;
 			break;
+		case 2: currentState = GameState::PAUSESETTINGS;
+			break;
 		case 3: currentState = GameState::MENU;
 			resetGame();
 			mainMenu.resetCooldown();
@@ -545,6 +573,9 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		switch (optionsAction) {
 		case 1: currentState = GameState::COMMANDS;
 			break;
+		case 2: 
+			currentState = GameState::SETTINGS;
+			break;
 		case 4: currentState = GameState::MENU;
 			break;
 		}
@@ -555,6 +586,15 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 
 		switch (actionCommands) {
 		case 4: currentState = GameState::OPTIONS;
+			break;
+		}
+	}
+	if (currentState == GameState::SETTINGS) {
+		mainMenu.handleMouseHover(*window);
+		int settingsAction = mainMenu.handleInputSettingsMenu(*window, event);
+
+		switch (settingsAction) {
+		case 6: currentState = GameState::OPTIONS;
 			break;
 		}
 	}

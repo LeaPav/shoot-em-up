@@ -20,7 +20,9 @@ public:
 		GAMEOVER,
 		WIN,
 		PAUSE,
-		PLAYING
+		PLAYING,
+		SETTINGS,
+		PAUSESETTINGS
 	};
 private:
 	RenderWindow* window;
@@ -143,6 +145,7 @@ public:
 	void handleMenuState(Event& event);
 	void handleMenu();
 	void renderMenuPause();
+	void renderSettingsPause();
 
 	//Game over
 	void renderGameOver();

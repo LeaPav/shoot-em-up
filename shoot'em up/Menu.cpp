@@ -257,6 +257,20 @@ int Menu::handleInputPauseMenu(RenderWindow& window, const Event& event) //chang
 	return 0;
 }
 
+int Menu::handleInputSettingsMenu(RenderWindow& window, const Event& event)
+{
+	if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+		if (!isCooldownActive()) {
+			Vector2i mousePos = Mouse::getPosition(window);
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 6;
+			}
+		}
+	}
+	return 0;
+}
+
 ///////////////////////////////////////////////affichage//////////////////////////////////////////////
 
 void Menu::render(RenderWindow& window) //menu principale
@@ -315,6 +329,14 @@ void Menu::renderPauseMenu(RenderWindow& window) //menu pause
 	window.draw(resumeButton);
 	window.draw(settingsPauseButton);
 	window.draw(returnToMainMenuButton);
+}
+
+void Menu::renderSettingsMenu(RenderWindow& window)
+{
+	window.draw(optionsBackground);
+	window.draw(returnButtonRect);
+	window.draw(returnButton);
+
 }
 
 void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramètre menu pause

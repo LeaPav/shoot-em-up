@@ -62,12 +62,14 @@ public:
 	int handleInputMainMenu(RenderWindow& window, const Event& event);
 	int handleInputMenuOptions(RenderWindow& window, const Event& event);
 	int handleInputPauseMenu(RenderWindow& window, const Event& event);
+	int handleInputSettingsMenu(RenderWindow& window, const Event& event);
 
 	void render(RenderWindow& window);
 	void renderOptions(RenderWindow& window);
 	void renderEditor(RenderWindow& window);
 	void renderCommands(RenderWindow& window);
 	void renderPauseMenu(RenderWindow& window);
+	void renderSettingsMenu(RenderWindow& window);
 	void renderSettingsPauseMenu(RenderWindow& window);
 	void setBackground(const string& backgroundImage);
 	void handleMouseHover(const RenderWindow& window);
