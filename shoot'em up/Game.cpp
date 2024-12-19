@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(30)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(10), vagueActif(true), spawnBonusPhase(30)
 {
 	this->initSprite();
 	this->initTexture();
@@ -110,6 +110,18 @@ void Game::ennemyUpdate()
 void Game::updateBoss()
 {
 	if (this->boss->canSpawn(scoreBoss, spawnBoss)) {
+		
+
+	    if (bosslvl1.getStatus() != bosslvl1.Playing) {
+				bosslvl1.play();
+		}
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+
+		}
+
+
 		this->boss->update();
 		this->boss->udpateHealthBar();
 		this->shootingBoss();
@@ -231,6 +243,7 @@ void Game::resetGame()
 	vagueActif = true;
 	fireRate = 15;
 	lore = true;
+	curentlyLoose = 0;
 
 	fill(bonusActive.begin(), bonusActive.end(), false);
 
@@ -280,7 +293,7 @@ void Game::renderWin()
 
 void Game::renderNiveau1()
 {
-	if (lvl1.getStatus() != lvl1.Playing) {
+	if (lvl1.getStatus() != lvl1.Playing && scoreBoss <= spawnBoss) {
 		lvl1.play();
 	}
 	if (menu.getStatus() == menu.Playing) {
@@ -385,6 +398,21 @@ void Game::handleMenu() //les etats du jeu
 		mainMenu.renderCommands(*window);
 	}
 	if (currentState == GameState::GAMEOVER) {
+		
+
+		if (looseGameSound.getStatus() != looseGameSound.Playing && curentlyLoose < 1) {
+			looseGameSound.play();
+			curentlyLoose += 1;
+		}
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+		}
+		if (bosslvl1.getStatus() == bosslvl1.Playing) {
+			bosslvl1.stop();
+			bosslvl1.pause();
+		}
+
 		gameOver.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
@@ -395,6 +423,19 @@ void Game::handleMenu() //les etats du jeu
 		this->renderGameOver();
 	}
 	if (currentState == GameState::WIN) {
+
+		if (victoire.getStatus() != victoire.Playing) {
+			victoire.play();
+		}
+		if (lvl1.getStatus() == lvl1.Playing) {
+			lvl1.stop();
+			lvl1.pause();
+		}
+		if (bosslvl1.getStatus() == bosslvl1.Playing) {
+			bosslvl1.stop();
+			bosslvl1.pause();
+		}
+
 		win.handleMouseHover(*window);
 		this->renderNiveau1();
 		this->window->draw(this->spriteMap);
@@ -412,7 +453,14 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		if (lvl1.getStatus() == lvl1.Playing) {
 			lvl1.stop();
 			lvl1.pause();
-
+		}
+		if (looseGameSound.getStatus() == looseGameSound.Playing) {
+			looseGameSound.stop();
+			looseGameSound.pause();
+		}
+		if (victoire.getStatus() == victoire.Playing) {
+			victoire.stop();
+			victoire.pause();
 		}
 		if (menu.getStatus() != menu.Playing) {
 			menu.play();
@@ -644,7 +692,7 @@ void Game::initLore()
 		textLore.setString("En tant que benevoles de la federation des defenseurs de l'espace\net pourfendeurs de pirates de l'espace, eliminez les pirates de l'espace qui ont envahi 4546B\net immergez vous dans cette planete afin de trouver le droide des pirates de l'espace\n\n\nApres tout, il n'y a pas de bon ou mauvais pirate de l'espace, c'est avant tout une vocation,\nune maniere de vivre. Certes, ils sont en proie au danger, mais peut-etre qu'ils trouvent leur volonte\nde vivre dans cette mechancete gratuite qui leur procure leur bonheur au detriment\nd'autrui. Mais qui sommes-nous pour les blamer apres les multiples erreurs qu'a pu commettre\nla Federation des defenseurs de l'espace, peut-etre bien que certains pirates sont d'anciens\npartisans mais qu'ils se sont sentis trahis par cette federation et ont cherche leur bonheur\nailleurs, mais finalement ont-ils raison ? Ont-ils fait le bon choix ? Sont-ils prets a entendre raison ?\nEh bien non, et c'est pour cela que vous intervenez afin de couper le mal a sa racine\navant qu'il ne cause plus de degats a cette planete de vacances que vous aimez tant.\n\n\n                                             appuyez sur espace pour commencer");
 }
 
-void Game::initSound() {
+void Game::initSound() {  //bruitage
 
 	if (!boom.loadFromFile("assets/Son/Bruitage/boom.mp3"))
 		cout << "erreur boom";
@@ -657,10 +705,15 @@ void Game::initSound() {
 	if (!joueurToucher.loadFromFile("assets/Son/Bruitage/toucher_J.mp3"))
 		cout << "erreur trouvher j";
 
+	boomSound.setBuffer(boom);
+	boomBossSound.setBuffer(boomBoss);
+	looseGameSound.setBuffer(looseGame);
+	projoTirerSound.setBuffer(projoTirer);
+	joueurToucherSound.setBuffer(joueurToucher);
 }
 
 
-void Game::initMusic() {
+void Game::initMusic() { //musique
 
 	if (!menu.openFromFile("assets/Son/Musique/son menu.mp3"))
 		cout << "erreur menu";

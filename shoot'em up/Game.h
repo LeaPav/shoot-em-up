@@ -147,6 +147,7 @@ public:
 	//Game over
 	void renderGameOver();
 	void renderWin();
+	int curentlyLoose = 0;
 	//boss
 	void renderBoss();
 	void updateBoss();
@@ -183,6 +184,13 @@ public:
 	SoundBuffer looseGame;
 	SoundBuffer projoTirer;
 	SoundBuffer joueurToucher;
+
+	Sound boomSound;
+	Sound boomBossSound;
+	Sound looseGameSound;
+	Sound projoTirerSound;
+	Sound joueurToucherSound;
+
 
 	Music menu;
 	Music lvl1;
