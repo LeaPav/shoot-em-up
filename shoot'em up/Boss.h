@@ -39,9 +39,12 @@ public:
 	void movement(int dx, int dy) override;
 	const Vector2f getPosition() const;
 	int getHp();
+	int getMaxHp() const;
 	void render(RenderTarget& target);
 	FloatRect getGlobalBounds() const;
 	void update();
+	void setHp(int newHp);
+	void setMaxhp(int newMaxHp);
 	bool canSpawn(int bossScore, int spawnBoss);
 	bool isBossActive() const;
 	bool isBossDead() const;

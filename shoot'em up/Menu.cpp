@@ -18,13 +18,13 @@ Menu::Menu() : indexButtonSelected(0)
 	initLevelButton();
 }
 
-void Menu::updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed)
+void Menu::updateEditorTexts(Player* player, int newPvAggressif, int newPvPassif, float speed, Boss* boss)
 {
-	
 	TextRenderLifePlayer.setString(to_string(player->getHealthMax()));
 	TextRenderSpeedPlayer.setString(to_string(player->getSpeed()));
 	TextRenderLifeEnemy1.setString(to_string(newPvAggressif));
 	TextRenderLifeEnemy2.setString(to_string(newPvPassif));
+	renderBossHp.setString(to_string(boss->getMaxHp()));
 }
 
 /////////////////////////////////////////maj du Game Over/////////////////////////////////////
@@ -267,7 +267,7 @@ void Menu::initOptionsButton()
 
 	settingsPauseButton.setFont(fontPauseMenu);
 	settingsPauseButton.setCharacterSize(28);
-	settingsPauseButton.setString("Parametres");
+	settingsPauseButton.setString("Son");
 
 	FloatRect settingsButtonBounds = settingsPauseButton.getLocalBounds();
 	float xSettings = (1920 / 2.f) - (settingsButtonBounds.width / 2.f) - settingsButtonBounds.left;
@@ -328,6 +328,10 @@ void Menu::initEditorButton()
 	TextRenderLifeEnemy2.setCharacterSize(30);
 	TextRenderLifeEnemy2.setPosition(550.f, 490.f);
 
+	renderBossHp.setFont(this->fontMainMenu);
+	renderBossHp.setCharacterSize(30);
+	renderBossHp.setPosition(550.f, 800.f);
+
 	speedPlayer.setFont(this->fontMainMenu);
 	speedPlayer.setCharacterSize(22);
 	speedPlayer.setString("Vitesse");
@@ -387,6 +391,15 @@ void Menu::initEditorButton()
 	ennemyHealthMin3.setSize(Vector2f(25.f, 25.f));
 	ennemyHealthMin3.setPosition(400.f, 430.f);
 	ennemyHealthMin3.setTexture(&playerButtonLeft);
+
+	bossHpPlus.setSize(Vector2f(25.f, 25.f));
+	bossHpPlus.setPosition(750.f, 800.f);
+	bossHpPlus.setTexture(&playerButtonRight);
+
+	bossHpMin.setSize(Vector2f(25.f, 25.f));
+	bossHpMin.setPosition(450.f, 800.f);
+	bossHpMin.setTexture(&playerButtonLeft);
+
 }
 
 
@@ -616,9 +629,17 @@ int Menu::handleInputEditor(RenderWindow& window, const Event& event)
 					return 12;
 				}
 			}
-			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+			if (bossHpPlus.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
 				resetCooldown();
 				return 13;
+			}
+			if (bossHpMin.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 14;
+			}
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 15;
 			}
 		}
 	}
@@ -765,6 +786,11 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 	window.draw(ennemyHealthMin2);
 	window.draw(ennemyHealthPlus3);
 	window.draw(ennemyHealthMin3);
+
+	window.draw(bossHpPlus);
+	window.draw(bossHpMin);
+	window.draw(renderBossHp);
+
 
 	//affichage du text
 	window.draw(lifePlayer);
@@ -1043,7 +1069,18 @@ void Menu::handleMouseHover(const RenderWindow& window)
 	else {
 		ennemyHealthMin3.setFillColor(Color::White);
 	}
-
+	if (bossHpPlus.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		bossHpPlus.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		bossHpPlus.setFillColor(Color::White);
+	}
+	if (bossHpMin.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		bossHpMin.setFillColor(Color(189, 189, 189));
+	}
+	else {
+		bossHpMin.setFillColor(Color::White);
+	}
 }
 
 
