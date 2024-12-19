@@ -180,13 +180,11 @@ public:
 
 	//sound
 	SoundBuffer boom;
-	SoundBuffer boomBoss;
 	SoundBuffer looseGame;
 	SoundBuffer projoTirer;
 	SoundBuffer joueurToucher;
 
 	Sound boomSound;
-	Sound boomBossSound;
 	Sound looseGameSound;
 	Sound projoTirerSound;
 	Sound joueurToucherSound;

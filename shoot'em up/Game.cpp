@@ -287,7 +287,7 @@ void Game::renderWin()
 	overlay.setFillColor(Color(0, 0, 0, 125));
 	this->window->draw(overlay);
 	win.render(*window);
-	win.setScore(score,killStreak,boomBossSound);
+	win.setScore(score,killStreak);
 }
 
 
@@ -696,8 +696,6 @@ void Game::initSound() {  //bruitage
 
 	if (!boom.loadFromFile("assets/Son/Bruitage/boom.mp3"))
 		cout << "erreur boom";
-	if (!boomBoss.loadFromFile("assets/Son/Bruitage/boom-Boss.mp3"))
-		cout << "erreur boom boss";
 	if (!looseGame.loadFromFile("assets/Son/Bruitage/loose_game.mp3"))
 		cout << "erreur loose game";
 	if (!projoTirer.loadFromFile("assets/Son/Bruitage/ProjoTirer.mp3"))
@@ -706,7 +704,6 @@ void Game::initSound() {  //bruitage
 		cout << "erreur trouvher j";
 
 	boomSound.setBuffer(boom);
-	boomBossSound.setBuffer(boomBoss);
 	looseGameSound.setBuffer(looseGame);
 	projoTirerSound.setBuffer(projoTirer);
 	joueurToucherSound.setBuffer(joueurToucher);
