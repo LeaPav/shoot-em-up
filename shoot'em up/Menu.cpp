@@ -383,10 +383,6 @@ void Menu::initEditorButton()
 	ennemyHealthPlus2.setPosition(700.f, 500.f);
 	ennemyHealthPlus2.setTexture(&playerButtonRight);
 
-	ennemyHealthPlus3.setSize(Vector2f(25.f, 25.f));
-	ennemyHealthPlus3.setPosition(700.f, 430.f);
-	ennemyHealthPlus3.setTexture(&playerButtonRight);
-
 	ennemyHealthMin1.setSize(Vector2f(25.f, 25.f));
 	ennemyHealthMin1.setPosition(400.f, 365.f);
 	ennemyHealthMin1.setTexture(&playerButtonLeft);
@@ -394,10 +390,6 @@ void Menu::initEditorButton()
 	ennemyHealthMin2.setSize(Vector2f(25.f, 25.f));
 	ennemyHealthMin2.setPosition(400.f, 500.f);
 	ennemyHealthMin2.setTexture(&playerButtonLeft);
-
-	ennemyHealthMin3.setSize(Vector2f(25.f, 25.f));
-	ennemyHealthMin3.setPosition(400.f, 430.f);
-	ennemyHealthMin3.setTexture(&playerButtonLeft);
 
 	bossHpPlus.setSize(Vector2f(25.f, 25.f));
 	bossHpPlus.setPosition(750.f, 800.f);
@@ -845,8 +837,6 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 	window.draw(ennemyHealthMin1);
 	window.draw(ennemyHealthPlus2);
 	window.draw(ennemyHealthMin2);
-	window.draw(ennemyHealthPlus3);
-	window.draw(ennemyHealthMin3);
 
 	window.draw(bossHpPlus);
 	window.draw(bossHpMin);
@@ -863,7 +853,6 @@ void Menu::renderEditor(RenderWindow& window) // menu éditeur
 	window.draw(TextRenderLifeEnemy1);
 	window.draw(TextRenderLifeEnemy2);
 	window.draw(speedPlayer);
-	window.draw(speedEnnemy);
 	window.draw(lifeEnnemy1);
 	window.draw(lifeEnnemy2);
 }

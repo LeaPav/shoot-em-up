@@ -227,7 +227,7 @@ void Game::intermediaireLevel()
 void Game::hardLevel()
 {
 	//canHaveDamaged = true;
-	player->setMaxHealth(1);
+	player->setMaxHealth(2);
 	pv = 3;
 	newPvPassif = pv;
 	newPvAggressif = pv;
@@ -380,7 +380,6 @@ void Game::resetBonus()
 	fill(bonusActive.begin(), bonusActive.end(), false);
 
 	player->resetSprite();
-	player->resetSpeed();
 	fireRate = 15;
 	bonusShotCount = 0;
 	bonusShieldDef = 5;
