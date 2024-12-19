@@ -73,7 +73,8 @@ private:
 	RectangleShape level2Rect;
 	RectangleShape level3Rect;
 
-	int initLevel();
+	int initLevel1();
+	int initLevel2();
 	
 	Text level1;
 	Text level2;

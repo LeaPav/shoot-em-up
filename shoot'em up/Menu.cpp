@@ -3,7 +3,8 @@
 Menu::Menu() : indexButtonSelected(0)
 {
 	initBackground();
-	initLevel();
+	initLevel1();
+	initLevel2();
 	initFont();
 	initButton();
 	initOptionsButton();
@@ -37,17 +38,21 @@ int Menu::initBackground() //chargement image
 	optionsBackground.setTexture(optionsTexture);
 }
 
-int Menu::initLevel()
+int Menu::initLevel1()
 {
-	/*if (!textureLevel1.loadFromFile("assets/choix level/500_250_niveau_1.png")); {
+	if (!textureLevel1.loadFromFile("assets/choix level/niv_1_500.png")); {
 		return -1;
-	}*/
+	}
 
+}
+
+int Menu::initLevel2()
+{
+	
 	if (!textureLevel2.loadFromFile("assets/choix level/500_250_niveau_2.jpg")); {
 		return -1;
 	}
-	//spriteLevel1.setTexture(textureLevel1);
-	spriteLevel2.setTexture(textureLevel2);
+	
 }
 
 
@@ -222,14 +227,20 @@ void Menu::initLevelButton()
 {
 	level1Rect.setSize(Vector2f(500.f, 250.f));
 	level1Rect.setPosition(Vector2f(50.f, 400.f));
+	level1Rect.setTexture(&textureLevel1);
+	level1Rect.setOutlineThickness(5);
+	level1Rect.setOutlineColor(Color::White);
 
 	level1.setFont(this->fontMainMenu);
 	level1.setString("Niveau 1");
 	level1.setCharacterSize(35);
 	level1.setPosition(200.f, 675.f);
 
-	//level2Rect.setSize(Vector2f(500.f, 250.f));
-	spriteLevel2.setPosition(Vector2f(700.f, 400.f));
+	level2Rect.setSize(Vector2f(500.f, 250.f));
+	level2Rect.setPosition(Vector2f(700.f, 400.f));
+	level2Rect.setTexture(&textureLevel2);
+	level2Rect.setOutlineThickness(5);
+	level2Rect.setOutlineColor(Color::White);
 
 	level2.setFont(this->fontMainMenu);
 	level2.setString("Niveau 2");
@@ -238,11 +249,14 @@ void Menu::initLevelButton()
 
 	level3Rect.setSize(Vector2f(500.f, 250.f));
 	level3Rect.setPosition(Vector2f(1350.f, 400.f));
+	level3Rect.setFillColor(Color::Black);
+	level3Rect.setOutlineThickness(5);
+	level3Rect.setOutlineColor(Color::White);
 
 	level3.setFont(this->fontMainMenu);
-	level3.setString("Niveau 3");
+	level3.setString("Prochainement");
 	level3.setCharacterSize(35);
-	level3.setPosition(1500.f, 675.f);
+	level3.setPosition(1450.f, 675.f);
 }
 
 ///////////////////////////////////////clique souris//////////////////////////////////////////
@@ -355,6 +369,10 @@ int Menu::handleInputLevel(RenderWindow& window, const Event& event)
 				resetCooldown();
 				return 3;
 			}
+			if (returnButtonRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+				resetCooldown();
+				return 4;
+			}
 		}
 	}
 	return 0;
@@ -462,12 +480,16 @@ void Menu::renderLevel(RenderWindow& window)
 	window.draw(optionsBackground);
 	window.draw(level1Rect);
 	window.draw(level1);
-
-	window.draw(spriteLevel2);
+	
+	window.draw(level2Rect);
 	window.draw(level2);
 
 	window.draw(level3Rect);
 	window.draw(level3);
+	window.draw(returnButtonRect);
+	window.draw(this->returnButton);
+
+
 }
 
 void Menu::renderSettingsPauseMenu(RenderWindow& window) //menu paramètre menu pause
@@ -568,12 +590,24 @@ void Menu::handleMouseHover(const RenderWindow& window)
 		normalButtonRect.setFillColor(Color(165, 191, 208));
 		hardButton.setFillColor(Color::White);
 	}
-	/*if (level1Rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+	if (level1Rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
 		level1Rect.setFillColor(Color(179, 179, 179));
 	}
 	else {
 		level1Rect.setFillColor(Color::White);
-	}*/
+	}
+	if (level2Rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		level2Rect.setFillColor(Color(179, 179, 179));
+	}
+	else {
+		level2Rect.setFillColor(Color::White);
+	}
+	if (level3Rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+		level3Rect.setFillColor(Color(51, 51, 51));
+	}
+	else {
+		level3Rect.setFillColor(Color::Black);
+	}
 	if (hardCoreRect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
 		hardCoreRect.setFillColor(Color(222, 231, 237));
 		hardCoreButton.setFillColor(Color(165, 191, 208));

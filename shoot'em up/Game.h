@@ -162,6 +162,7 @@ public:
 	void resetGame();
 	
 	Clock tpsTouch;
+	Clock timeCheckCollision;
   
 	//bonus
 

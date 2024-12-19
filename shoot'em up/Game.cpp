@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(20)
+Game::Game() : currentState(MENU), isPaused(false), bossSpawn(false), spawnBoss(100), vagueActif(true), spawnBonusPhase(5)
 {
 	this->initSprite();
 	this->initTexture();
@@ -537,6 +537,9 @@ void Game::handleMenuState(Event& event) // gere les etat du jeu
 		case 1:
 			currentState = GameState::PLAYING;
 			break;
+		case 4:
+			currentState = GameState::MENU;
+			break;
 		}
 	}
 }
@@ -705,7 +708,7 @@ void Game::spawnBonus()
 		randBonus3 = rand() % 9;
 	}
 
-	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus1), bonusTexture[(randBonus1)], bonusZones[0]);
+	bonus.emplace_back(static_cast<Bonus::AllBonus>(Bonus::Shield), bonusTexture[(Bonus::Shield)], bonusZones[0]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus2), bonusTexture[randBonus2], bonusZones[1]);
 	bonus.emplace_back(static_cast<Bonus::AllBonus>(randBonus3), bonusTexture[randBonus3], bonusZones[2]);
 }
@@ -986,9 +989,10 @@ void Game::checkCollisions()
 		if (ennemy->getGlobalBounds().intersects(player->getGlobalBounds())) {
 			ennemy->damage(10);
 			if (checkCollisionsBonus(player, ennemy)) {
+				timeCheckCollision.restart();
 				break;
 			}
-			if (canHaveDamaged) {
+			else if (canHaveDamaged) {
 				if (tpsTouch.getElapsedTime().asMilliseconds() > 201) {
 					killStreak = 0;
 					cout << "Degats" << endl;
@@ -996,7 +1000,9 @@ void Game::checkCollisions()
 					tpsTouch.restart();
 				}
 			}
-			canHaveDamaged = true;
+			if (timeCheckCollision.getElapsedTime().asMilliseconds() > 100) {
+				canHaveDamaged = true;
+			}
 		}
 	}
 
@@ -1008,13 +1014,14 @@ void Game::checkCollisions()
 				canHaveDamaged = false;
 				if (bonusShieldDef > 0) {
 					bonusShieldDef--;
-					cout << bonusShieldDef << endl;
 				}
 				if (bonusShieldDef == 0) {
+					timeCheckCollision.restart();
 					deactivateBonus(Bonus::Shield);
 				}
 			}
 			else if (bonusActive[Bonus::OffensiveShield]) {
+				timeCheckCollision.restart();
 				deactivateBonus(Bonus::OffensiveShield);
 			}
 
@@ -1023,7 +1030,9 @@ void Game::checkCollisions()
 			}
 			projectile->markAsOutOfScreen();
 		}
-		canHaveDamaged = true;
+		if (timeCheckCollision.getElapsedTime().asMilliseconds() > 100) {
+			canHaveDamaged = true;
+		}
 	}
 
 	for (auto& projectile : projectilesPlayer) {
